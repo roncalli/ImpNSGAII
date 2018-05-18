@@ -55,4 +55,29 @@ public class RelacoesDominancia {
 		return nivelDominancia;
 	}
 	
+	public int[] retornarIndividuosMaisDominados (int numIndividuos, int [] nivelDominancia, int percentual) {		
+		int maxDom = -1;
+		int qtde = (int)(((numIndividuos*percentual)/100));
+		int [] retorno = new int[qtde];
+		for (int i=0; i<numIndividuos; i++) {
+			if (nivelDominancia[i] > maxDom) {
+				maxDom = nivelDominancia[i];
+			}			
+		}
+		int cont = 0;
+		for (int i=0; i<2*numIndividuos; i++) {
+			if (nivelDominancia[i] == maxDom) {
+				retorno[cont] = i;
+				cont++;
+			}
+			if (cont == qtde) {
+				break;				
+			}
+			if ((i == (2*numIndividuos-1))&&(cont<qtde)) {
+				i = 0;
+				maxDom--;
+			}
+		}
+		return retorno;
+	}
 }

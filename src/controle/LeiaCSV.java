@@ -19,10 +19,10 @@ public class LeiaCSV {
 
 	public void popularTabelas(Tarefa[] tarefas, Maquina[] maquinas, int[][] matrizTarefaMaquina, float matrizSetup[][][], int numMaquinas) {
 
-		String arquivoTarefa = "D:/FELIPE/TabelaTarefa.csv";
-		//String arquivoTarefa = "D:/FELIPE/Tarefas.csv";		
-		String arquivoMaquina = "D:/FELIPE/TabelaTarefaMaquina.csv";
-		//String arquivoMaquina = "D:/FELIPE/Maquinas.csv";
+		//String arquivoTarefa = "D:/FELIPE/TabelaTarefa.csv";
+		String arquivoTarefa = "D:/FELIPE/Tarefas.csv";		
+		//String arquivoMaquina = "D:/FELIPE/TabelaTarefaMaquina.csv";
+		String arquivoMaquina = "D:/FELIPE/Maquinas.csv";
 		String arquivoSetup = "D:/FELIPE/TabelaSetupMaquina";
 		BufferedReader br = null;
 		String linha = "";

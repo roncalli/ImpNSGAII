@@ -15,14 +15,15 @@ public class Main {
 	public static void main (String[] args) {		
 		LeiaCSV lerArquivos = new LeiaCSV();
 		//Parâmetros do sistema
-		int numTarefas = 20;
-		int numMaquinas = 5;
+		int numTarefas = 100;
+		int numMaquinas = 10;
 		int numIndividuos = 100; //número de indivíduos
 		int numExec = 5; //Número de execuções
-		int numGer = 5; //número de gerações
+		int numGer = 50000; //número de gerações
 		int nGetMut = 10; //numero médio de genes mutados
 		int varMur = 10; //Tipo uma variância da mutação (n_mut = floor(rand*varMut)+qtdMut);
 		int qtdMut =  5; //% Percentual de indivíduos mutados
+		int qtdMaisDom = 30;//Percentual de mais dominados a compor a nova população
 		Maquina maquina[] = new Maquina[numMaquinas];
 		Tarefa tarefa[] = new Tarefa[numTarefas];
 		int matrizTarefaMaquina[][] = new int[numTarefas][numMaquinas];
@@ -177,7 +178,10 @@ public class Main {
 			int nivel = 1; //nível de dominância
 			int j=0; // número de indivíduos adicionados
 			int ind_vet = 0;
-			while (j<100) {//Enquanto não selecionar 100 indivíduos
+			//criando vetor com os mais dominados (para gerar diversidade populacional)
+			int [] maisDominados = new int[((numIndividuos*qtdMaisDom)/100)];
+			maisDominados = relacoesDominancia.retornarIndividuosMaisDominados(numIndividuos, nivelDominancia, qtdMaisDom);
+			while (j<numIndividuos) {//Enquanto não selecionar 100 indivíduos
 				//Cálculo de indivíduos de nível j				
 				int n_ind_nivel = 0; //número de individuos do nível X				
 				//Adicionando todos os indivíduos dos níveis mais baixos
@@ -201,7 +205,15 @@ public class Main {
 				j+=n_ind_nivel;
 				nivel++;								
 			}
-			
+			j = 0;
+			ind_vet = numIndividuos - ((numIndividuos*qtdMaisDom)/100);
+			while(j<((numIndividuos*qtdMaisDom)/100)) {
+				for (int k =0; k<numTarefas; k++) {
+					pop_linha[k][ind_vet] = pop_pai_filho[k][maisDominados[j]];	
+				}				
+				j++;
+				ind_vet++;
+			}
 			//% Atribui a população e a sequência dos indivíduos da população
 			pop = pop_linha;
 			seq_pop = seq_pop_linha;
