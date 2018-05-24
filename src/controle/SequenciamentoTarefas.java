@@ -57,6 +57,9 @@ public class SequenciamentoTarefas {
 		while (tar_maq[i]!=-2) {
 			num_tar++;	
 			i++;
+			if (i == numIndividuos) {
+				break;
+			}
 		}
 		int[] vet_tar = new int[num_tar];
 		int[] seq_pop_ms = new int[numTarefas];	
@@ -68,6 +71,9 @@ public class SequenciamentoTarefas {
 		while (tar_maq[i]!=-2) {
 			vet_tar[i] = tar_maq[i];
 			i++;
+			if (i == numIndividuos) {
+				break;
+			}
 		}
 		for (int k=0; k<num_tar; k++) {
 			seq_pop_ms[k] = vet_tar[k];

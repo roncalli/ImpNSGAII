@@ -14,6 +14,9 @@ public class calculoCusto {
 				while (seq_pop[i][j][cont]!=-2) {
 					aux_custo = aux_custo + matrizTarefaMaquina[seq_pop[i][j][cont]][j]*maquina[j].getCusto();
 					cont++;
+					if (cont == numIndividuos) {
+						break;
+					}
 				}
 				matrizCusto[i][j] = aux_custo;	//Custo por máquina			
 			}
