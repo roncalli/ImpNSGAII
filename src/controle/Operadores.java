@@ -102,43 +102,70 @@ public class Operadores {
 		return pop_f;
 	}
 	
-	public float [] calculoDistanciaMultidao(int [] makespan, float[] custo, int numFobj) {
-		float [] distMultidao = new float[makespan.length];
-		//Ordenando Makespan
-		for (int i = 0; i<makespan.length; i++) {
-			int aux = -1;
-			for (int j=i; j<makespan.length; j++) {
-				if (makespan[j]<makespan[i]) {
-					aux = makespan[i];
-					makespan[i] = makespan[j];
-					makespan[j] = aux;
+	public float [][] calculoDistanciaMultidao(int [] makespan, float[] custo, int numFobj, int[] posicao_nivel) {
+		float [][] distMultidao = new float[makespan.length][2];
+		for (int w = 0; w<numFobj; w++){
+			if (w == 0){
+				//Ordenando Makespan			
+				for (int i = 0; i<makespan.length; i++) {
+					int aux = -1;
+					int auxPos = -1;
+					for (int j=i; j<makespan.length; j++) {
+						if (makespan[j]<makespan[i]) {
+							aux = makespan[i];
+							auxPos = posicao_nivel[i];
+							makespan[i] = makespan[j];
+							posicao_nivel[i] = posicao_nivel[j];
+							makespan[j] = aux;
+							posicao_nivel[j] = auxPos;
+						}
+					}
+				}
+				for(int j=1; j<makespan.length-1; j++) {				
+					if (makespan[j+1]!=makespan[j-1]) {
+						distMultidao[j][0] = distMultidao[j][0] + (makespan[j+1] - makespan[j-1]);
+					}
+				}
+			}else if (w == 1){
+				//Ordenando Custo
+				for (int i = 0; i<custo.length; i++) {
+					float aux = -1;
+					int auxPos = -1;
+					for (int j=i; j<custo.length; j++) {
+						if (custo[j]<custo[i]) {
+							aux = custo[i];
+							auxPos = posicao_nivel[i];
+							custo[i] = custo[j];
+							posicao_nivel[i] = posicao_nivel[j];
+							custo[j] = aux;
+							posicao_nivel[j] = auxPos;
+						}
+					}
+				}
+				for(int j=1; j<custo.length-1; j++) {				
+					if (custo[j+1]!=custo[j-1]) {
+						distMultidao[j][0] = distMultidao[j][0] + (custo[j+1] - custo[j-1]);
+					}
 				}
 			}
 		}
-		//Ordenando Custo
-		for (int i = 0; i<custo.length; i++) {
-			float aux = -1;
-			for (int j=i; j<custo.length; j++) {
-				if (custo[j]<custo[i]) {
-					aux = custo[i];
-					custo[i] = custo[j];
-					custo[j] = aux;
-				}
-			}
+		
+		
+		distMultidao[0][0] = -1;
+		distMultidao[distMultidao.length-1][0] = -1;
+		for (int i=0; i<posicao_nivel.length;i++){
+			distMultidao[i][1] = posicao_nivel[i];
 		}		
-		for(int j=1; j<makespan.length-1; j++) {				
-			if (makespan[j+1]!=makespan[j-1]) {
-				distMultidao[j] = distMultidao[j] + (makespan[j+1] - makespan[j-1]);
-			}
-		}
-		for(int j=1; j<custo.length-1; j++) {				
-			if (custo[j+1]!=custo[j-1]) {
-				distMultidao[j] = distMultidao[j] + (custo[j+1] - custo[j-1]);
-			}
-		}
-		distMultidao[0] = -1;
-		distMultidao[distMultidao.length-1] = -1;
 		return distMultidao;
+	}
+	
+	public boolean verificaSolucoesIguais(int[] makespan_pai_filho, float[] custo_pai_filho, int posicao){
+		for (int i=0; i<posicao; i++){
+			if((makespan_pai_filho[i] == makespan_pai_filho[posicao])&&(custo_pai_filho[i]==custo_pai_filho[posicao])){
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

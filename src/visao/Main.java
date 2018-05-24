@@ -19,7 +19,7 @@ public class Main {
 		int numMaquinas = 10;
 		int numIndividuos = 100; //número de indivíduos
 		int numExec = 5; //Número de execuções
-		int numGer = 10; //número de gerações
+		int numGer = 10000; //número de gerações
 		int nGetMut = 10; //numero médio de genes mutados
 		int varMur = 10; //Tipo uma variância da mutação (n_mut = floor(rand*varMut)+qtdMut);
 		int qtdMut =  5; //% Percentual de indivíduos mutados
@@ -194,13 +194,19 @@ public class Main {
 				//Adicionando todos os indivíduos dos níveis mais baixos
 				if (j+n_ind_nivel < 100) {
 					for (int cont = 0; cont< 2*numIndividuos; cont++) {
-						if (nivelDominancia[cont]==nivel) {						
-							for (int k =0; k<numTarefas; k++) {
-								if (nivelDominancia[cont]==nivel) {
-									pop_linha[k][ind_vet] = pop_pai_filho[k][cont];								
-								}
+						if (nivelDominancia[cont]==nivel) {
+							boolean solucaoJaIncluida = false;
+							if (cont>0){
+								solucaoJaIncluida = operadores.verificaSolucoesIguais(makespan_pai_filho, custo_pai_filho, cont);
 							}
-							ind_vet++;		
+							if (!solucaoJaIncluida){
+								for (int k =0; k<numTarefas; k++) {
+									if (nivelDominancia[cont]==nivel) {				
+										pop_linha[k][ind_vet] = pop_pai_filho[k][cont];								
+									}
+								}
+								ind_vet++;
+							}
 						}	
 					}					
 				}else {	//CÁLCULO DA DISTÂNCIA DE MULTIDÃO
@@ -216,28 +222,43 @@ public class Main {
 							pos++;
 						}
 					}
+					float [][] auxDist = new float[n_ind_nivel][2];
 					float [] distMultidao = new float[n_ind_nivel];
-					distMultidao = operadores.calculoDistanciaMultidao(aux_mksp, aux_custo, 2);
+					auxDist = operadores.calculoDistanciaMultidao(aux_mksp, aux_custo, 2,posicao_nivel);
+					for (int w=0; w<n_ind_nivel; w++){
+						distMultidao[w] = auxDist[w][0];
+						posicao_nivel[w] = (int)auxDist[w][1];
+					}
 					float aux = 0;
+					int auxPos = 0;
 					//Ordenando após calcular a distância de multidão
 					for (int w = 0; w<distMultidao.length; w++) {
 						for (int k=w; k<distMultidao.length; k++) {
 							if (distMultidao[k]>distMultidao[w]) {
 								aux = distMultidao[w];
+								auxPos = posicao_nivel[w];
 								distMultidao[w] = distMultidao[k];
+								posicao_nivel[w] = posicao_nivel[k];
 								distMultidao[k] = aux;
+								posicao_nivel[k] = auxPos;
 							}
 						}
 					}
 					int n = numIndividuos - j; //Número de indivíduos para completar a população
 					for (int cont = 0; cont<n; cont++) {
 						if (distMultidao[cont]!=-1) {
-							for (int k =0; k<numTarefas; k++) {								
-								pop_linha[k][ind_vet] = pop_pai_filho[k][posicao_nivel[cont]];																
+							boolean solucaoJaIncluida = false;
+							if (cont>0){
+								solucaoJaIncluida = operadores.verificaSolucoesIguais(makespan_pai_filho, custo_pai_filho, cont);
 							}
-							ind_vet++;
-							if (cont+ind_vet >=100) {
-								break;
+							if (!solucaoJaIncluida){
+								for (int k =0; k<numTarefas; k++) {								
+									pop_linha[k][ind_vet] = pop_pai_filho[k][posicao_nivel[cont]];																
+								}
+								ind_vet++;
+								if (cont+ind_vet >=100) {
+									break;
+								}
 							}
 						}
 					}					
