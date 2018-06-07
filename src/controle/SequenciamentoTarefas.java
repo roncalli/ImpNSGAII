@@ -50,13 +50,16 @@ public class SequenciamentoTarefas {
 		return seq_pop;
 	}
 	
-	public int[] calculoMelhorSequenciamentoMaquina(int numMaquinas, int numIndividuos,int numTarefas, int[] tar_maq, Tarefa[] tarefa, int[][]matrizTarefaMaquina, int maquina, float[][][] matrizSetup) {		
+	public int[] calculoMelhorSequenciamentoMaquina(int numMaquinas, int numIndividuos,int numTarefas, int[] tar_maq, Tarefa[] tarefa, int[][]matrizTarefaMaquina, float[][][] matrizSetup) {		
 		int i=0;
 		int num_tar = 0;		
 		//Calculando a quantidade de tarefas 
 		while (tar_maq[i]!=-2) {
 			num_tar++;	
 			i++;
+			if (i == numIndividuos) {
+				break;
+			}
 		}
 		int[] vet_tar = new int[num_tar];
 		int[] seq_pop_ms = new int[numTarefas];	
@@ -68,13 +71,16 @@ public class SequenciamentoTarefas {
 		while (tar_maq[i]!=-2) {
 			vet_tar[i] = tar_maq[i];
 			i++;
+			if (i == numIndividuos) {
+				break;
+			}
 		}
 		for (int k=0; k<num_tar; k++) {
 			seq_pop_ms[k] = vet_tar[k];
 		}
 		//Calculando o Makespan
 		CalculoMakespan calculoMakespan = new CalculoMakespan();
-		int makespan = calculoMakespan.calculoMakespanMelhorSequencia(seq_pop_ms, tarefa,matrizTarefaMaquina,maquina, matrizSetup);
+		int makespan = calculoMakespan.calculoMakespanSequencia(seq_pop_ms, tarefa,matrizTarefaMaquina, numMaquinas, matrizSetup);
 		
 		int[] novo_vet_tar = new int[num_tar];
 		for (i=0; i<(numMaquinas/2); i++) {
@@ -97,7 +103,7 @@ public class SequenciamentoTarefas {
 			for (int k=0; k<num_tar; k++) {
 				seq_pop_aux[k] = novo_vet_tar[k];
 			}			
-			int novo_makespan =  calculoMakespan.calculoMakespanMelhorSequencia(seq_pop_aux, tarefa, matrizTarefaMaquina,maquina, matrizSetup);
+			int novo_makespan =  calculoMakespan.calculoMakespanSequencia(seq_pop_aux, tarefa, matrizTarefaMaquina,numMaquinas, matrizSetup);
 			if (novo_makespan<makespan){				
 				seq_pop_ms = novo_vet_tar;
 				makespan = novo_makespan;
