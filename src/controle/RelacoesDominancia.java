@@ -16,7 +16,7 @@ public class RelacoesDominancia {
 	}
 	
 	
-	public int [] calculaNivelDominancia (int numIndividuos, int[] makespan, float[] custo) {
+	public int [] calculaNivelDominancia (int numIndividuos, int[] makespan) {
 		int [] nivelDominancia = new int [numIndividuos];
 		int [] solucoes = new int[numIndividuos];//0 individuo ainda não visitado, 1 individuo já visitado
 		int k = 0; //Nível de dominância
@@ -32,10 +32,8 @@ public class RelacoesDominancia {
 							if(i!=j) {//Verificando que não estamos comparando os mesmos individuos
 								float [] sol1 = new float[2];
 								float [] sol2 = new float[2];
-								sol1[0] = (float) makespan[i];
-								sol1[1] =  custo[i];
-								sol2[0] = (float) makespan[j];
-								sol2[1] =  custo[j];								
+								sol1[0] = (float) makespan[i];							
+								sol2[0] = (float) makespan[j];													
 								if (verificaDominancia(sol1, sol2) == 2) {
 									flag = 1;
 									break;

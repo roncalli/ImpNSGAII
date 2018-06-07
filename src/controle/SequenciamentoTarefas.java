@@ -79,7 +79,7 @@ public class SequenciamentoTarefas {
 			seq_pop_ms[k] = vet_tar[k];
 		}
 		//Calculando o Makespan
-		CalculoMakespan calculoMakespan = new CalculoMakespan();
+		CalculoAdiantamentoAtraso calculoMakespan = new CalculoAdiantamentoAtraso();
 		int makespan = calculoMakespan.calculoMakespanSequencia(seq_pop_ms, tarefa,matrizTarefaMaquina, numMaquinas, matrizSetup);
 		
 		int[] novo_vet_tar = new int[num_tar];

@@ -4,7 +4,7 @@ import java.util.Random;
 
 import controle.BuscaLocal;
 import controle.CalculoCusto;
-import controle.CalculoMakespan;
+import controle.CalculoAdiantamentoAtraso;
 import controle.LeiaCSV;
 import controle.Operadores;
 import controle.RelacoesDominancia;
@@ -17,10 +17,10 @@ public class Main {
 		LeiaCSV lerArquivos = new LeiaCSV();
 		//Parâmetros do sistema
 		int numTarefas = 100;
-		int numMaquinas = 10;
+		int numMaquinas = 1;
 		int numIndividuos = 100; //número de indivíduos
 		int numExec = 5; //Número de execuções
-		int numGer = 200000; //número de gerações		
+		int numGer = 2000; //número de gerações		
 		int nGetMut = 10; //numero médio de genes mutados
 		int varMur = 10; //Tipo uma variância da mutação (n_mut = floor(rand*varMut)+qtdMut);
 		int qtdMut =  5; //% Percentual de indivíduos mutados
@@ -51,18 +51,18 @@ public class Main {
 		// Cálculos das funções objetivo
 		// Função Objetivo 1: Cálculo do makespan
 		int [] makespan = new int [numIndividuos];
-		CalculoMakespan calculoMakespan = new CalculoMakespan();
-		makespan = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_pop, tarefa, matrizTarefaMaquina,matrizSetup);
+		CalculoAdiantamentoAtraso calculoMakespan = new CalculoAdiantamentoAtraso();
+		makespan = calculoMakespan.calculoAdiantamentoAtraso(numIndividuos, numMaquinas, seq_pop, tarefa, matrizTarefaMaquina,matrizSetup);
 		
-		//Função Objetivo 2: Cálculo do Custo
-		float[] custo = new float[numIndividuos];
-		CalculoCusto calculoCusto = new CalculoCusto();
-		custo = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_pop, matrizTarefaMaquina, maquina);
+//		//Função Objetivo 2: Cálculo do Custo
+//		float[] custo = new float[numIndividuos];
+//		CalculoCusto calculoCusto = new CalculoCusto();
+//		custo = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_pop, matrizTarefaMaquina, maquina);
 		
 		//Classificação por níveis de não dominância
 		int[] nivelDominancia = new int[numIndividuos];
 		RelacoesDominancia relacoesDominancia = new RelacoesDominancia();
-		nivelDominancia = relacoesDominancia.calculaNivelDominancia(numIndividuos, makespan, custo);
+		nivelDominancia = relacoesDominancia.calculaNivelDominancia(numIndividuos, makespan);
 		
 		int g = 0; // geração
 		// Imprimindo Primeira Geração
@@ -92,11 +92,11 @@ public class Main {
 //			}
 			//Cálculo makespan da população de filhos
 			int [] makespan_f = new int [numIndividuos];
-			makespan_f = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_Pop_filhos, tarefa, matrizTarefaMaquina,matrizSetup);
+			makespan_f = calculoMakespan.calculoAdiantamentoAtraso(numIndividuos, numMaquinas, seq_Pop_filhos, tarefa, matrizTarefaMaquina,matrizSetup);
 			
-			//Função Objetivo 2: Cálculo do Custo
-			float[] custo_f = new float[numIndividuos];			
-			custo_f = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_Pop_filhos, matrizTarefaMaquina, maquina);			
+//			//Função Objetivo 2: Cálculo do Custo
+//			float[] custo_f = new float[numIndividuos];			
+//			custo_f = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_Pop_filhos, matrizTarefaMaquina, maquina);			
 			
 			//Concatenando Pais e Filhos
 			int[][] pop_pai_filho = new int[numTarefas][2*numIndividuos];
@@ -135,18 +135,18 @@ public class Main {
 				}
 			}
 			
-			float[]custo_pai_filho = new float[2*numIndividuos];
-			for (int i=0; i<2*numIndividuos; i++) {
-				if (i<numIndividuos) {
-					custo_pai_filho[i] = custo[i];
-				}else {
-					custo_pai_filho[i] = custo_f[i-100];
-				}
-			}
+//			float[]custo_pai_filho = new float[2*numIndividuos];
+//			for (int i=0; i<2*numIndividuos; i++) {
+//				if (i<numIndividuos) {
+//					custo_pai_filho[i] = custo[i];
+//				}else {
+//					custo_pai_filho[i] = custo_f[i-100];
+//				}
+//			}
 				
 			//Ranquamento de não dominância dos 2n indivíduos
 			//nível de não dominância
-			nivelDominancia = relacoesDominancia.calculaNivelDominancia((2*numIndividuos), makespan_pai_filho, custo_pai_filho);
+			nivelDominancia = relacoesDominancia.calculaNivelDominancia((2*numIndividuos), makespan_pai_filho);
 			
 			//Criando a nova população
 			int[][] pop_linha = new int[numTarefas][numIndividuos]; //Nova população
@@ -173,7 +173,7 @@ public class Main {
 						if (nivelDominancia[cont]==nivel) {
 							boolean solucaoJaIncluida = false;
 							if (cont>0){
-								solucaoJaIncluida = operadores.verificaSolucoesIguais(makespan_pai_filho, custo_pai_filho, cont);
+								solucaoJaIncluida = operadores.verificaSolucoesIguais(makespan_pai_filho, cont);
 							}
 							if (!solucaoJaIncluida){
 								for (int k =0; k<numTarefas; k++) {
@@ -188,19 +188,19 @@ public class Main {
 				}else {	//CÁLCULO DA DISTÂNCIA DE MULTIDÃO
 					int [] posicao_nivel = new int[n_ind_nivel];
 					int [] aux_mksp = new int[n_ind_nivel];
-					float [] aux_custo = new float[n_ind_nivel];
+					//float [] aux_custo = new float[n_ind_nivel];
 					int pos = 0;
 					for (int cont = 0; cont< 2*numIndividuos; cont++) {
 						if (nivelDominancia[cont] == nivel) {
 							posicao_nivel[pos] = cont;
 							aux_mksp[pos] = makespan_pai_filho[cont];
-							aux_custo[pos] = custo_pai_filho[cont];
+							//aux_custo[pos] = custo_pai_filho[cont];
 							pos++;
 						}
 					}
 					float [][] auxDist = new float[n_ind_nivel][2];
 					float [] distMultidao = new float[n_ind_nivel];
-					auxDist = operadores.calculoDistanciaMultidao(aux_mksp, aux_custo, 2,posicao_nivel);
+					auxDist = operadores.calculoDistanciaMultidao(aux_mksp, 2,posicao_nivel);
 					for (int w=0; w<n_ind_nivel; w++){
 						distMultidao[w] = auxDist[w][0];
 						posicao_nivel[w] = (int)auxDist[w][1];
@@ -240,7 +240,7 @@ public class Main {
 						if (distMultidao[cont]!=-1) {
 							boolean solucaoJaIncluida = false;
 							if (cont>0){
-								solucaoJaIncluida = operadores.verificaSolucoesIguais(makespan_pai_filho, custo_pai_filho, cont);
+								solucaoJaIncluida = operadores.verificaSolucoesIguais(makespan_pai_filho, cont);
 							}
 							if (!solucaoJaIncluida){
 								for (int k =0; k<numTarefas; k++) {								
@@ -271,19 +271,19 @@ public class Main {
 			pop = pop_linha;
 			seq_pop = seq_pop_linha;
 			
-			makespan = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_pop, tarefa, matrizTarefaMaquina,matrizSetup);
-			custo = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_pop, matrizTarefaMaquina, maquina);
+			makespan = calculoMakespan.calculoAdiantamentoAtraso(numIndividuos, numMaquinas, seq_pop, tarefa, matrizTarefaMaquina,matrizSetup);
+			//custo = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_pop, matrizTarefaMaquina, maquina);
 			
-			nivelDominancia = relacoesDominancia.calculaNivelDominancia(numIndividuos, makespan, custo);			
+			nivelDominancia = relacoesDominancia.calculaNivelDominancia(numIndividuos, makespan);			
 			Impressaoes imprimir = new Impressaoes();
-			imprimir.imprimir(g, makespan, custo, seq_pop, numIndividuos, nivelDominancia, numMaquinas);
+			imprimir.imprimir(g, makespan, seq_pop, numIndividuos, nivelDominancia, numMaquinas);
 			System.out.println("Teste");
 			//Incremanta contador de gerações
 			g++;
 		}
 		//Imprimindo resultados		
 		Impressaoes imprimir = new Impressaoes();
-		imprimir.imprimir(g, makespan, custo, seq_pop, numIndividuos, nivelDominancia,numMaquinas);
+		imprimir.imprimir(g, makespan, seq_pop, numIndividuos, nivelDominancia,numMaquinas);
 		System.out.println("Teste");
 	}
 }

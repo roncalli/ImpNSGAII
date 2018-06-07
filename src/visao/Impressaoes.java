@@ -2,7 +2,7 @@ package visao;
 
 public class Impressaoes {
 
-	public void imprimir(int geracao,int[] makespan, float[]custo, int[][][]seq_pop, int numIndividuos, int[] nivelDominancia, int numMaquinas) {
+	public void imprimir(int geracao,int[] makespan, int[][][]seq_pop, int numIndividuos, int[] nivelDominancia, int numMaquinas) {
 		int piorMakespan = 0;		
 		int melhorMakespan = 10000;
 		int ind_mm= 0 ;
@@ -15,7 +15,7 @@ public class Impressaoes {
 		System.out.println("Indivíduo     -     Makespan     -    Custo");
 		for (int i=0; i<numIndividuos; i++) {
 			if (nivelDominancia[i] == 1) {//Imprimindo apenas as soluções não dominadas
-				System.out.println(i+"          -          "+makespan[i]+"          -          "+custo[i]);
+				System.out.println(i+"          -          "+makespan[i]+"          -          ");
 				if (makespan[i]<melhorMakespan) {
 					melhorMakespan = makespan[i];
 					ind_mm = i;
@@ -24,13 +24,13 @@ public class Impressaoes {
 					piorMakespan = makespan[i];
 				}
 				
-				if (custo[i]<melhorCusto) {
-					melhorCusto= custo[i];
-					ind_mc = i;
-				}
-				if (custo[i]>piorCusto) {
-					piorCusto= custo[i];
-				}
+//				if (custo[i]<melhorCusto) {
+//					melhorCusto= custo[i];
+//					ind_mc = i;
+//				}
+//				if (custo[i]>piorCusto) {
+//					piorCusto= custo[i];
+//				}
 			}
 		}
 		System.out.println();
