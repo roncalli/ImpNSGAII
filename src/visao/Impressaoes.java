@@ -1,13 +1,13 @@
 package visao;
 
+import modelo.Tarefa;
+
 public class Impressaoes {
 
-	public void imprimir(int geracao,int[] makespan, int[][][]seq_pop, int numIndividuos, int[] nivelDominancia, int numMaquinas) {
+	public void imprimir(int geracao,int[] makespan, int[][][]seq_pop, int numIndividuos, int[] nivelDominancia, int numMaquinas, int numTarefas) {
 		int piorMakespan = 0;		
-		int melhorMakespan = 10000;
+		int melhorMakespan = 10000000;
 		int ind_mm= 0 ;
-		float piorCusto = 0;
-		float melhorCusto = 10000;
 		int ind_mc = 0;
 		System.out.println("Imprimindo os ítens da geração: "+geracao);
 		System.out.println("----------------------------------------------------------------------");
@@ -45,27 +45,33 @@ public class Impressaoes {
 					System.out.println();
 				}
 				j++;
+				if (j == numTarefas-1){
+					break;
+				}				
 			}
 		}	
 		
-		System.out.println();
-		System.out.println("Sequenciamento da solução com melhor Custo:");
-		System.out.println();
-		for (int i=0;i<numMaquinas; i++) {
-			int j=0;
-			System.out.println("Máquina: "+i);
-			while (seq_pop[ind_mc][i][j]!=-2) {
-				System.out.print(seq_pop[ind_mc][i][j]+"  -  ");
-				if (seq_pop[ind_mc][i][j+1] == -2) {
-					System.out.println();
-				}
-				j++;
-			}
-		}	
+//		System.out.println();
+//		System.out.println("Sequenciamento da solução com melhor Custo:");
+//		System.out.println();
+//		for (int i=0;i<numMaquinas; i++) {
+//			int j=0;
+//			System.out.println("Máquina: "+i);
+//			while (seq_pop[ind_mc][i][j]!=-2) {
+//				System.out.print(seq_pop[ind_mc][i][j]+"  -  ");
+//				if (seq_pop[ind_mc][i][j+1] == -2) {
+//					System.out.println();
+//				}
+//				j++;
+//				if (j == numTarefas-1){
+//					break;
+//				}	
+//			}
+//		}	
 		System.out.println();
 		System.out.println();
 		System.out.println("Melhor Makespan: "+melhorMakespan+"    -    "+"Pior Makespan: "+piorMakespan);
-		System.out.println("Melhor Custo: "+melhorCusto+"    -    "+"Pior Custo: "+piorCusto);
+		//System.out.println("Melhor Custo: "+melhorCusto+"    -    "+"Pior Custo: "+piorCusto);
 		System.out.println("----------------------------------------------------------------------");
 		System.out.println();
 		System.out.println();

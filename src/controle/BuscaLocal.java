@@ -17,7 +17,7 @@ public class BuscaLocal {
 		CalculoCusto calculoCusto = new CalculoCusto();
 		//Encontrar a máquina com maior makespan
 		for (int i=0; i<numMaquinas; i++) {			
-			int makespan = calculoMakespan.calculoAdiantamentoAtrasoSequencia(seq_pop[individuo][i], tarefa, matrizTarefaMaquina, i, matrizSetup);
+			int makespan = calculoMakespan.calculoAdiantamentoAtrasoSequencia(seq_pop[individuo][i], tarefa, matrizTarefaMaquina, i);
 			if (makespan>maiorMakespan) {
 				makespan = maiorMakespan;
 				maquinaMaiorMakespan = i;
@@ -39,13 +39,13 @@ public class BuscaLocal {
 						int contTarMaqSelcionada = 0;
 						while (seq_pop[individuo][maquinas.get(cont)][contTarMaqSelcionada]!=-2) {
 							//Troca de tarefas
-							int makespan_antes = calculoMakespan.calculoAdiantamentoAtrasoSequencia(seq_pop[individuo][maquinas.get(cont)], tarefa, matrizTarefaMaquina, numMaquinas, matrizSetup);
+							int makespan_antes = calculoMakespan.calculoAdiantamentoAtrasoSequencia(seq_pop[individuo][maquinas.get(cont)], tarefa, matrizTarefaMaquina, numMaquinas);
 							float custo_antes = calculoCusto.calculoCustoSequencia(seq_pop[individuo][maquinas.get(cont)], tarefa, matrizTarefaMaquina, numMaquinas, maquina);
 							int aux = seq_pop[individuo][maquinaMaiorMakespan][contTarMaqMaior];
 							seq_pop[individuo][maquinaMaiorMakespan][contTarMaqMaior] = seq_pop[individuo][maquinas.get(cont)][contTarMaqSelcionada];
 							seq_pop[individuo][maquinas.get(cont)][contTarMaqSelcionada] = aux;
 							//Inserir Cálculo das funções objetivo
-							int makespan_apos = calculoMakespan.calculoAdiantamentoAtrasoSequencia(seq_pop[individuo][maquinas.get(cont)], tarefa, matrizTarefaMaquina, numMaquinas, matrizSetup);
+							int makespan_apos = calculoMakespan.calculoAdiantamentoAtrasoSequencia(seq_pop[individuo][maquinas.get(cont)], tarefa, matrizTarefaMaquina, numMaquinas);
 							float custo_apos = calculoCusto.calculoCustoSequencia(seq_pop[individuo][maquinas.get(cont)], tarefa, matrizTarefaMaquina, numMaquinas, maquina);
 							if (makespan_apos<makespan_antes) {
 								melhorou = true;

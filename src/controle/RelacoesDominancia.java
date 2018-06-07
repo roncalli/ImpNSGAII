@@ -3,11 +3,11 @@ package controle;
 public class RelacoesDominancia {
 
 	public int verificaDominancia (float []sol1, float[]sol2) {		
-		if ((sol2[0]>=sol1[0]) && (sol2[1]>=sol1[1])){ // Solução 1 domina a solução 2
+		if ((sol2[0]>=sol1[0])){ // Solução 1 domina a solução 2
 		//if (sol2[0]>=sol1[0]){
 			return 1;
 		}
-		if ((sol1[0]>=sol2[0]) && (sol1[1]>=sol2[1])){ // Solução 2 domina a solução 1
+		if ((sol1[0]>=sol2[0])){ // Solução 2 domina a solução 1
 		//if (sol1[0]>=sol2[0]){
 			return 2;
 		}else {

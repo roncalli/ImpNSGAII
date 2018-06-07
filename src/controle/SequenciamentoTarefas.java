@@ -20,29 +20,23 @@ public class SequenciamentoTarefas {
 			}
 		}
 		for (int j=0;j<numIndividuos;j++) {
+			//Gerando uma sequencia aleatória
+			List<Integer> tarefas = new ArrayList<Integer>();
+			for (int k=0; k<numTarefas; k++){
+				tarefas.add(k);
+			}
+			Collections.shuffle(tarefas);
 			for (int k=0; k<numMaquinas;k++) {
 				int vet_tarefa[] = new int[numTarefas]; //Tarefas executadas pela máquina k
-				int vet_peso[] = new int [numTarefas]; //Contém os pesos das tarefas executadas pela máquina k
-				int cont = 0;
+				//int vet_peso[] = new int [numTarefas]; //Contém os pesos das tarefas executadas pela máquina k
+				int cont = 0;				
 				for (int i=0; i<numTarefas;i++) {
 					if (pop[i][j] == k) {
-						vet_tarefa[cont] =  i;
-						vet_peso[cont] = tarefa[i].getPrioridade();
+						vet_tarefa[cont] =  tarefas.get(i);
+						//vet_peso[cont] = tarefa[i].getPrioridade();
 						cont++;
 					}
-				}
-				int cont2=0;				
-				for (int m=0; m<cont; m++) {
-					int prioridade = -1;
-					int indice = -1;
-					for (int n=0; n<cont; n++) {
-						if (vet_peso[n]>prioridade) {
-							indice = n;
-							prioridade = vet_peso[n];							
-						}
-					}
-					seq_pop[j][k][m] = vet_tarefa[indice];
-					vet_peso[indice] = -1;
+					seq_pop[j][k][i] = vet_tarefa[i];
 				}
 			}
 		
@@ -80,7 +74,7 @@ public class SequenciamentoTarefas {
 		}
 		//Calculando o Makespan
 		CalculoAdiantamentoAtraso calculoMakespan = new CalculoAdiantamentoAtraso();
-		int makespan = calculoMakespan.calculoMakespanSequencia(seq_pop_ms, tarefa,matrizTarefaMaquina, numMaquinas, matrizSetup);
+		int makespan = calculoMakespan.calculoAdiantamentoAtrasoSequencia(seq_pop_ms, tarefa,matrizTarefaMaquina, numMaquinas);
 		
 		int[] novo_vet_tar = new int[num_tar];
 		for (i=0; i<(numMaquinas/2); i++) {
@@ -103,7 +97,7 @@ public class SequenciamentoTarefas {
 			for (int k=0; k<num_tar; k++) {
 				seq_pop_aux[k] = novo_vet_tar[k];
 			}			
-			int novo_makespan =  calculoMakespan.calculoMakespanSequencia(seq_pop_aux, tarefa, matrizTarefaMaquina,numMaquinas, matrizSetup);
+			int novo_makespan =  calculoMakespan.calculoAdiantamentoAtrasoSequencia(seq_pop_aux, tarefa, matrizTarefaMaquina,numMaquinas);
 			if (novo_makespan<makespan){				
 				seq_pop_ms = novo_vet_tar;
 				makespan = novo_makespan;

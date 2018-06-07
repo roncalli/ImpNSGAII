@@ -6,6 +6,8 @@ public class Tarefa {
 	private float tempoInicio;
 	private float dataEntrega; // em horas
 	private int prioridade;
+	private int penalidadeAtraso;
+	private int penalidadeAdiantamento;
 
 	public int getId() {
 		return id;
@@ -80,5 +82,28 @@ public class Tarefa {
 		this.dataEntrega = dataEntrega;
 		this.tempoInicio = 0;
 	}
+	public Tarefa (int id, int adiantamento, int atraso){
+		super();
+		this.id = id;
+		this.penalidadeAdiantamento = adiantamento;
+		this.penalidadeAtraso = atraso;
+	}
+
+	public int getPenalidadeAtraso() {
+		return penalidadeAtraso;
+	}
+
+	public void setPenalidadeAtraso(int penalidadeAtraso) {
+		this.penalidadeAtraso = penalidadeAtraso;
+	}
+
+	public int getPenalidadeAdiantamento() {
+		return penalidadeAdiantamento;
+	}
+
+	public void setPenalidadeAdiantamento(int penalidadeAdiantamento) {
+		this.penalidadeAdiantamento = penalidadeAdiantamento;
+	}
+	
 
 }

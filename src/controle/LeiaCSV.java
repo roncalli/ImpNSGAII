@@ -17,23 +17,23 @@ public class LeiaCSV {
 
 	}
 
-	public void popularTabelas(Tarefa[] tarefas, Maquina[] maquinas, int[][] matrizTarefaMaquina, float matrizSetup[][][], int numMaquinas) {
+	public void popularTabelas(Tarefa[] tarefas, Maquina[] maquinas, int[][] matrizTarefaMaquina, int numMaquinas) {
 
 		//String arquivoTarefa = "D:/FELIPE/TabelaTarefa.csv";
-		String arquivoTarefa = "D:/FELIPE/Tarefas.csv";		
+		String arquivoTarefaMaquina = "D:/FELIPE/sch100k1.csv";		
 		//String arquivoMaquina = "D:/FELIPE/TabelaTarefaMaquina.csv";
-		String arquivoMaquina = "D:/FELIPE/Maquinas.csv";
-		String arquivoSetup = "D:/FELIPE/TabelaSetupMaquina";
+		//String arquivoMaquina = "D:/FELIPE/Maquinas.csv";
+		//String arquivoSetup = "D:/FELIPE/TabelaSetupMaquina";
 		BufferedReader br = null;
 		String linha = "";
 		String csvDivisor = ",";
 		try {
 
-			br = new BufferedReader(new FileReader(arquivoTarefa));
+			br = new BufferedReader(new FileReader(arquivoTarefaMaquina));
 			int i = 0;
 			while ((linha = br.readLine()) != null) {
 				String[] objeto = linha.split(csvDivisor);
-				tarefas[i] = new Tarefa(Integer.valueOf(objeto[objeto.length - 3]), Integer.valueOf(objeto[objeto.length - 2]), Float.valueOf(objeto[objeto.length - 1]), true);
+				tarefas[i] = new Tarefa(i,Integer.valueOf(objeto[objeto.length - 2]), Integer.valueOf(objeto[objeto.length - 1]));
 				i++;
 			}
 		} catch (FileNotFoundException e) {
@@ -52,7 +52,7 @@ public class LeiaCSV {
 		// LENDO O ARQUIVO DE MAQUINAS
 		try {
 
-			br = new BufferedReader(new FileReader(arquivoMaquina));
+			br = new BufferedReader(new FileReader(arquivoTarefaMaquina));
 			for (int i = 0; i < maquinas.length; i++) {
 				maquinas[i] = new Maquina(i);
 				//ALTERAR DEPOIS 
@@ -61,7 +61,7 @@ public class LeiaCSV {
 			int i = 0;
 			while ((linha = br.readLine()) != null) {
 				String[] objeto = linha.split(csvDivisor);
-				for (int j = 0; j < objeto.length; j++) {
+				for (int j = 0; j < maquinas.length; j++) {
 					matrizTarefaMaquina[i][j] = Integer.valueOf(objeto[j]);
 				}
 				i++;
@@ -81,36 +81,36 @@ public class LeiaCSV {
 			}
 		}
 		// Lendo os Arquivos de SETUP
-		for (int w = 0; w < numMaquinas; w++) {
-			arquivoSetup = "D:/FELIPE/TabelaSetupMaquina" + w + ".csv";
-			try {
-				br = new BufferedReader(new FileReader(arquivoSetup));
-				int i = 0;
-				while ((linha = br.readLine()) != null) {
-					String[] objeto = linha.split(csvDivisor);
-					for (int j = 0; j < objeto.length; j++) {
-						if (i != j) {
-							matrizSetup[w][i][j] = Float.valueOf(objeto[j]);
-						} else {
-							matrizSetup[w][i][j] = 0;
-						}
-					}
-					i++;
-				}
-
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				if (br != null) {
-					try {
-						br.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}
+//		for (int w = 0; w < numMaquinas; w++) {
+//			arquivoSetup = "D:/FELIPE/TabelaSetupMaquina" + w + ".csv";
+//			try {
+//				br = new BufferedReader(new FileReader(arquivoSetup));
+//				int i = 0;
+//				while ((linha = br.readLine()) != null) {
+//					String[] objeto = linha.split(csvDivisor);
+//					for (int j = 0; j < objeto.length; j++) {
+//						if (i != j) {
+//							matrizSetup[w][i][j] = Float.valueOf(objeto[j]);
+//						} else {
+//							matrizSetup[w][i][j] = 0;
+//						}
+//					}
+//					i++;
+//				}
+//
+//			} catch (FileNotFoundException e) {
+//				e.printStackTrace();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			} finally {
+//				if (br != null) {
+//					try {
+//						br.close();
+//					} catch (IOException e) {
+//						e.printStackTrace();
+//					}
+//				}
+//			}
+//		}
 	}
 }

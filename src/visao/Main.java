@@ -17,10 +17,11 @@ public class Main {
 		LeiaCSV lerArquivos = new LeiaCSV();
 		//Parâmetros do sistema
 		int numTarefas = 100;
+		int entrega = 454;
 		int numMaquinas = 1;
 		int numIndividuos = 100; //número de indivíduos
 		int numExec = 5; //Número de execuções
-		int numGer = 2000; //número de gerações		
+		int numGer = 200; //número de gerações		
 		int nGetMut = 10; //numero médio de genes mutados
 		int varMur = 10; //Tipo uma variância da mutação (n_mut = floor(rand*varMut)+qtdMut);
 		int qtdMut =  5; //% Percentual de indivíduos mutados
@@ -28,8 +29,7 @@ public class Main {
 		Maquina maquina[] = new Maquina[numMaquinas];
 		Tarefa tarefa[] = new Tarefa[numTarefas];
 		int matrizTarefaMaquina[][] = new int[numTarefas][numMaquinas];
-		float matrizSetup[][][] = new float[numMaquinas][numTarefas][numTarefas];
-		lerArquivos.popularTabelas(tarefa, maquina, matrizTarefaMaquina,matrizSetup,numMaquinas);
+		lerArquivos.popularTabelas(tarefa, maquina, matrizTarefaMaquina,numMaquinas);
 		//Fim dos parâmetros do sistema
 		
 		
@@ -52,7 +52,7 @@ public class Main {
 		// Função Objetivo 1: Cálculo do makespan
 		int [] makespan = new int [numIndividuos];
 		CalculoAdiantamentoAtraso calculoMakespan = new CalculoAdiantamentoAtraso();
-		makespan = calculoMakespan.calculoAdiantamentoAtraso(numIndividuos, numMaquinas, seq_pop, tarefa, matrizTarefaMaquina,matrizSetup);
+		makespan = calculoMakespan.calculoAdiantamentoAtraso(numIndividuos, numMaquinas, seq_pop, tarefa, matrizTarefaMaquina,entrega);
 		
 //		//Função Objetivo 2: Cálculo do Custo
 //		float[] custo = new float[numIndividuos];
@@ -92,7 +92,7 @@ public class Main {
 //			}
 			//Cálculo makespan da população de filhos
 			int [] makespan_f = new int [numIndividuos];
-			makespan_f = calculoMakespan.calculoAdiantamentoAtraso(numIndividuos, numMaquinas, seq_Pop_filhos, tarefa, matrizTarefaMaquina,matrizSetup);
+			makespan_f = calculoMakespan.calculoAdiantamentoAtraso(numIndividuos, numMaquinas, seq_Pop_filhos, tarefa, matrizTarefaMaquina,entrega);
 			
 //			//Função Objetivo 2: Cálculo do Custo
 //			float[] custo_f = new float[numIndividuos];			
@@ -231,7 +231,10 @@ public class Main {
 								pop_linha[k][ind_vet] = pop_pai_filho[k][posicao_nivel[distMultidao.length-1]];																
 							}
 						}
-						ind_vet++;						
+						ind_vet++;
+						if (ind_vet == numIndividuos){
+							break;
+						}
 					}
 					
 					int n = numIndividuos - j; //Número de indivíduos para completar a população tirando as duas soluções de borda incluidas
@@ -271,19 +274,19 @@ public class Main {
 			pop = pop_linha;
 			seq_pop = seq_pop_linha;
 			
-			makespan = calculoMakespan.calculoAdiantamentoAtraso(numIndividuos, numMaquinas, seq_pop, tarefa, matrizTarefaMaquina,matrizSetup);
+			makespan = calculoMakespan.calculoAdiantamentoAtraso(numIndividuos, numMaquinas, seq_pop, tarefa, matrizTarefaMaquina,entrega);
 			//custo = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_pop, matrizTarefaMaquina, maquina);
 			
 			nivelDominancia = relacoesDominancia.calculaNivelDominancia(numIndividuos, makespan);			
 			Impressaoes imprimir = new Impressaoes();
-			imprimir.imprimir(g, makespan, seq_pop, numIndividuos, nivelDominancia, numMaquinas);
+			imprimir.imprimir(g, makespan, seq_pop, numIndividuos, nivelDominancia, numMaquinas, numTarefas);
 			System.out.println("Teste");
 			//Incremanta contador de gerações
 			g++;
 		}
 		//Imprimindo resultados		
 		Impressaoes imprimir = new Impressaoes();
-		imprimir.imprimir(g, makespan, seq_pop, numIndividuos, nivelDominancia,numMaquinas);
+		imprimir.imprimir(g, makespan, seq_pop, numIndividuos, nivelDominancia,numMaquinas, numTarefas);
 		System.out.println("Teste");
 	}
 }
