@@ -2,6 +2,7 @@ package visao;
 
 import java.util.Random;
 
+import controle.BuscaLocal;
 import controle.CalculoCusto;
 import controle.CalculoMakespan;
 import controle.LeiaCSV;
@@ -19,11 +20,7 @@ public class Main {
 		int numMaquinas = 10;
 		int numIndividuos = 100; //número de indivíduos
 		int numExec = 5; //Número de execuções
-<<<<<<< HEAD
-		int numGer = 50000; //número de gerações
-=======
-		int numGer = 10000; //número de gerações
->>>>>>> DistMultidao
+		int numGer = 200000; //número de gerações		
 		int nGetMut = 10; //numero médio de genes mutados
 		int varMur = 10; //Tipo uma variância da mutação (n_mut = floor(rand*varMut)+qtdMut);
 		int qtdMut =  5; //% Percentual de indivíduos mutados
@@ -44,23 +41,6 @@ public class Main {
 				pop[i][j] = (int) (Math.floor(Math.random()*numMaquinas));
 			}
 		}
-//		//% Gera 5% dos indivíduos atribuindo cada tarefa a máquina que a executa no menor tempo
-//		for (int j=95; j<numIndividuos; j++) { 
-//			for (int i=0; i<numTarefas; i++) {
-//				//Buscando qual máquina executa a tarefa em menos tempo				
-//				for (int k=0; k<numTarefas; k++) {
-//					float tempoExec = 1000;
-//					int indice = -1;
-//					for (int l=0; l<numMaquinas; l++) {
-//						if (matrizTarefaMaquina[k][l]<tempoExec) {
-//							indice = l;
-//							tempoExec = matrizTarefaMaquina[k][l];
-//						}
-//					pop[i][j] = indice;
-//					}
-//				}				
-//			}
-//		}
 		// Sequenciamento da População
 		// Formato:(sequencia da individuo, maquina, tarefa)
 		int [][][] seq_pop = new int[numIndividuos][numMaquinas][numTarefas];
@@ -105,21 +85,11 @@ public class Main {
 			int[][][] seq_Pop_filhos = new int[numIndividuos][numMaquinas][numTarefas];
 			seq_Pop_filhos = sequenciamento.sequenciamento_Inicial(numIndividuos, numMaquinas, numTarefas, pop_f, tarefa);
 			
-			//Inserir Busca Local após XX gerações, aumentando a popúlação em N soluções, o restamte continua da mesma maneira
-			
-			//Tenta encontrar uma melhor sequenciamento de tarefas dos filhos por busca aleatória
-			//VERIFICAR SE É NECESSÁRIO			
-//			for (int i = 0; i<numIndividuos; i++) {
-//				for (int j=0; j<numMaquinas;j++) {
-//					int[]nova_seq = new int[numMaquinas];
-//					nova_seq = sequenciamento.calculoMelhorSequenciamentoMaquina(numMaquinas, numIndividuos, numTarefas, seq_pop[i][j], tarefa, matrizTarefaMaquina, j, matrizSetup);										
-//					for (int k=0; k<nova_seq.length; k++) {
-//						seq_pop[i][j][k] = nova_seq[k];
-//					}
-//				}
+//			//Inserir Busca Local após XX gerações, aumentando a popúlação em N soluções, o restamte continua da mesma maneira
+//			BuscaLocal buscaLocal = new BuscaLocal();
+//			for (int cont=0; cont<numIndividuos; cont++) {
+//				buscaLocal.buscaLocalN1N2(pop_f, seq_Pop_filhos, numMaquinas, maquina, tarefa, matrizTarefaMaquina, matrizSetup, cont);
 //			}
-			//VERIFICAR SE É NECESSÁRIO
-			
 			//Cálculo makespan da população de filhos
 			int [] makespan_f = new int [numIndividuos];
 			makespan_f = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_Pop_filhos, tarefa, matrizTarefaMaquina,matrizSetup);
@@ -249,9 +219,24 @@ public class Main {
 								posicao_nivel[k] = auxPos;
 							}
 						}
+					}					
+					//Incluindo as soluções de fronteira encontradas na Distância de Multidão
+					for (int cont = 0; cont<2; cont++) {
+						if (cont==0) {
+							for (int k =0; k<numTarefas; k++) {								
+								pop_linha[k][ind_vet] = pop_pai_filho[k][posicao_nivel[cont]];																
+							}
+						}else { // if cont==1
+							for (int k =0; k<numTarefas; k++) {								
+								pop_linha[k][ind_vet] = pop_pai_filho[k][posicao_nivel[distMultidao.length-1]];																
+							}
+						}
+						ind_vet++;						
 					}
-					int n = numIndividuos - j; //Número de indivíduos para completar a população
-					for (int cont = 0; cont<n; cont++) {
+					
+					int n = numIndividuos - j; //Número de indivíduos para completar a população tirando as duas soluções de borda incluidas
+					for (int cont = 2; cont<n; cont++) {
+						//INCLUIR OS INDIVIDUOS DAS EXTREMIDADES =-1
 						if (distMultidao[cont]!=-1) {
 							boolean solucaoJaIncluida = false;
 							if (cont>0){

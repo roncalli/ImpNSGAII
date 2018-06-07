@@ -164,14 +164,8 @@ public class Operadores {
 			if((makespan_pai_filho[i] == makespan_pai_filho[posicao])&&(custo_pai_filho[i]==custo_pai_filho[posicao])){
 				return true;
 			}
-		}
-<<<<<<< HEAD
-		distMultidao[0] = 10000;
-		distMultidao[distMultidao.length-1] = 10000;
-		return distMultidao;
-=======
+		}		
 		return false;
->>>>>>> DistMultidao
 	}
 
 }
