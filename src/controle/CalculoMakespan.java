@@ -42,21 +42,23 @@ public class CalculoMakespan {
 		return makespan;
 	}
 	
-	public int calculoMakespanMelhorSequencia (int[]seq_pop, Tarefa[] tarefa, int[][] matrizTarefaMaquina, int maquina, float[][][] matrizSetup){
+	public int calculoMakespanSequencia (int[]seq_pop, Tarefa[] tarefa, int[][] matrizTarefaMaquina, int numMaquinas, float[][][] matrizSetup){
 		int calculoMakespan = 0;
 		int makespan = 0;
 		int cont = 0;
-		while (seq_pop[cont]!=-2) {	
-			if (cont+1 == seq_pop.length) {
-				break;
+		for (int j=0; j<numMaquinas; j++){
+			while (seq_pop[cont]!=-2) {	
+				if (cont+1 == seq_pop.length) {
+					break;
+				}
+				if (seq_pop[cont+1]!=-2) {
+					makespan = makespan +  matrizTarefaMaquina[seq_pop[cont]][j]+(int)matrizSetup[j][seq_pop[cont]][seq_pop[cont+1]];
+				}else {
+					makespan = makespan +  matrizTarefaMaquina[seq_pop[cont]][j];
+				}					
+				cont++;
 			}
-			if (seq_pop[cont+1]!=-2) {
-				makespan = makespan +  matrizTarefaMaquina[seq_pop[cont]][maquina]+(int)matrizSetup[maquina][seq_pop[cont]][seq_pop[cont+1]];
-			}else {
-				makespan = makespan +  matrizTarefaMaquina[seq_pop[cont]][maquina];
-			}					
-			cont++;
-		}		
+		}
 		return makespan;
-	}
+	}		
 }

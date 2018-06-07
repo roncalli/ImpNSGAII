@@ -2,12 +2,12 @@ package visao;
 
 import java.util.Random;
 
+import controle.CalculoCusto;
 import controle.CalculoMakespan;
 import controle.LeiaCSV;
 import controle.Operadores;
 import controle.RelacoesDominancia;
 import controle.SequenciamentoTarefas;
-import controle.calculoCusto;
 import modelo.Maquina;
 import modelo.Tarefa;
 
@@ -19,7 +19,7 @@ public class Main {
 		int numMaquinas = 10;
 		int numIndividuos = 100; //número de indivíduos
 		int numExec = 5; //Número de execuções
-		int numGer = 10; //número de gerações
+		int numGer = 50000; //número de gerações
 		int nGetMut = 10; //numero médio de genes mutados
 		int varMur = 10; //Tipo uma variância da mutação (n_mut = floor(rand*varMut)+qtdMut);
 		int qtdMut =  5; //% Percentual de indivíduos mutados
@@ -72,7 +72,7 @@ public class Main {
 		
 		//Função Objetivo 2: Cálculo do Custo
 		float[] custo = new float[numIndividuos];
-		calculoCusto calculoCusto = new calculoCusto();
+		CalculoCusto calculoCusto = new CalculoCusto();
 		custo = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_pop, matrizTarefaMaquina, maquina);
 		
 		//Classificação por níveis de não dominância
@@ -95,23 +95,25 @@ public class Main {
 			
 			
 			//População gerada pela mutação
-			pop_f = operadores.operadorMutacao(numIndividuos, numMaquinas, numTarefas, qtdMut, varMur,pop_f);
+			pop_f = operadores.operadorMutacao(numIndividuos, numMaquinas, numTarefas, qtdMut, varMur,pop_f);						
 			
 			//Sequenciamento da População de Filhos
 			int[][][] seq_Pop_filhos = new int[numIndividuos][numMaquinas][numTarefas];
 			seq_Pop_filhos = sequenciamento.sequenciamento_Inicial(numIndividuos, numMaquinas, numTarefas, pop_f, tarefa);
 			
+			//Inserir Busca Local após XX gerações, aumentando a popúlação em N soluções, o restamte continua da mesma maneira
+			
 			//Tenta encontrar uma melhor sequenciamento de tarefas dos filhos por busca aleatória
 			//VERIFICAR SE É NECESSÁRIO			
-			for (int i = 0; i<numIndividuos; i++) {
-				for (int j=0; j<numMaquinas;j++) {
-					int[]nova_seq = new int[numMaquinas];
-					nova_seq = sequenciamento.calculoMelhorSequenciamentoMaquina(numMaquinas, numIndividuos, numTarefas, seq_pop[i][j], tarefa, matrizTarefaMaquina, j, matrizSetup);										
-					for (int k=0; k<nova_seq.length; k++) {
-						seq_pop[i][j][k] = nova_seq[k];
-					}
-				}
-			}
+//			for (int i = 0; i<numIndividuos; i++) {
+//				for (int j=0; j<numMaquinas;j++) {
+//					int[]nova_seq = new int[numMaquinas];
+//					nova_seq = sequenciamento.calculoMelhorSequenciamentoMaquina(numMaquinas, numIndividuos, numTarefas, seq_pop[i][j], tarefa, matrizTarefaMaquina, j, matrizSetup);										
+//					for (int k=0; k<nova_seq.length; k++) {
+//						seq_pop[i][j][k] = nova_seq[k];
+//					}
+//				}
+//			}
 			//VERIFICAR SE É NECESSÁRIO
 			
 			//Cálculo makespan da população de filhos

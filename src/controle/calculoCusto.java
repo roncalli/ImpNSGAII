@@ -1,8 +1,9 @@
 package controle;
 
 import modelo.Maquina;
+import modelo.Tarefa;
 
-public class calculoCusto {
+public class CalculoCusto {
 	
 	public float[] calculoCusto (int numIndividuos, int numMaquinas, int [][][] seq_pop, int[][] matrizTarefaMaquina, Maquina[] maquina) {
 		float matrizCusto[][] = new float [numIndividuos][numMaquinas];
@@ -31,5 +32,17 @@ public class calculoCusto {
 		}		
 		return custo;
 	}
+	
+	public float calculoCustoSequencia (int[]seq_pop, Tarefa[] tarefa, int[][] matrizTarefaMaquina, int numMaquinas, Maquina[] maquina){		
+		float custo = 0;		
+		for (int j=0; j<numMaquinas; j++){
+			int cont=0;			
+			while (seq_pop[cont]!=-2) {
+				custo = custo + matrizTarefaMaquina[seq_pop[cont]][j]*maquina[j].getCusto();
+				cont++;				
+			}					
+		}
+		return custo;
+	}		
 
 }

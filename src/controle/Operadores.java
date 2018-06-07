@@ -136,8 +136,8 @@ public class Operadores {
 				distMultidao[j] = distMultidao[j] + (custo[j+1] - custo[j-1]);
 			}
 		}
-		distMultidao[0] = -1;
-		distMultidao[distMultidao.length-1] = -1;
+		distMultidao[0] = 10000;
+		distMultidao[distMultidao.length-1] = 10000;
 		return distMultidao;
 	}
 
