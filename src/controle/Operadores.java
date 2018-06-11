@@ -152,7 +152,7 @@ public class Operadores {
 		
 		
 		distMultidao[0][0] = -1;
-		distMultidao[distMultidao.length-1][0] = -1;
+		distMultidao[distMultidao.length-1][0] = -1;		
 		for (int i=0; i<posicao_nivel.length;i++){
 			distMultidao[i][1] = posicao_nivel[i];
 		}		

@@ -20,7 +20,7 @@ public class Main {
 		int numMaquinas = 10;
 		int numIndividuos = 100; //número de indivíduos
 		int numExec = 5; //Número de execuções
-		int numGer = 200000; //número de gerações		
+		int numGer = 50000; //número de gerações		
 		int nGetMut = 10; //numero médio de genes mutados
 		int varMur = 10; //Tipo uma variância da mutação (n_mut = floor(rand*varMut)+qtdMut);
 		int qtdMut =  5; //% Percentual de indivíduos mutados
@@ -161,10 +161,17 @@ public class Main {
 				//Cálculo de indivíduos de nível j				
 				int n_ind_nivel = 0; //número de individuos do nível X
 				//Calculando o número de indivíduos em um determinado nível
+				int maiorNivelDominancia = 0;
 				for (int cont = 0; cont< 2*numIndividuos; cont++) {
+					if (nivelDominancia[cont]>maiorNivelDominancia) {
+						maiorNivelDominancia = nivelDominancia[cont];
+					}
 					if (nivelDominancia[cont] == nivel) {
 						n_ind_nivel++;
 					}
+				}
+				if (nivel>maiorNivelDominancia) {
+					break;
 				}
 				
 				//Adicionando todos os indivíduos dos níveis mais baixos
@@ -221,22 +228,27 @@ public class Main {
 						}
 					}					
 					//Incluindo as soluções de fronteira encontradas na Distância de Multidão
+					int inseridos_borda = 0;
 					for (int cont = 0; cont<2; cont++) {
 						if (cont==0) {
 							for (int k =0; k<numTarefas; k++) {								
-								pop_linha[k][ind_vet] = pop_pai_filho[k][posicao_nivel[cont]];																
+								pop_linha[k][ind_vet] = pop_pai_filho[k][posicao_nivel[distMultidao.length-1]];								
 							}
+							inseridos_borda++;
 						}else { // if cont==1
 							for (int k =0; k<numTarefas; k++) {								
-								pop_linha[k][ind_vet] = pop_pai_filho[k][posicao_nivel[distMultidao.length-1]];																
+								pop_linha[k][ind_vet] = pop_pai_filho[k][posicao_nivel[distMultidao.length-2]];
 							}
+							inseridos_borda++;
 						}
-						ind_vet++;						
+						ind_vet++;	
+						if (ind_vet == 100) {//Apenas um indivíduo no nível escolhido							
+							break;
+						}
 					}
-					
 					int n = numIndividuos - j; //Número de indivíduos para completar a população tirando as duas soluções de borda incluidas
-					for (int cont = 2; cont<n; cont++) {
-						//INCLUIR OS INDIVIDUOS DAS EXTREMIDADES =-1
+					for (int cont = inseridos_borda; cont<n; cont++) {
+						//JÁ INCLUIDO OS INDIVIDUOS DAS EXTREMIDADES =-1
 						if (distMultidao[cont]!=-1) {
 							boolean solucaoJaIncluida = false;
 							if (cont>0){
@@ -247,26 +259,21 @@ public class Main {
 									pop_linha[k][ind_vet] = pop_pai_filho[k][posicao_nivel[cont]];																
 								}
 								ind_vet++;
-								if (cont+ind_vet >=100) {
+								if (ind_vet >=100) {									
 									break;
 								}
 							}
 						}
 					}					
 				}
+				//VERIFICAR
 				seq_pop_linha = sequenciamento.sequenciamento_Inicial(numIndividuos, numMaquinas, numTarefas, pop_linha, tarefa);
-				j+=n_ind_nivel;
+				//VERIFICAR
+				//j+=n_ind_nivel;
+				j = ind_vet;				
 				nivel++;								
-			}
-			j = 0;
-			ind_vet = numIndividuos - ((numIndividuos*qtdMaisDom)/100);
-			while(j<((numIndividuos*qtdMaisDom)/100)) {
-				for (int k =0; k<numTarefas; k++) {
-					pop_linha[k][ind_vet] = pop_pai_filho[k][maisDominados[j]];	
-				}				
-				j++;
-				ind_vet++;
-			}
+			}	
+	
 			//% Atribui a população e a sequência dos indivíduos da população
 			pop = pop_linha;
 			seq_pop = seq_pop_linha;
@@ -279,11 +286,9 @@ public class Main {
 			imprimir.imprimir(g, makespan, custo, seq_pop, numIndividuos, nivelDominancia, numMaquinas);
 			System.out.println("Teste");
 			//Incremanta contador de gerações
-			g++;
-		}
+			g++;		}
 		//Imprimindo resultados		
 		Impressaoes imprimir = new Impressaoes();
-		imprimir.imprimir(g, makespan, custo, seq_pop, numIndividuos, nivelDominancia,numMaquinas);
-		System.out.println("Teste");
+		imprimir.imprimir(g, makespan, custo, seq_pop, numIndividuos, nivelDominancia,numMaquinas);		
 	}
 }
