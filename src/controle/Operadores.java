@@ -33,15 +33,16 @@ public class Operadores {
 	}
 	
 	
-	public int[][] operadorCruzamento (int numTarefas, int numIndividuos, int[] resTorneio, int[][] pop){
+	public int[][][] operadorCruzamento (int numTarefas, int numIndividuos, int[] resTorneio, int[][][] seq_pop){
+		boolean sequenciaValida = validarSequencia(seq_pop, numIndividuos, numTarefas);
 		int n_corte = (int) Math.floor(Math.random()*6)+5; //Números de regiões de corte
 		int[] v_corte = new int[n_corte]; //Vetor dos pontos de corte
 		for (int i=0; i<n_corte; i++) {
 			v_corte[i] = (int) Math.floor(Math.random()*99);
 		}
 		Arrays.sort(v_corte);
-		int[][] pop_f = new int[numTarefas][numIndividuos];
-		
+		int[][][] seq_pop_f = new int[numIndividuos][1][numTarefas];
+		seq_pop_f = seq_pop;
 		//Cruzamento dos indivíduos selecionados
 		int cont = (int)Math.floor(numIndividuos/2);
 		for(int j=0; j<cont; j++) {
@@ -49,20 +50,17 @@ public class Operadores {
 			int cont_tarefa = 0; //Contador de Tarefa
 			int num_corte = 0;
 			//Realização do cruzamento com n pontos de corte
-			int op1 = (int) (Math.floor(Math.random()*100)); // Escolha aleatória dois individuos para o cruzamento
-			int op2 = (int) (Math.floor(Math.random()*100)); // Escolha aleatória dois individuos para o cruzamento			
-			while (op1 == op2) { // Garantir que op1 seja o mesmo individuo de op2
-				op2 = (int) (Math.floor(Math.random()*100));
-			}
-			int pai1 = resTorneio[op1];
-			int pai2 = resTorneio[op2];
-			while(cont_tarefa <numTarefas) {
+			int op1 = (int) (Math.floor(Math.random()*100)); // Escolha aleatória dois individuos para o cruzamento									
+			int pai = resTorneio[op1];
+			while(cont_tarefa <numTarefas-1) {
 				if(flag == 0) {
-					pop_f[cont_tarefa][(2*j)] = pop[cont_tarefa][pai1];
-					pop_f[cont_tarefa][(2*j+1)] = pop[cont_tarefa][pai2];
+					int aux = seq_pop[pai][0][cont_tarefa];
+					seq_pop_f[pai][0][cont_tarefa] = seq_pop[pai][0][cont_tarefa+1];
+					seq_pop_f[pai][0][cont_tarefa+1] = aux;
 				}else {
-					pop_f[cont_tarefa][(2*j)] = pop[cont_tarefa][pai2];
-					pop_f[cont_tarefa][(2*j+1)] = pop[cont_tarefa][pai1];
+					int aux = seq_pop[pai][0][cont_tarefa];
+					seq_pop_f[pai][0][cont_tarefa] = seq_pop[pai][0][cont_tarefa+1];
+					seq_pop_f[pai][0][cont_tarefa+1] = aux;
 				}
 				cont_tarefa++;
 				if (cont_tarefa <= num_corte) {
@@ -82,24 +80,28 @@ public class Operadores {
 					}
 				}
 			}
-		}		
-		return pop_f;
+		}	
+		sequenciaValida = validarSequencia(seq_pop_f, numIndividuos, numTarefas);
+		return seq_pop_f;
 	}
 	
-	public int [][] operadorMutacao(int numIndividuos, int numMaquinas, int numTarefas, int qtdMut, int varMur, int[][]pop_f){		
+	public int [][][] operadorMutacao(int numIndividuos, int numMaquinas, int numTarefas, int qtdMut, int varMur, int[][][]seq_pop_f){		
 		int pm = (int)(Math.floor(qtdMut*numIndividuos)/100); //Percentual de Mutação
 		int n_mut = (int) (Math.floor(Math.random()*varMur)+qtdMut); //Número de Genes Mutáveis
-		
+		boolean sequenciaValida = validarSequencia(seq_pop_f, numIndividuos, numTarefas);
 		//Selecionar individuos para mutação		
 		for (int i=0; i<pm; i++) {
 			int filho = (int) Math.floor(Math.random()*numIndividuos);
 			for (int j=0; j<n_mut; j++) {
-				int ind_Pop_Mut = (int)Math.floor(Math.random()*numTarefas);
-				int alt_Pop_Mut = (int) Math.floor(Math.random()*numMaquinas);
-				pop_f[ind_Pop_Mut][filho] = alt_Pop_Mut; 
+				int ind_Pop_Mut_t1 = (int)Math.floor(Math.random()*numTarefas);
+				int ind_Pop_Mut_t2 = (int)Math.floor(Math.random()*numTarefas);
+				int aux = seq_pop_f[filho][0][ind_Pop_Mut_t1];
+				seq_pop_f[filho][0][ind_Pop_Mut_t1] = seq_pop_f[filho][0][ind_Pop_Mut_t2];
+				seq_pop_f[filho][0][ind_Pop_Mut_t2] = aux;
 			}
 		}
-		return pop_f;
+		sequenciaValida = validarSequencia(seq_pop_f, numIndividuos, numTarefas);
+		return seq_pop_f;
 	}
 	
 	public float [][] calculoDistanciaMultidao(int [] makespan, int numFobj, int[] posicao_nivel) {
@@ -126,27 +128,6 @@ public class Operadores {
 						distMultidao[j][0] = distMultidao[j][0] + (makespan[j+1] - makespan[j-1]);
 					}
 				}
-//			}else if (w == 1){
-//				//Ordenando Custo
-//				for (int i = 0; i<custo.length; i++) {
-//					float aux = -1;
-//					int auxPos = -1;
-//					for (int j=i; j<custo.length; j++) {
-//						if (custo[j]<custo[i]) {
-//							aux = custo[i];
-//							auxPos = posicao_nivel[i];
-//							custo[i] = custo[j];
-//							posicao_nivel[i] = posicao_nivel[j];
-//							custo[j] = aux;
-//							posicao_nivel[j] = auxPos;
-//						}
-//					}
-//				}
-//				for(int j=1; j<custo.length-1; j++) {				
-//					if (custo[j+1]!=custo[j-1]) {
-//						distMultidao[j][0] = distMultidao[j][0] + (custo[j+1] - custo[j-1]);
-//					}
-//				}
 			}
 		}
 		
@@ -160,13 +141,35 @@ public class Operadores {
 		return distMultidao;
 	}
 	
-	public boolean verificaSolucoesIguais(int[] makespan_pai_filho, int posicao){
+	public boolean verificaSolucoesIguais(int[] makespan_pai_filho, int posicao, int[][][] seq_pop, int numTarefas){
 		for (int i=0; i<posicao; i++){
 			if((makespan_pai_filho[i] == makespan_pai_filho[posicao])){
+				for (int j=0; j<numTarefas; j++) {
+					if (seq_pop[i][0][j] != seq_pop[posicao][0][j]) {
+						return false;
+					}
+				}
 				return true;
 			}
 		}		
 		return false;
+	}
+	
+	public boolean validarSequencia(int [][][] seq_pop, int numIndividuos, int numTarefas) {
+		for (int i=0; i<numIndividuos; i++) {
+			int cont = 0;
+			for (int j=0; j<numTarefas; j++) {
+				if (seq_pop[i][0][j] == i) {
+					cont++;
+				}
+				if (cont>1) {
+					System.out.println("Sequencia Inválida!");
+					return false;
+				}
+			}
+		}
+		System.out.println("Sequencia Válida!");
+		return true;
 	}
 
 }

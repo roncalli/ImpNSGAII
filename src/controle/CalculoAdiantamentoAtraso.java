@@ -19,9 +19,9 @@ public class CalculoAdiantamentoAtraso {
 						break;
 					}
 					if (tempo<=entrega) {
-						aux_adiantamentoAtraso = aux_adiantamentoAtraso + matrizTarefaMaquina[seq_pop[i][j][cont]][j]*tarefa[seq_pop[i][j][cont]].getPenalidadeAdiantamento()*(entrega-tempo);						
+						aux_adiantamentoAtraso = aux_adiantamentoAtraso + tarefa[seq_pop[i][j][cont]].getPenalidadeAdiantamento()*(entrega-tempo);						
 					}else {
-						aux_adiantamentoAtraso = aux_adiantamentoAtraso + matrizTarefaMaquina[seq_pop[i][j][cont]][j]*tarefa[seq_pop[i][j][cont]].getPenalidadeAtraso()*(tempo-entrega);
+						aux_adiantamentoAtraso = aux_adiantamentoAtraso + tarefa[seq_pop[i][j][cont]].getPenalidadeAtraso()*(tempo-entrega);
 					}			
 					tempo = tempo+matrizTarefaMaquina[seq_pop[i][j][cont]][j];
 					cont++;

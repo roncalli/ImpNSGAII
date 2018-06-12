@@ -14,7 +14,7 @@ public class Impressaoes {
 		System.out.println();
 		System.out.println("Indivíduo     -     Makespan     -    Custo");
 		for (int i=0; i<numIndividuos; i++) {
-			if (nivelDominancia[i] == 1) {//Imprimindo apenas as soluções não dominadas
+			//if (nivelDominancia[i] == 1) {//Imprimindo apenas as soluções não dominadas
 				System.out.println(i+"          -          "+makespan[i]+"          -          ");
 				if (makespan[i]<melhorMakespan) {
 					melhorMakespan = makespan[i];
@@ -31,7 +31,7 @@ public class Impressaoes {
 //				if (custo[i]>piorCusto) {
 //					piorCusto= custo[i];
 //				}
-			}
+			//}
 		}
 		System.out.println();
 		System.out.println("Sequenciamento da solução com melhor makespan:");
