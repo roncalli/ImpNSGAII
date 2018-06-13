@@ -16,10 +16,10 @@ public class Main {
 	public static void main (String[] args) {		
 		LeiaCSV lerArquivos = new LeiaCSV();
 		//Parâmetros do sistema
-		//int numTarefas = 100;
-		int numTarefas = 200;
-		//int entrega = 454;
-		int entrega = 851;
+		int numTarefas = 100;
+		//int numTarefas = 200;
+		int entrega = 454;
+		//int entrega = 851;
 		long melhorMakespan = 1000000;
 		int qtdeGerSemMelhora = 0;
 		int gatilhoBuscaLocal = 10;
