@@ -26,9 +26,16 @@ public class Main {
 		boolean buscaLocal = false;
 		int numMaquinas = 1;
 		int numIndividuos = 100; //número de indivíduos
-		int numGer = 100000; //número de gerações		
+		
+		//int numGer = 10000; //número de gerações
+		int numGer = numTarefas*numIndividuos; //número de gerações	-para aumentar o numero de iterações de acordo com a quantidade de tarefas	
+		
 		int varMur = 15; //Tipo uma variância da mutação (n_mut = floor(rand*varMut)+qtdMut);
-		int qtdMut =  10; //% Percentual de indivíduos mutados
+		
+		//int qtdMut =  10; //% Percentual de indivíduos mutados
+		int qtdMut = varMur/(numTarefas/numIndividuos);//% Percentual de indivíduos mutados
+		
+		
 		Maquina maquina[] = new Maquina[numMaquinas];
 		Tarefa tarefa[] = new Tarefa[numTarefas];
 		int matrizTarefaMaquina[][] = new int[numTarefas][numMaquinas];
