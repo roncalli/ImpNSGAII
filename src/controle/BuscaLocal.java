@@ -8,79 +8,45 @@ import modelo.Maquina;
 import modelo.Tarefa;
 
 public class BuscaLocal {
-	public void buscaLocalN1N2(int [][] pop, int [][][] seq_pop, int numMaquinas, Maquina[] maquina, Tarefa[] tarefa, int[][] matrizTarefaMaquina, float[][][] matrizSetup, int individuo){
+	public int[][][] buscaLocal(int [][][] seq_pop, Tarefa[] tarefa, int[][] matrizTarefaMaquina, int individuo, int entrega, int numIndividuos){
 		//Verificar qual máquina possui o maior makespan
+		int [][][] seq = new int[numIndividuos][1][tarefa.length];
+		seq = seq_pop;
 		int contNaoMelhora = 0;
-		int maquinaMaiorMakespan = -1;
 		int maiorMakespan = 0;
-		CalculoAdiantamentoAtraso calculoMakespan = new CalculoAdiantamentoAtraso();
-		CalculoCusto calculoCusto = new CalculoCusto();
-		//Encontrar a máquina com maior makespan
-		for (int i=0; i<numMaquinas; i++) {			
-			int makespan = calculoMakespan.calculoAdiantamentoAtrasoSequencia(seq_pop[individuo][i], tarefa, matrizTarefaMaquina, i);
-			if (makespan>maiorMakespan) {
-				makespan = maiorMakespan;
-				maquinaMaiorMakespan = i;
-			}
-		}
-		boolean melhorou = true;
-		while (melhorou) {
-			//Gerar uma sequencia aleatória com a ordenação das máquinas
-			List<Integer> maquinas = new ArrayList<Integer>();			
-			for (int i=0; i<numMaquinas; i++) {
-				maquinas.add(i);
-			}
-			Collections.shuffle(maquinas);
-			int cont = 0;
-			if (maquinas.get(cont)!=maquinaMaiorMakespan) {
-				int contTarMaqMaior = 0;
-				if (maquinaMaiorMakespan !=-1) {
-					while (seq_pop[individuo][maquinaMaiorMakespan][contTarMaqMaior]!=-2) {
-						int contTarMaqSelcionada = 0;
-						while (seq_pop[individuo][maquinas.get(cont)][contTarMaqSelcionada]!=-2) {
-							//Troca de tarefas
-							int makespan_antes = calculoMakespan.calculoAdiantamentoAtrasoSequencia(seq_pop[individuo][maquinas.get(cont)], tarefa, matrizTarefaMaquina, numMaquinas);
-							float custo_antes = calculoCusto.calculoCustoSequencia(seq_pop[individuo][maquinas.get(cont)], tarefa, matrizTarefaMaquina, numMaquinas, maquina);
-							int aux = seq_pop[individuo][maquinaMaiorMakespan][contTarMaqMaior];
-							seq_pop[individuo][maquinaMaiorMakespan][contTarMaqMaior] = seq_pop[individuo][maquinas.get(cont)][contTarMaqSelcionada];
-							seq_pop[individuo][maquinas.get(cont)][contTarMaqSelcionada] = aux;
-							//Inserir Cálculo das funções objetivo
-							int makespan_apos = calculoMakespan.calculoAdiantamentoAtrasoSequencia(seq_pop[individuo][maquinas.get(cont)], tarefa, matrizTarefaMaquina, numMaquinas);
-							float custo_apos = calculoCusto.calculoCustoSequencia(seq_pop[individuo][maquinas.get(cont)], tarefa, matrizTarefaMaquina, numMaquinas, maquina);
-							if (makespan_apos<makespan_antes) {
-								melhorou = true;
-								int aux_pop = maquinaMaiorMakespan;
-								pop[seq_pop[individuo][maquinaMaiorMakespan][contTarMaqMaior]][individuo] = maquinas.get(cont);
-								pop[seq_pop[individuo][maquinas.get(cont)][contTarMaqSelcionada]][individuo] = maquinaMaiorMakespan;
-								contNaoMelhora = 0;
-							}else if ((makespan_antes == makespan_apos)&&(custo_apos<custo_antes)) {
-								melhorou = true;	
-								contNaoMelhora = 0;
-							}else {
-								//Desfaz a troca de tarefas nas máquinas
-								aux = seq_pop[individuo][maquinaMaiorMakespan][contTarMaqMaior];
-								seq_pop[individuo][maquinaMaiorMakespan][contTarMaqMaior] = seq_pop[individuo][maquinas.get(cont)][contTarMaqSelcionada];
-								seq_pop[individuo][maquinas.get(cont)][contTarMaqSelcionada] = aux;
-								contNaoMelhora++;
-								if (contNaoMelhora == 10) {
-									melhorou=false;
-									break;
-								}
-							}	
-							if (contNaoMelhora == 10) {
-								break;
-							}
-							contTarMaqSelcionada++;
-							//Caso o makespan seja igual se calcula o custo						
-						}
-						if (contNaoMelhora == 10) {
-							break;
-						}
-						contTarMaqMaior++;
-					}
-				}
-			}
-			cont++;
+		int [] seq_pop_anterior = new int [tarefa.length];
+		for (int i=0; i<tarefa.length;i++) {
+			seq_pop_anterior[i] = seq[individuo][0][i];
 		}		
+		//Encontrar uma troca de tarefa que melhore a melhor solução
+		int numTarefas = tarefa.length;
+		boolean melhorou = false;		
+		while (!melhorou) {
+			int posicao1 = (int) (Math.floor(Math.random()*numTarefas));
+			int posicao2 = posicao1;		
+			while (posicao1 == posicao2) {
+				posicao2 = (int) (Math.floor(Math.random()*numTarefas));
+			}
+			
+			CalculoAdiantamentoAtraso calculoAdiantamentoAtraso = new CalculoAdiantamentoAtraso();
+			long makespanAnterior = calculoAdiantamentoAtraso.calculoAdiantamentoAtrasoSequencia(seq[individuo][0], tarefa, matrizTarefaMaquina, 1, entrega);
+			//Efetuando a troca de Tarefas
+			int aux = seq[individuo][0][posicao1];
+			seq[individuo][0][posicao1] = seq[individuo][0][posicao2];
+			seq[individuo][0][posicao2] = aux;
+			long makespanPosterior = calculoAdiantamentoAtraso.calculoAdiantamentoAtrasoSequencia(seq[individuo][0], tarefa, matrizTarefaMaquina, 1, entrega);
+			if (makespanPosterior<makespanAnterior) {
+				melhorou = true;
+			}else {
+				for (int i=0; i<tarefa.length;i++) {
+					seq[individuo][0][i] = seq_pop_anterior[i];
+				}				
+				contNaoMelhora++;
+			}
+			if (contNaoMelhora == 100) {
+				break;
+			}					
+		}
+		return seq;
 	}
 }

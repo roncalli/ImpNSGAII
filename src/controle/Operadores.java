@@ -85,9 +85,14 @@ public class Operadores {
 		return seq_pop_f;
 	}
 	
-	public int [][][] operadorMutacao(int numIndividuos, int numMaquinas, int numTarefas, int qtdMut, int varMur, int[][][]seq_pop_f){		
+	public int [][][] operadorMutacao(int numIndividuos, int numMaquinas, int numTarefas, int qtdMut, int varMur, int[][][]seq_pop_f){
+		//Luiz
+		double randomVarMu=Math.floor(Math.random()*varMur);			
+		double relacaoPesoQtdMuttarefasMaquina= (qtdMut*(Double.parseDouble(numMaquinas+"")/numTarefas));				
+		int n_mut = ((int) (randomVarMu*relacaoPesoQtdMuttarefasMaquina));//Número de Genes Mutáveis
+		//Luiz
 		int pm = (int)(Math.floor(qtdMut*numIndividuos)/100); //Percentual de Mutação
-		int n_mut = (int) (Math.floor(Math.random()*varMur)+qtdMut); //Número de Genes Mutáveis
+		//int n_mut = (int) (Math.floor(Math.random()*varMur)+qtdMut); //Número de Genes Mutáveis
 		boolean sequenciaValida = validarSequencia(seq_pop_f, numIndividuos, numTarefas);
 		//Selecionar individuos para mutação		
 		for (int i=0; i<pm; i++) {
@@ -104,33 +109,28 @@ public class Operadores {
 		return seq_pop_f;
 	}
 	
-	public float [][] calculoDistanciaMultidao(int [] makespan, int numFobj, int[] posicao_nivel) {
-		float [][] distMultidao = new float[makespan.length][2];
-		for (int w = 0; w<numFobj; w++){
-			if (w == 0){
-				//Ordenando Makespan			
-				for (int i = 0; i<makespan.length; i++) {
-					int aux = -1;
-					int auxPos = -1;
-					for (int j=i; j<makespan.length; j++) {
-						if (makespan[j]<makespan[i]) {
-							aux = makespan[i];
-							auxPos = posicao_nivel[i];
-							makespan[i] = makespan[j];
-							posicao_nivel[i] = posicao_nivel[j];
-							makespan[j] = aux;
-							posicao_nivel[j] = auxPos;
-						}
-					}
-				}
-				for(int j=1; j<makespan.length-1; j++) {				
-					if (makespan[j+1]!=makespan[j-1]) {
-						distMultidao[j][0] = distMultidao[j][0] + (makespan[j+1] - makespan[j-1]);
-					}
+	public float [][] calculoDistanciaMultidao(long [] makespan, int[] posicao_nivel) {
+		float [][] distMultidao = new float[makespan.length][2];			
+		//Ordenando Makespan			
+		for (int i = 0; i<makespan.length; i++) {
+			long aux = -1;
+			int auxPos = -1;
+			for (int j=i; j<makespan.length; j++) {
+				if (makespan[j]<makespan[i]) {
+					aux = makespan[i];
+					auxPos = posicao_nivel[i];
+					makespan[i] = makespan[j];
+					posicao_nivel[i] = posicao_nivel[j];
+					makespan[j] = aux;
+					posicao_nivel[j] = auxPos;
 				}
 			}
 		}
-		
+		for(int j=1; j<makespan.length-1; j++) {				
+			if (makespan[j+1]!=makespan[j-1]) {
+				distMultidao[j][0] = distMultidao[j][0] + (makespan[j+1] - makespan[j-1]);
+			}
+		}			
 		
 		distMultidao[0][0] = -1;
 		distMultidao[distMultidao.length-1][0] = -1;
@@ -141,14 +141,14 @@ public class Operadores {
 		return distMultidao;
 	}
 	
-	public boolean verificaSolucoesIguais(int[] makespan_pai_filho, int posicao, int[][][] seq_pop, int numTarefas){
+	public boolean verificaSolucoesIguais(long[] makespan_pai_filho, int posicao, int[][][] seq_pop, int numTarefas){
 		for (int i=0; i<posicao; i++){
 			if((makespan_pai_filho[i] == makespan_pai_filho[posicao])){
-				for (int j=0; j<numTarefas; j++) {
-					if (seq_pop[i][0][j] != seq_pop[posicao][0][j]) {
-						return false;
-					}
-				}
+//				for (int j=0; j<numTarefas; j++) {
+//					if (seq_pop[i][0][j] != seq_pop[posicao][0][j]) {
+//						return false;
+//					}
+//				}
 				return true;
 			}
 		}		
@@ -168,7 +168,7 @@ public class Operadores {
 				}
 			}
 		}
-		System.out.println("Sequencia Válida!");
+		//System.out.println("Sequencia Válida!");
 		return true;
 	}
 

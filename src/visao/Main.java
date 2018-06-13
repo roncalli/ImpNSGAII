@@ -16,11 +16,17 @@ public class Main {
 	public static void main (String[] args) {		
 		LeiaCSV lerArquivos = new LeiaCSV();
 		//Parâmetros do sistema
-		int numTarefas = 100;
-		int entrega = 454;
+		//int numTarefas = 100;
+		int numTarefas = 200;
+		//int entrega = 454;
+		int entrega = 851;
+		long melhorMakespan = 1000000;
+		int qtdeGerSemMelhora = 0;
+		int gatilhoBuscaLocal = 10;
+		boolean buscaLocal = false;
 		int numMaquinas = 1;
 		int numIndividuos = 100; //número de indivíduos
-		int numGer = 1000000; //número de gerações		
+		int numGer = 100000; //número de gerações		
 		int varMur = 15; //Tipo uma variância da mutação (n_mut = floor(rand*varMut)+qtdMut);
 		int qtdMut =  10; //% Percentual de indivíduos mutados
 		Maquina maquina[] = new Maquina[numMaquinas];
@@ -55,7 +61,7 @@ public class Main {
 		
 		// Cálculos das funções objetivo
 		// Função Objetivo 1: Cálculo do makespan
-		int [] makespan = new int [numIndividuos];
+		long [] makespan = new long [numIndividuos];
 		CalculoAdiantamentoAtraso calculoMakespan = new CalculoAdiantamentoAtraso();
 		makespan = calculoMakespan.calculoAdiantamentoAtraso(numIndividuos, numMaquinas, seq_pop, tarefa, matrizTarefaMaquina,entrega);
 		
@@ -81,10 +87,27 @@ public class Main {
 			//População gerada pela mutação
 			seq_pop_f = operadores.operadorMutacao(numIndividuos, numMaquinas, numTarefas, qtdMut, varMur,seq_pop_f);						
 			
-			//Cálculo makespan da população de filhos
-			int [] makespan_f = new int [numIndividuos];
+			//Cálculo Mekespan da população de filhos
+			long [] makespan_f = new long [numIndividuos];
 			makespan_f = calculoMakespan.calculoAdiantamentoAtraso(numIndividuos, numMaquinas, seq_pop_f, tarefa, matrizTarefaMaquina,entrega);
 			
+//			//INSERIR A BUSCA LOCAL//
+			if (buscaLocal) {
+				//Verificando qual indivisuo possui o menor makespan
+				int individuo = 0;
+				long makespanIndividuo = 1000000;
+				for (int w=0; w<numIndividuos; w++) {
+					if (makespan_f[w]<makespanIndividuo) {
+						makespanIndividuo = makespan_f[w];
+						individuo = w;
+					}
+				}
+				BuscaLocal busca = new BuscaLocal();
+				seq_pop_f = busca.buscaLocal(seq_pop_f, tarefa, matrizTarefaMaquina, individuo, entrega, numIndividuos);
+				buscaLocal = false;
+			}
+//			//INSERIR A BUSCA LOCAL//
+			makespan_f = calculoMakespan.calculoAdiantamentoAtraso(numIndividuos, numMaquinas, seq_pop_f, tarefa, matrizTarefaMaquina,entrega);
 			//Concatenando Pais e Filhos
 			int[][][] seq_pop_pai_filho = new int[2*numIndividuos][numMaquinas][numTarefas];
 			for (int i=0; i<numTarefas; i++) {			
@@ -97,7 +120,7 @@ public class Main {
 				}
 			}
 					
-			int[] makespan_pai_filho = new int[2*numIndividuos];
+			long[] makespan_pai_filho = new long[2*numIndividuos];
 			for (int i=0; i<2*numIndividuos; i++) {
 				if (i<numIndividuos) {
 					makespan_pai_filho[i] = makespan[i];
@@ -154,8 +177,7 @@ public class Main {
 					}					
 				}else {	//CÁLCULO DA DISTÂNCIA DE MULTIDÃO
 					int [] posicao_nivel = new int[n_ind_nivel];
-					int [] aux_mksp = new int[n_ind_nivel];
-					float [] aux_custo = new float[n_ind_nivel];
+					long [] aux_mksp = new long[n_ind_nivel];
 					int pos = 0;
 					for (int cont = 0; cont< 2*numIndividuos; cont++) {
 						if (nivelDominancia[cont] == nivel) {
@@ -166,7 +188,7 @@ public class Main {
 					}
 					float [][] auxDist = new float[n_ind_nivel][2];
 					float [] distMultidao = new float[n_ind_nivel];
-					auxDist = operadores.calculoDistanciaMultidao(aux_mksp, 2,posicao_nivel);
+					auxDist = operadores.calculoDistanciaMultidao(aux_mksp, posicao_nivel);
 					for (int w=0; w<n_ind_nivel; w++){
 						distMultidao[w] = auxDist[w][0];
 						posicao_nivel[w] = (int)auxDist[w][1];
@@ -227,23 +249,25 @@ public class Main {
 				}
 				j = ind_vet;				
 				nivel++;								
-			}	
+			}							
 			//% Atribui a população e a sequência dos indivíduos da população			
-			seq_pop = seq_pop_linha;
-			
-			makespan = calculoMakespan.calculoAdiantamentoAtraso(numIndividuos, numMaquinas, seq_pop, tarefa, matrizTarefaMaquina,entrega);
-			//custo = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_pop, matrizTarefaMaquina, maquina);
-			
+			seq_pop = seq_pop_linha;			
+			makespan = calculoMakespan.calculoAdiantamentoAtraso(numIndividuos, numMaquinas, seq_pop, tarefa, matrizTarefaMaquina,entrega);			
 			nivelDominancia = relacoesDominancia.calculaNivelDominancia(numIndividuos, makespan);			
-			Impressaoes imprimir = new Impressaoes();
-			imprimir.imprimir(g, makespan, seq_pop, numIndividuos, nivelDominancia, numMaquinas, numTarefas);
-			System.out.println("Teste");
+			Impressaoes imprimir = new Impressaoes();			
+			long melhorMakespanGeracao = imprimir.imprimir(g, makespan, seq_pop, numIndividuos, nivelDominancia, numMaquinas, numTarefas);
+			if (melhorMakespanGeracao<melhorMakespan) {
+				melhorMakespan = melhorMakespanGeracao;
+				qtdeGerSemMelhora = 0;
+			}else {
+				qtdeGerSemMelhora++;
+			}
+			if (qtdeGerSemMelhora == gatilhoBuscaLocal) {
+				buscaLocal = true;
+				qtdeGerSemMelhora = 0;
+			}			
 			//Incremanta contador de gerações
 			g++;
-		}
-		//Imprimindo resultados		
-		Impressaoes imprimir = new Impressaoes();
-		imprimir.imprimir(g, makespan, seq_pop, numIndividuos, nivelDominancia,numMaquinas, numTarefas);
-		System.out.println("Teste");
+		}	
 	}
 }

@@ -20,7 +20,8 @@ public class LeiaCSV {
 	public void popularTabelas(Tarefa[] tarefas, Maquina[] maquinas, int[][] matrizTarefaMaquina, int numMaquinas) {
 
 		//String arquivoTarefa = "D:/FELIPE/TabelaTarefa.csv";
-		String arquivoTarefaMaquina = "D:/FELIPE/sch100k1.csv";		
+		//String arquivoTarefaMaquina = "D:/FELIPE/sch100k1.csv";		
+		String arquivoTarefaMaquina = "D:/FELIPE/sch200k1.csv";
 		//String arquivoMaquina = "D:/FELIPE/TabelaTarefaMaquina.csv";
 		//String arquivoMaquina = "D:/FELIPE/Maquinas.csv";
 		//String arquivoSetup = "D:/FELIPE/TabelaSetupMaquina";

@@ -14,7 +14,7 @@ public class RelacoesDominancia {
 	}
 	
 	
-	public int [] calculaNivelDominancia (int numIndividuos, int[] makespan) {
+	public int [] calculaNivelDominancia (int numIndividuos, long[] makespan) {
 		int [] nivelDominancia = new int [numIndividuos];
 		int [] solucoes = new int[numIndividuos];//0 individuo ainda não visitado, 1 individuo já visitado
 		int k = 0; //Nível de dominância
