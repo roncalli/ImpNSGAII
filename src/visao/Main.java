@@ -33,7 +33,11 @@ public class Main {
 		int varMur = 15; //Tipo uma variância da mutação (n_mut = floor(rand*varMut)+qtdMut);
 		
 		//int qtdMut =  10; //% Percentual de indivíduos mutados
-		int qtdMut = varMur/(numTarefas/numIndividuos);//% Percentual de indivíduos mutados
+		int qtdMut =10;
+		
+		if(numIndividuos<=numTarefas) {
+			qtdMut= (int) (varMur/(Double.parseDouble(numTarefas+"")/numIndividuos));//% Percentual de indivíduos mutados
+		}
 		
 		
 		Maquina maquina[] = new Maquina[numMaquinas];
@@ -85,7 +89,7 @@ public class Main {
 			//Seleciona os pais utilizando torneio de multidão
 			int [] resTorneio = new int[numIndividuos];
 			Operadores operadores = new Operadores();
-			resTorneio = operadores.operadorTorneio(numIndividuos, nivelDominancia);
+			resTorneio = operadores.operadorTorneio1(numIndividuos, nivelDominancia);
 			
 			//População gerada pelo cruzamento
 			int[][][] seq_pop_f = new int[numIndividuos][numMaquinas][numTarefas];

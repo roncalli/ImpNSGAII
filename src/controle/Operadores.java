@@ -1,6 +1,7 @@
 package controle;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class Operadores {
 	
@@ -29,6 +30,82 @@ public class Operadores {
 			}
 			
 		}
+		return vet_pais;
+	}
+	
+	public int[] operadorTorneio1(int numIndividuos, int[] nivelDominancia) {
+		int[] vet_pais = new int[numIndividuos];
+		int x=0;
+		HashMap<String,String> possui= new HashMap<String,String>();
+		
+		while(x<numIndividuos) {
+			
+			float k = (float)0.75; // Porcentagem de escolher o melhor
+			float r = (float)Math.random();
+			int op1 = (int) (Math.floor(Math.random()*100)); // Escolha aleatória dois individuos para o torneio
+			int op2 = (int) (Math.floor(Math.random()*100)); // Escolha aleatória dois individuos para o torneio			
+			while (op1 == op2) { // Garantir que op1 seja o mesmo individuo de op2
+				op2 = (int) (Math.floor(Math.random()*100));
+			}
+			//evita geracao de itens que ja foram gerados
+			while(possui.containsKey(op1+"")) {
+				op1 = (int) (Math.floor(Math.random()*100));
+			}
+			
+			//evita geracao de itens que ja foram gerados			
+			while(possui.containsKey(op2+"")) {
+				op2 = (int) (Math.floor(Math.random()*100));
+			}
+			
+			if (r<k) { //Escolhe o melhor
+				if (nivelDominancia[op1]<nivelDominancia[op2]) {
+					vet_pais[x] = op1;
+					possui.put(op1+"", op1+"");
+					x++;
+				}else {
+					vet_pais[x] = op2;
+					possui.put(op2+"", op2+"");
+					x++;
+				}
+			}else { //Escolhe o pior
+				if (nivelDominancia[op1]>nivelDominancia[op2]) {
+					vet_pais[x] = op1;
+					possui.put(op1+"", op1+"");
+					x++;
+				}else {
+					vet_pais[x] = op2;
+					possui.put(op2+"", op2+"");
+					x++;
+				}
+			}
+			
+			
+		}
+		
+		
+	/*	for (int i=0; i<numIndividuos; i++) {
+			float k = (float)0.75; // Porcentagem de escolher o melhor
+			float r = (float)Math.random();
+			int op1 = (int) (Math.floor(Math.random()*100)); // Escolha aleatória dois individuos para o torneio
+			int op2 = (int) (Math.floor(Math.random()*100)); // Escolha aleatória dois individuos para o torneio			
+			while (op1 == op2) { // Garantir que op1 seja o mesmo individuo de op2
+				op2 = (int) (Math.floor(Math.random()*100));
+			}
+			if (r<k) { //Escolhe o melhor
+				if (nivelDominancia[op1]<nivelDominancia[op2]) {
+					vet_pais[i] = op1;
+				}else {
+					vet_pais[i] = op2;
+				}
+			}else { //Escolhe o pior
+				if (nivelDominancia[op1]>nivelDominancia[op2]) {
+					vet_pais[i] = op1;
+				}else {
+					vet_pais[i] = op2;
+				}
+			}
+			
+		}*/
 		return vet_pais;
 	}
 	
@@ -143,7 +220,7 @@ public class Operadores {
 	
 	public boolean verificaSolucoesIguais(long[] makespan_pai_filho, int posicao, int[][][] seq_pop, int numTarefas){
 		for (int i=0; i<posicao; i++){
-			if((makespan_pai_filho[i] == makespan_pai_filho[posicao])){
+			if(i!=posicao&&(makespan_pai_filho[i] == makespan_pai_filho[posicao])){
 //				for (int j=0; j<numTarefas; j++) {
 //					if (seq_pop[i][0][j] != seq_pop[posicao][0][j]) {
 //						return false;
