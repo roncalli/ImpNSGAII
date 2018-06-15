@@ -20,14 +20,14 @@ public class Main {
 		//int numTarefas = 200;
 		int entrega = 454;
 		//int entrega = 851;
-		long melhorMakespan = 1000000;
+		long melhoratrasoAdiantamento = 1000000;
 		int qtdeGerSemMelhora = 0;
 		int gatilhoBuscaLocal = 10;
 		boolean buscaLocal = false;
 		int numMaquinas = 1;
 		int numIndividuos = 100; //número de indivíduos
 		
-		//int numGer = 10000; //número de gerações
+		//int numGer = 1000; //número de gerações
 		int numGer = numTarefas*numIndividuos; //número de gerações	-para aumentar o numero de iterações de acordo com a quantidade de tarefas	
 		
 		int varMur = 15; //Tipo uma variância da mutação (n_mut = floor(rand*varMut)+qtdMut);
@@ -71,21 +71,24 @@ public class Main {
 		
 		
 		// Cálculos das funções objetivo
-		// Função Objetivo 1: Cálculo do makespan
-		long [] makespan = new long [numIndividuos];
-		CalculoAdiantamentoAtraso calculoMakespan = new CalculoAdiantamentoAtraso();
-		makespan = calculoMakespan.calculoAdiantamentoAtraso(numIndividuos, numMaquinas, seq_pop, tarefa, matrizTarefaMaquina,entrega);
+		// Função Objetivo 1: Cálculo do atrasoAdiantamento
+		long [] atrasoAdiantamento = new long [numIndividuos];
+		CalculoAdiantamentoAtraso calculoatrasoAdiantamento = new CalculoAdiantamentoAtraso();
+		atrasoAdiantamento = calculoatrasoAdiantamento.calculoAdiantamentoAtraso(numIndividuos, numMaquinas, seq_pop, tarefa, matrizTarefaMaquina,entrega);
 		
 		
 		//Classificação por níveis de não dominância
 		int[] nivelDominancia = new int[numIndividuos];
 		RelacoesDominancia relacoesDominancia = new RelacoesDominancia();
-		nivelDominancia = relacoesDominancia.calculaNivelDominancia(numIndividuos, makespan);
+		nivelDominancia = relacoesDominancia.calculaNivelDominancia(numIndividuos, atrasoAdiantamento);
 		
 		int g = 0; // geração
 		// Imprimindo Primeira Geração
 						
-		while(g<numGer) {
+		//Rodando com a sequencia inicial gerada pelo GRASP
+		lerArquivos.popularSequenciaInicial(seq_pop,numTarefas);
+		
+		while(g<numGer) {			
 			//Seleciona os pais utilizando torneio de multidão
 			int [] resTorneio = new int[numIndividuos];
 			Operadores operadores = new Operadores();
@@ -99,17 +102,17 @@ public class Main {
 			seq_pop_f = operadores.operadorMutacao(numIndividuos, numMaquinas, numTarefas, qtdMut, varMur,seq_pop_f);						
 			
 			//Cálculo Mekespan da população de filhos
-			long [] makespan_f = new long [numIndividuos];
-			makespan_f = calculoMakespan.calculoAdiantamentoAtraso(numIndividuos, numMaquinas, seq_pop_f, tarefa, matrizTarefaMaquina,entrega);
+			long [] atrasoAdiantamento_f = new long [numIndividuos];
+			atrasoAdiantamento_f = calculoatrasoAdiantamento.calculoAdiantamentoAtraso(numIndividuos, numMaquinas, seq_pop_f, tarefa, matrizTarefaMaquina,entrega);
 			
 //			//INSERIR A BUSCA LOCAL//
 			if (buscaLocal) {
-				//Verificando qual indivisuo possui o menor makespan
+				//Verificando qual indivisuo possui o menor atrasoAdiantamento
 				int individuo = 0;
-				long makespanIndividuo = 1000000;
+				long atrasoAdiantamentoIndividuo = 1000000;
 				for (int w=0; w<numIndividuos; w++) {
-					if (makespan_f[w]<makespanIndividuo) {
-						makespanIndividuo = makespan_f[w];
+					if (atrasoAdiantamento_f[w]<atrasoAdiantamentoIndividuo) {
+						atrasoAdiantamentoIndividuo = atrasoAdiantamento_f[w];
 						individuo = w;
 					}
 				}
@@ -118,7 +121,7 @@ public class Main {
 				buscaLocal = false;
 			}
 //			//INSERIR A BUSCA LOCAL//
-			makespan_f = calculoMakespan.calculoAdiantamentoAtraso(numIndividuos, numMaquinas, seq_pop_f, tarefa, matrizTarefaMaquina,entrega);
+			atrasoAdiantamento_f = calculoatrasoAdiantamento.calculoAdiantamentoAtraso(numIndividuos, numMaquinas, seq_pop_f, tarefa, matrizTarefaMaquina,entrega);
 			//Concatenando Pais e Filhos
 			int[][][] seq_pop_pai_filho = new int[2*numIndividuos][numMaquinas][numTarefas];
 			for (int i=0; i<numTarefas; i++) {			
@@ -131,19 +134,19 @@ public class Main {
 				}
 			}
 					
-			long[] makespan_pai_filho = new long[2*numIndividuos];
+			long[] atrasoAdiantamento_pai_filho = new long[2*numIndividuos];
 			for (int i=0; i<2*numIndividuos; i++) {
 				if (i<numIndividuos) {
-					makespan_pai_filho[i] = makespan[i];
+					atrasoAdiantamento_pai_filho[i] = atrasoAdiantamento[i];
 				}else {
-					makespan_pai_filho[i] = makespan_f[i-100];
+					atrasoAdiantamento_pai_filho[i] = atrasoAdiantamento_f[i-100];
 				}
 			}
 			
 				
 			//Ranquamento de não dominância dos 2n indivíduos
 			//nível de não dominância
-			nivelDominancia = relacoesDominancia.calculaNivelDominancia((2*numIndividuos), makespan_pai_filho);
+			nivelDominancia = relacoesDominancia.calculaNivelDominancia((2*numIndividuos), atrasoAdiantamento_pai_filho);
 			
 			//Criando a nova população
 			int[][][] seq_pop_linha = new int[numIndividuos][numMaquinas][numTarefas]; //Nova população			
@@ -173,7 +176,7 @@ public class Main {
 						if (nivelDominancia[cont]==nivel) {
 							boolean solucaoJaIncluida = false;
 							if (cont>0){
-								solucaoJaIncluida = operadores.verificaSolucoesIguais(makespan_pai_filho, cont, seq_pop_pai_filho, numTarefas);
+								solucaoJaIncluida = operadores.verificaSolucoesIguais(atrasoAdiantamento_pai_filho, cont, seq_pop_pai_filho, numTarefas);
 								solucaoJaIncluida = false;
 							}
 							if (!solucaoJaIncluida){
@@ -193,7 +196,7 @@ public class Main {
 					for (int cont = 0; cont< 2*numIndividuos; cont++) {
 						if (nivelDominancia[cont] == nivel) {
 							posicao_nivel[pos] = cont;
-							aux_mksp[pos] = makespan_pai_filho[cont];							
+							aux_mksp[pos] = atrasoAdiantamento_pai_filho[cont];							
 							pos++;
 						}
 					}
@@ -244,7 +247,7 @@ public class Main {
 						if (distMultidao[cont]!=-1) {
 							boolean solucaoJaIncluida = false;
 							if (cont>0){
-								solucaoJaIncluida = operadores.verificaSolucoesIguais(makespan_pai_filho, cont, seq_pop_pai_filho, numTarefas);
+								solucaoJaIncluida = operadores.verificaSolucoesIguais(atrasoAdiantamento_pai_filho, cont, seq_pop_pai_filho, numTarefas);
 							}
 							if (!solucaoJaIncluida){
 								for (int k =0; k<numTarefas; k++) {								
@@ -263,12 +266,12 @@ public class Main {
 			}							
 			//% Atribui a população e a sequência dos indivíduos da população			
 			seq_pop = seq_pop_linha;			
-			makespan = calculoMakespan.calculoAdiantamentoAtraso(numIndividuos, numMaquinas, seq_pop, tarefa, matrizTarefaMaquina,entrega);			
-			nivelDominancia = relacoesDominancia.calculaNivelDominancia(numIndividuos, makespan);			
+			atrasoAdiantamento = calculoatrasoAdiantamento.calculoAdiantamentoAtraso(numIndividuos, numMaquinas, seq_pop, tarefa, matrizTarefaMaquina,entrega);			
+			nivelDominancia = relacoesDominancia.calculaNivelDominancia(numIndividuos, atrasoAdiantamento);			
 			Impressaoes imprimir = new Impressaoes();			
-			long melhorMakespanGeracao = imprimir.imprimir(g, makespan, seq_pop, numIndividuos, nivelDominancia, numMaquinas, numTarefas);
-			if (melhorMakespanGeracao<melhorMakespan) {
-				melhorMakespan = melhorMakespanGeracao;
+			long melhoratrasoAdiantamentoGeracao = imprimir.imprimir(g, atrasoAdiantamento, seq_pop, numIndividuos, nivelDominancia, numMaquinas, numTarefas);
+			if (melhoratrasoAdiantamentoGeracao<melhoratrasoAdiantamento) {
+				melhoratrasoAdiantamento = melhoratrasoAdiantamentoGeracao;
 				qtdeGerSemMelhora = 0;
 			}else {
 				qtdeGerSemMelhora++;
