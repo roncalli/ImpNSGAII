@@ -43,6 +43,20 @@ public class CalculoCusto {
 			}					
 		}
 		return custo;
-	}		
+	}
+	
+	public float calculoCustoSequencia (int[][]seq_pop, Tarefa[] tarefa, int[][] matrizTarefaMaquina, int numMaquinas, Maquina[] maquina){
+		float custo = 0;
+		for (int i=0; i<numMaquinas; i++){
+			for (int j=0; j<tarefa.length; j++){
+				if (seq_pop[i][j]!=-2){
+					 custo = custo + matrizTarefaMaquina[seq_pop[i][j]][i]*maquina[i].getCusto();
+				}else{
+					break;
+				}
+			}
+		}
+		return custo;
+	}
 
 }

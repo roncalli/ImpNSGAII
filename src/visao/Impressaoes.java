@@ -2,7 +2,7 @@ package visao;
 
 public class Impressaoes {
 
-	public void imprimir(int geracao,int[] makespan, float[]custo, int[][][]seq_pop, int numIndividuos, int[] nivelDominancia, int numMaquinas) {
+	public int imprimir(int geracao,int[] makespan, float[]custo, int[][][]seq_pop, int numIndividuos, int[] nivelDominancia, int numMaquinas) {
 		int piorMakespan = 0;		
 		int melhorMakespan = 10000;
 		int ind_mm= 0 ;
@@ -69,7 +69,7 @@ public class Impressaoes {
 		System.out.println("----------------------------------------------------------------------");
 		System.out.println();
 		System.out.println();
-		
+		return melhorMakespan;
 	}
 	
 	public void imprimir(int geracao,int[] makespan, float[]custo, int[][][]seq_pop, int numIndividuos) {

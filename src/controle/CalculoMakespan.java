@@ -61,4 +61,25 @@ public class CalculoMakespan {
 		}
 		return makespan;
 	}		
+	
+	public int calculoMakespanSequencia (int[][]seq_pop, Tarefa[] tarefa, int[][] matrizTarefaMaquina, int numMaquinas, float[][][] matrizSetup){
+		int valorMakespan = 100000;
+		int makespan = 0;
+		for (int i=0; i<numMaquinas; i++){
+			makespan = 0;
+			for (int j=0; j<tarefa.length; j++){
+				if (seq_pop[i][j+1]!=-2){
+					 makespan = makespan + matrizTarefaMaquina[seq_pop[i][j]][i] + (int)matrizSetup[i][seq_pop[i][j]][seq_pop[i][j+1]];
+				}else if (seq_pop[i][j]!=-2){
+					makespan = makespan + matrizTarefaMaquina[seq_pop[i][j]][i];
+				}else{
+					break;
+				}
+			}
+			if (makespan<valorMakespan){
+				valorMakespan = makespan;
+			}
+		}
+		return makespan;
+	}
 }

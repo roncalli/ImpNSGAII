@@ -86,9 +86,16 @@ public class Operadores {
 		return pop_f;
 	}
 	
-	public int [][] operadorMutacao(int numIndividuos, int numMaquinas, int numTarefas, int qtdMut, int varMur, int[][]pop_f){		
+	public int [][] operadorMutacao(int numIndividuos, int numMaquinas, int numTarefas, int qtdMut, int varMur, int[][]pop_f){
+		
 		int pm = (int)(Math.floor(qtdMut*numIndividuos)/100); //Percentual de Mutação
-		int n_mut = (int) (Math.floor(Math.random()*varMur)+qtdMut); //Número de Genes Mutáveis
+		double randomVarMu=Math.floor(Math.random()*varMur);
+		double relacaoPesoQtdMuttarefasMaquina= (qtdMut*(Double.parseDouble(numMaquinas+"")/numTarefas));
+		
+		
+		int n_mut = ((int) (randomVarMu*relacaoPesoQtdMuttarefasMaquina));//Número de Genes Mutáveis
+		//int pm = (int)(Math.floor(qtdMut*numIndividuos)/100); //Percentual de Mutação
+		//int n_mut = (int) (Math.floor(Math.random()*varMur)+qtdMut); //Número de Genes Mutáveis
 		
 		//Selecionar individuos para mutação		
 		for (int i=0; i<pm; i++) {

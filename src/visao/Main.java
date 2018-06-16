@@ -20,7 +20,12 @@ public class Main {
 		int numMaquinas = 10;
 		int numIndividuos = 100; //número de indivíduos
 		int numExec = 5; //Número de execuções
-		int numGer = 200000; //número de gerações		
+		int melhorMakespanGeracao = 100000;
+		int qtdeGerSemMelhora=0;
+		int gatilhoBuscaLocal = 0;
+		boolean buscaLocal = false;
+		int melhorMakespan = 100000;
+		int numGer = 20000; //número de gerações		
 		int nGetMut = 10; //numero médio de genes mutados
 		int varMur = 10; //Tipo uma variância da mutação (n_mut = floor(rand*varMut)+qtdMut);
 		int qtdMut =  5; //% Percentual de indivíduos mutados
@@ -85,15 +90,27 @@ public class Main {
 			int[][][] seq_Pop_filhos = new int[numIndividuos][numMaquinas][numTarefas];
 			seq_Pop_filhos = sequenciamento.sequenciamento_Inicial(numIndividuos, numMaquinas, numTarefas, pop_f, tarefa);
 			
-//			//Inserir Busca Local após XX gerações, aumentando a popúlação em N soluções, o restamte continua da mesma maneira
-//			BuscaLocal buscaLocal = new BuscaLocal();
-//			for (int cont=0; cont<numIndividuos; cont++) {
-//				buscaLocal.buscaLocalN1N2(pop_f, seq_Pop_filhos, numMaquinas, maquina, tarefa, matrizTarefaMaquina, matrizSetup, cont);
-//			}
 			//Cálculo makespan da população de filhos
 			int [] makespan_f = new int [numIndividuos];
 			makespan_f = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_Pop_filhos, tarefa, matrizTarefaMaquina,matrizSetup);
 			
+			//INSERIR A BUSCA LOCAL//
+			if (buscaLocal) {
+				//Verificando qual indivisuo possui o menor atrasoAdiantamento
+				System.out.println("Busca Local");
+				int individuo = 0;
+				int makespanIndividuo = 1000000;
+				for (int w=0; w<numIndividuos; w++) {
+					if (makespan_f[w]<makespanIndividuo) {
+						makespanIndividuo = makespan_f[w];
+						individuo = w;
+					}
+				}
+				BuscaLocal busca = new BuscaLocal();
+				seq_Pop_filhos = busca.buscaLocal(pop_f, seq_Pop_filhos, numMaquinas, maquina, tarefa, matrizTarefaMaquina, matrizSetup, makespanIndividuo, numIndividuos);
+				buscaLocal = false;
+			}
+			makespan_f = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_Pop_filhos, tarefa, matrizTarefaMaquina,matrizSetup);
 			//Função Objetivo 2: Cálculo do Custo
 			float[] custo_f = new float[numIndividuos];			
 			custo_f = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_Pop_filhos, matrizTarefaMaquina, maquina);			
@@ -276,9 +293,19 @@ public class Main {
 			
 			nivelDominancia = relacoesDominancia.calculaNivelDominancia(numIndividuos, makespan, custo);			
 			Impressaoes imprimir = new Impressaoes();
-			imprimir.imprimir(g, makespan, custo, seq_pop, numIndividuos, nivelDominancia, numMaquinas);
+			melhorMakespanGeracao = imprimir.imprimir(g, makespan, custo, seq_pop, numIndividuos, nivelDominancia, numMaquinas);
 			System.out.println("Teste");
 			//Incremanta contador de gerações
+			if (melhorMakespanGeracao<melhorMakespan) {
+				melhorMakespan = melhorMakespanGeracao;
+				qtdeGerSemMelhora = 0;
+			}else {
+				qtdeGerSemMelhora++;
+			}
+			if (qtdeGerSemMelhora == gatilhoBuscaLocal) {
+				buscaLocal = true;
+				qtdeGerSemMelhora = 0;
+			}			
 			g++;
 		}
 		//Imprimindo resultados		
