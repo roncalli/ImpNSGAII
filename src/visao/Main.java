@@ -29,8 +29,12 @@ public class Main {
 		int numIndividuos = 100; //número de indivíduos
 		int [] melhor_seq = new int[numTarefas];
 		
-		//int numGer = 1000; //número de gerações
-		int numGer = numTarefas*numIndividuos; //número de gerações	-para aumentar o numero de iterações de acordo com a quantidade de tarefas	
+		int numGer = 20000; //número de gerações
+		//true utiliza arquivo gerado anteriomente pelo grasp
+		boolean usaGrasp=true;
+		
+		
+		//int numGer = numTarefas*numIndividuos; //número de gerações	-para aumentar o numero de iterações de acordo com a quantidade de tarefas	
 		int varMur = 15; //Tipo uma variância da mutação (n_mut = floor(rand*varMut)+qtdMut);
 		//int qtdMut =  10; //% Percentual de indivíduos mutados
 		int qtdMut =10;
@@ -79,7 +83,9 @@ public class Main {
 		int g = 0; // geração
 						
 		//Rodando com a sequencia inicial gerada pelo GRASP
+		if(usaGrasp) {
 		lerArquivos.popularSequenciaInicial(seq_pop,numTarefas);
+		}
 		
 		while(g<numGer) {			
 			//Seleciona os pais utilizando torneio de multidão
