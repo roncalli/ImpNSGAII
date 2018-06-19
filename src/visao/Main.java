@@ -1,11 +1,12 @@
 package visao;
 
+import java.io.IOException;
 import java.util.Random;
 
 import controle.BuscaLocal;
 import controle.CalculoCusto;
 import controle.CalculoAdiantamentoAtraso;
-import controle.LeiaCSV;
+import controle.LeiaGerarCSV;
 import controle.Operadores;
 import controle.RelacoesDominancia;
 import controle.SequenciamentoTarefas;
@@ -13,8 +14,8 @@ import modelo.Maquina;
 import modelo.Tarefa;
 
 public class Main {
-	public static void main (String[] args) {		
-		LeiaCSV lerArquivos = new LeiaCSV();
+	public static void main (String[] args) throws IOException {		
+		LeiaGerarCSV lerArquivos = new LeiaGerarCSV();
 		//Parâmetros do sistema
 		int numTarefas = 100;
 		//int numTarefas = 200;
@@ -26,26 +27,22 @@ public class Main {
 		boolean buscaLocal = false;
 		int numMaquinas = 1;
 		int numIndividuos = 100; //número de indivíduos
+		int [] melhor_seq = new int[numTarefas];
 		
 		//int numGer = 1000; //número de gerações
 		int numGer = numTarefas*numIndividuos; //número de gerações	-para aumentar o numero de iterações de acordo com a quantidade de tarefas	
-		
 		int varMur = 15; //Tipo uma variância da mutação (n_mut = floor(rand*varMut)+qtdMut);
-		
 		//int qtdMut =  10; //% Percentual de indivíduos mutados
 		int qtdMut =10;
-		
 		if(numIndividuos<=numTarefas) {
 			qtdMut= (int) (varMur/(Double.parseDouble(numTarefas+"")/numIndividuos));//% Percentual de indivíduos mutados
 		}
-		
 		
 		Maquina maquina[] = new Maquina[numMaquinas];
 		Tarefa tarefa[] = new Tarefa[numTarefas];
 		int matrizTarefaMaquina[][] = new int[numTarefas][numMaquinas];
 		lerArquivos.popularTabelas(tarefa, maquina, matrizTarefaMaquina,numMaquinas);
 		//Fim dos parâmetros do sistema
-		
 		
 		// pop (tarefa, individuo) - valor da célula é a máquina
 		int [][] pop = new int [numTarefas][numIndividuos];		
@@ -61,14 +58,11 @@ public class Main {
 		SequenciamentoTarefas sequenciamento = new SequenciamentoTarefas();
 		seq_pop = sequenciamento.sequenciamento_Inicial(numIndividuos, numMaquinas, numTarefas, pop, tarefa);
 		
-		//TESTE
 		int [][][] seq_pop_teste = new int[numIndividuos][numMaquinas][numTarefas];
 		seq_pop_teste = sequenciamento.gerarSequenciaInicial(matrizTarefaMaquina, tarefa, numIndividuos, entrega);
 		for (int w=0; w<10; w++) {
 			seq_pop[w][0] = seq_pop_teste[w][0];
 		}
-		//TESTE
-		
 		
 		// Cálculos das funções objetivo
 		// Função Objetivo 1: Cálculo do atrasoAdiantamento
@@ -83,7 +77,6 @@ public class Main {
 		nivelDominancia = relacoesDominancia.calculaNivelDominancia(numIndividuos, atrasoAdiantamento);
 		
 		int g = 0; // geração
-		// Imprimindo Primeira Geração
 						
 		//Rodando com a sequencia inicial gerada pelo GRASP
 		lerArquivos.popularSequenciaInicial(seq_pop,numTarefas);
@@ -269,7 +262,7 @@ public class Main {
 			atrasoAdiantamento = calculoatrasoAdiantamento.calculoAdiantamentoAtraso(numIndividuos, numMaquinas, seq_pop, tarefa, matrizTarefaMaquina,entrega);			
 			nivelDominancia = relacoesDominancia.calculaNivelDominancia(numIndividuos, atrasoAdiantamento);			
 			Impressaoes imprimir = new Impressaoes();			
-			long melhoratrasoAdiantamentoGeracao = imprimir.imprimir(g, atrasoAdiantamento, seq_pop, numIndividuos, nivelDominancia, numMaquinas, numTarefas);
+			long melhoratrasoAdiantamentoGeracao = imprimir.imprimir(g, atrasoAdiantamento, seq_pop, numIndividuos, nivelDominancia, numMaquinas, numTarefas,melhor_seq);
 			if (melhoratrasoAdiantamentoGeracao<melhoratrasoAdiantamento) {
 				melhoratrasoAdiantamento = melhoratrasoAdiantamentoGeracao;
 				qtdeGerSemMelhora = 0;
@@ -282,6 +275,7 @@ public class Main {
 			}			
 			//Incremanta contador de gerações
 			g++;
-		}	
+		}
+		lerArquivos.gerarCsvSolucao(numTarefas, melhor_seq);
 	}
 }

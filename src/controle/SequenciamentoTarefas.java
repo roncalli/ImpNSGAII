@@ -28,12 +28,10 @@ public class SequenciamentoTarefas {
 			Collections.shuffle(tarefas);
 			for (int k=0; k<numMaquinas;k++) {
 				int vet_tarefa[] = new int[numTarefas]; //Tarefas executadas pela máquina k
-				//int vet_peso[] = new int [numTarefas]; //Contém os pesos das tarefas executadas pela máquina k
 				int cont = 0;				
 				for (int i=0; i<numTarefas;i++) {
 					if (pop[i][j] == k) {
-						vet_tarefa[cont] =  tarefas.get(i);
-						//vet_peso[cont] = tarefa[i].getPrioridade();
+						vet_tarefa[cont] =  tarefas.get(i);						
 						cont++;
 					}
 					seq_pop[j][k][i] = vet_tarefa[i];

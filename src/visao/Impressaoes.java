@@ -4,34 +4,21 @@ import modelo.Tarefa;
 
 public class Impressaoes {
 
-	public long imprimir(int geracao,long[] makespan, int[][][]seq_pop, int numIndividuos, int[] nivelDominancia, int numMaquinas, int numTarefas) {
+	public long imprimir(int geracao,long[] makespan, int[][][]seq_pop, int numIndividuos, int[] nivelDominancia, int numMaquinas, int numTarefas, int[] melhor_seq) {
 		long piorMakespan = 0;		
 		long melhorMakespan = 10000000;
 		int ind_mm= 0 ;
 		int ind_mc = 0;
 		System.out.println("Imprimindo os ítens da geração: "+geracao);
 		System.out.println("----------------------------------------------------------------------");
-//		System.out.println();
-//		System.out.println("Indivíduo     -     Makespan     -    Custo");
-		for (int i=0; i<numIndividuos; i++) {
-			//if (nivelDominancia[i] == 1) {//Imprimindo apenas as soluções não dominadas
-//				System.out.println(i+"          -          "+makespan[i]+"          -          ");
-				if (makespan[i]<melhorMakespan) {
-					melhorMakespan = makespan[i];
-					ind_mm = i;
-				}
-				if (makespan[i]>piorMakespan) {
-					piorMakespan = makespan[i];
-				}
-				
-//				if (custo[i]<melhorCusto) {
-//					melhorCusto= custo[i];
-//					ind_mc = i;
-//				}
-//				if (custo[i]>piorCusto) {
-//					piorCusto= custo[i];
-//				}
-			//}
+		for (int i=0; i<numIndividuos; i++) {			
+			if (makespan[i]<melhorMakespan) {
+				melhorMakespan = makespan[i];
+				ind_mm = i;
+			}
+			if (makespan[i]>piorMakespan) {
+				piorMakespan = makespan[i];
+			}				
 		}
 		System.out.println();
 		System.out.println("Sequenciamento da solução com melhor makespan:");
@@ -49,10 +36,11 @@ public class Impressaoes {
 					System.out.print(seq_pop[ind_mm][i][j]);
 					break;
 				}				
-			}
+			}			
 		}	
-		
-	
+		for (int i=0; i<numTarefas; i++) {
+			melhor_seq[i] = seq_pop[ind_mm][0][i];
+		}
 		System.out.println();
 		System.out.println();
 		System.out.println("Melhor Penalidade Atraso+Adiantamento: "+melhorMakespan+"    -    "+"Pior Melhor Penalidade Atraso+Adiantamento: "+piorMakespan);
