@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Random;
 
 import controle.BuscaLocal;
-import controle.CalculoCusto;
 import controle.CalculoAdiantamentoAtraso;
 import controle.LeiaGerarCSV;
 import controle.Operadores;
@@ -30,11 +29,11 @@ public class Main {
 		int [] melhor_seq = new int[numTarefas];
 		
 		int numGer = 20000; //número de gerações
+		
 		//true utiliza arquivo gerado anteriomente pelo grasp
 		boolean usaGrasp=true;
 		
-		
-		//int numGer = numTarefas*numIndividuos; //número de gerações	-para aumentar o numero de iterações de acordo com a quantidade de tarefas	
+				
 		int varMur = 15; //Tipo uma variância da mutação (n_mut = floor(rand*varMut)+qtdMut);
 		//int qtdMut =  10; //% Percentual de indivíduos mutados
 		int qtdMut =10;

@@ -81,31 +81,6 @@ public class Operadores {
 			
 			
 		}
-		
-		
-	/*	for (int i=0; i<numIndividuos; i++) {
-			float k = (float)0.75; // Porcentagem de escolher o melhor
-			float r = (float)Math.random();
-			int op1 = (int) (Math.floor(Math.random()*100)); // Escolha aleatória dois individuos para o torneio
-			int op2 = (int) (Math.floor(Math.random()*100)); // Escolha aleatória dois individuos para o torneio			
-			while (op1 == op2) { // Garantir que op1 seja o mesmo individuo de op2
-				op2 = (int) (Math.floor(Math.random()*100));
-			}
-			if (r<k) { //Escolhe o melhor
-				if (nivelDominancia[op1]<nivelDominancia[op2]) {
-					vet_pais[i] = op1;
-				}else {
-					vet_pais[i] = op2;
-				}
-			}else { //Escolhe o pior
-				if (nivelDominancia[op1]>nivelDominancia[op2]) {
-					vet_pais[i] = op1;
-				}else {
-					vet_pais[i] = op2;
-				}
-			}
-			
-		}*/
 		return vet_pais;
 	}
 	

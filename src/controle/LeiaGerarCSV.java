@@ -13,8 +13,8 @@ import modelo.Tarefa;
 public class LeiaGerarCSV {
 
 	public void popularSequenciaInicial(int[][][] seq_pop, int numTarefas){
-		String arquivoSequencia = "D:/FELIPE/test1.csv";
-		//String arquivoSequencia = "D:/FELIPE/test2.csv";
+		String arquivoSequencia = "D:/test1.csv";
+		//String arquivoSequencia = "D:/test2.csv";
 		BufferedReader br = null;
 		String linha = "";
 		String csvDivisor = ",";
@@ -46,8 +46,8 @@ public class LeiaGerarCSV {
 	}
 	
 	public void popularTabelas(Tarefa[] tarefas, Maquina[] maquinas, int[][] matrizTarefaMaquina, int numMaquinas) {
-		String arquivoTarefaMaquina = "D:/FELIPE/sch100k1.csv";		
-		//String arquivoTarefaMaquina = "D:/FELIPE/sch200k1.csv";
+		String arquivoTarefaMaquina = "D:/sch100k1.csv";		
+		//String arquivoTarefaMaquina = "D:/sch200k1.csv";
 		BufferedReader br = null;
 		String linha = "";
 		String csvDivisor = ",";
@@ -106,7 +106,7 @@ public class LeiaGerarCSV {
 	}
 	
 	public void gerarCsvSolucao(int numTarefas, int[] seq_pop) throws IOException {
-		String nomeArquivo = "D:/Felipe/MachadoNascimentoCarneiro.csv"; 
+		String nomeArquivo = "D://MachadoNascimentoCarneiro.csv"; 
 		FileWriter arquivoSaída = new FileWriter(nomeArquivo);	
 		for (int i=0; i<numTarefas; i++) {
 			if (i==numTarefas-1) {
