@@ -19,9 +19,9 @@ public class LeiaCSV {
 
 	public void popularTabelas(Tarefa[] tarefas, Maquina[] maquinas, float[][] matrizTarefaMaquina, float matrizSetup[][][], int numMaquinas) {
 
-		String arquivoTarefa = "D:/Mestrado UFMG/Carrano/Otimização Redes/TrabalhoFinal/Tarefa.csv";		
-		String arquivoMaquina = "D:/Mestrado UFMG/Carrano/Otimização Redes/TrabalhoFinal/temposMaquina70IOF.csv";
-		String arquivoSetup = "D:/FELIPE/TabelaSetupMaquina";
+		String arquivoTarefa = "D:/FELIPE/TESTE/Tarefa.csv";		
+		String arquivoMaquina = "D:/FELIPE/TESTE/temposMaquina70IOF.csv";
+		String arquivoSetup = "D:/FELIPE/TESTE/TabelaSetupMaquina";
 		BufferedReader br = null;
 		String linha = "";
 		String csvDivisor = ",";
@@ -80,7 +80,7 @@ public class LeiaCSV {
 		}
 		// Lendo os Arquivos de SETUP
 		for (int w = 0; w < numMaquinas; w++) {
-			arquivoSetup = "D:/FELIPE/TabelaSetupMaquinaAUX" + w + ".csv";
+			arquivoSetup = "D:/FELIPE/TESTE/TabelaSetupMaquinaIOF" + w + ".csv";
 			try {
 				br = new BufferedReader(new FileReader(arquivoSetup));
 				int i = 0;

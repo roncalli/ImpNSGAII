@@ -25,7 +25,7 @@ public class Main {
 		int gatilhoBuscaLocal = 0;
 		boolean buscaLocal = false;
 		float melhorMakespan = 100000;
-		int numGer = 5000; //n�mero de gera��es		
+		int numGer = 10000; //n�mero de gera��es		
 		int nGetMut = 10; //numero m�dio de genes mutados
 		int varMur = 10; //Tipo uma vari�ncia da muta��o (n_mut = floor(rand*varMut)+qtdMut);
 		int qtdMut =  5; //% Percentual de indiv�duos mutados
@@ -106,8 +106,8 @@ public class Main {
 						individuo = w;
 					}
 				}
-				//BuscaLocal busca = new BuscaLocal();
-				//seq_Pop_filhos = busca.buscaLocal(pop_f, seq_Pop_filhos, numMaquinas, maquina, tarefa, matrizTarefaMaquina, matrizSetup, individuo, numIndividuos);
+				BuscaLocal busca = new BuscaLocal();
+				seq_Pop_filhos = busca.buscaLocal(pop_f, seq_Pop_filhos, numMaquinas, maquina, tarefa, matrizTarefaMaquina, matrizSetup, individuo, numIndividuos);
 				buscaLocal = false;
 			}
 			makespan_f = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_Pop_filhos, tarefa, matrizTarefaMaquina,matrizSetup);

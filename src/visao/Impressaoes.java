@@ -51,20 +51,20 @@ public class Impressaoes {
 		System.out.println();
 		System.out.println("Sequenciamento da solução com melhor Custo:");
 		System.out.println();
-		for (int i=0;i<numMaquinas; i++) {
-			int j=0;
-			System.out.println("Máquina: "+i);
-			while (seq_pop[ind_mc][i][j]!=-2) {
-				System.out.print(seq_pop[ind_mc][i][j]+"  -  ");
-				if ((j == numTarefas-1)||(seq_pop[ind_mc][i][j+1] == -2)) {
-					System.out.println();
-				}
-				j++;
-				if (j == numTarefas){
-					break;
-				}
-			}
-		}	
+//		for (int i=0;i<numMaquinas; i++) {
+//			int j=0;
+//			System.out.println("Máquina: "+i);
+//			while (seq_pop[ind_mc][i][j]!=-2) {
+//				System.out.print(seq_pop[ind_mc][i][j]+"  -  ");
+//				if ((j == numTarefas-1)||(seq_pop[ind_mc][i][j+1] == -2)) {
+//					System.out.println();
+//				}
+//				j++;
+//				if (j == numTarefas){
+//					break;
+//				}
+//			}
+//		}	
 		System.out.println();
 		System.out.println();
 		System.out.println("Melhor Makespan: "+melhorMakespan+"    -    "+"Pior Makespan: "+piorMakespan);
