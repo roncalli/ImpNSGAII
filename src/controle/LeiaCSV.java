@@ -17,12 +17,10 @@ public class LeiaCSV {
 
 	}
 
-	public void popularTabelas(Tarefa[] tarefas, Maquina[] maquinas, int[][] matrizTarefaMaquina, float matrizSetup[][][], int numMaquinas) {
+	public void popularTabelas(Tarefa[] tarefas, Maquina[] maquinas, float[][] matrizTarefaMaquina, float matrizSetup[][][], int numMaquinas) {
 
-		//String arquivoTarefa = "D:/FELIPE/TabelaTarefa.csv";
-		String arquivoTarefa = "D:/FELIPE/Tarefas.csv";		
-		//String arquivoMaquina = "D:/FELIPE/TabelaTarefaMaquina.csv";
-		String arquivoMaquina = "D:/FELIPE/Maquinas.csv";
+		String arquivoTarefa = "D:/Mestrado UFMG/Carrano/Otimização Redes/TrabalhoFinal/Tarefa.csv";		
+		String arquivoMaquina = "D:/Mestrado UFMG/Carrano/Otimização Redes/TrabalhoFinal/temposMaquina70IOF.csv";
 		String arquivoSetup = "D:/FELIPE/TabelaSetupMaquina";
 		BufferedReader br = null;
 		String linha = "";
@@ -62,7 +60,7 @@ public class LeiaCSV {
 			while ((linha = br.readLine()) != null) {
 				String[] objeto = linha.split(csvDivisor);
 				for (int j = 0; j < objeto.length; j++) {
-					matrizTarefaMaquina[i][j] = Integer.valueOf(objeto[j]);
+					matrizTarefaMaquina[i][j] = Float.valueOf(objeto[j]);
 				}
 				i++;
 			}
@@ -82,7 +80,7 @@ public class LeiaCSV {
 		}
 		// Lendo os Arquivos de SETUP
 		for (int w = 0; w < numMaquinas; w++) {
-			arquivoSetup = "D:/FELIPE/TabelaSetupMaquina" + w + ".csv";
+			arquivoSetup = "D:/FELIPE/TabelaSetupMaquinaAUX" + w + ".csv";
 			try {
 				br = new BufferedReader(new FileReader(arquivoSetup));
 				int i = 0;
@@ -90,7 +88,7 @@ public class LeiaCSV {
 					String[] objeto = linha.split(csvDivisor);
 					for (int j = 0; j < objeto.length; j++) {
 						if (i != j) {
-							matrizSetup[w][i][j] = Float.valueOf(objeto[j]);
+							matrizSetup[w][i][j] = Float.parseFloat(objeto[j]);
 						} else {
 							matrizSetup[w][i][j] = 0;
 						}
@@ -112,5 +110,12 @@ public class LeiaCSV {
 				}
 			}
 		}
+	}
+	
+	public int retornaNumTarefas(){
+		
+		
+		
+		return 0;
 	}
 }

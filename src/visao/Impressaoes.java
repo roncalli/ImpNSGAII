@@ -2,9 +2,9 @@ package visao;
 
 public class Impressaoes {
 
-	public int imprimir(int geracao,int[] makespan, float[]custo, int[][][]seq_pop, int numIndividuos, int[] nivelDominancia, int numMaquinas) {
-		int piorMakespan = 0;		
-		int melhorMakespan = 10000;
+	public float imprimir(int geracao,float[] makespan, float[]custo, int[][][]seq_pop, int numIndividuos, int[] nivelDominancia, int numMaquinas, int numTarefas) {
+		float piorMakespan = 0;		
+		float melhorMakespan = 10000;
 		int ind_mm= 0 ;
 		float piorCusto = 0;
 		float melhorCusto = 10000;
@@ -56,10 +56,13 @@ public class Impressaoes {
 			System.out.println("Máquina: "+i);
 			while (seq_pop[ind_mc][i][j]!=-2) {
 				System.out.print(seq_pop[ind_mc][i][j]+"  -  ");
-				if (seq_pop[ind_mc][i][j+1] == -2) {
+				if ((j == numTarefas-1)||(seq_pop[ind_mc][i][j+1] == -2)) {
 					System.out.println();
 				}
 				j++;
+				if (j == numTarefas){
+					break;
+				}
 			}
 		}	
 		System.out.println();

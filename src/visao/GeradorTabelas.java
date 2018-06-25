@@ -1,82 +1,84 @@
 package visao;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.omg.PortableServer.POAPackage.WrongAdapter;
+
 public class GeradorTabelas {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException {
 		Gerar();
 	}
 
-	private static void Gerar() {
-		int numTarefas = 20;
-		int numMaquinas = 5;
+	private static void Gerar() throws FileNotFoundException {
+		int numTarefas = 70;
+		int numMaquinas = 4;
 		// TABELA TAREFA
-		try {
-			FileWriter writer = new FileWriter("D:/FELIPE/TabelaTarefa.csv");
-			// Preencher Matriz Tarefa Maquina
-			// IdTarefa, PesoTarefa, DataEntrega
-			// Peso tarefa variando de 1 a 10
-			// Data de entrega 80 (2 semanas)
-			int vMax = 10;
-			int vMin = 1;
-			int dataEntrega = 40;
-			for (int i = 0; i < numTarefas; i++) {
-				writer.append(i + "," + (int) ((Math.floor(Math.random() * (vMax - vMin)) + vMin)) + "," + dataEntrega);
-				writer.append('\n');
-			}
-			writer.flush();
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		// TABELA TAREFA MAQUINA
-		try {
-			FileWriter writer = new FileWriter("D:/FELIPE/TabelaTarefaMaquina.csv");
-			// Preencher Matriz Tarefa Maquina
-			// Peso tarefa maquina variando de 1 a 10
-			// Data de entrega 80 (2 semanas)
-			int vMax = 20;
-			int vMin = 5;
-			for (int i = 0; i < numTarefas; i++) {
-				for (int j = 0; j < numMaquinas; j++) {
-					if (j != numMaquinas - 1) {
-						writer.append((int) ((Math.floor(Math.random() * (vMax - vMin)) + vMin)) + ",");
-					} else {
-						writer.append((int) ((Math.floor(Math.random() * (vMax - vMin)) + vMin)) + "\n");
-					}
-				}
-			}
-			writer.flush();
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		// MATRIZ SETUP - 1 Matriz para cada máquina
-		// TABELA TAREFA MAQUINA
-
+		String acertoSemLavagem = "D:/Mestrado UFMG/Carrano/Otimização Redes/TrabalhoFinal/acertoSemLavagem70.csv";
+		BufferedReader semLavagem = null;
+		String acertoComLavagem = "D:/Mestrado UFMG/Carrano/Otimização Redes/TrabalhoFinal/acertoComLavagemMaquina70.csv";
+		BufferedReader comLavagem = null;
+		String coresTarefas= "D:/Mestrado UFMG/Carrano/Otimização Redes/TrabalhoFinal/cores.csv";
+		BufferedReader cores = null;
+		semLavagem = new BufferedReader(new FileReader(acertoSemLavagem));
+		comLavagem = new BufferedReader(new FileReader(acertoComLavagem));
+		cores = new BufferedReader(new FileReader(coresTarefas));
+		String csvDivisor = ",";
 		for (int w = 0; w < numMaquinas; w++) {
 			try {
-				String nomeArquivo = "D:/FELIPE/TabelaSetupMaquina" + w + ".csv";
+				String nomeArquivo = "D:/FELIPE/TabelaSetupMaquinaIOF" + w + ".csv";
 				FileWriter writer = new FileWriter(nomeArquivo);
 				// Preencher Matriz Tarefa Maquina
 				// Peso tarefa maquina variando de 1 a 10
 				// Data de entrega 80 (2 semanas)
-				int vMax = 0;
-				int vMin = 0;
+				String[] linhaSemLavagem = (semLavagem.readLine()).split(csvDivisor);
+				String[] linhaComLavagem = (comLavagem.readLine()).split(csvDivisor);				
 				for (int i = 0; i < numTarefas; i++) {
-					for (int j = 0; j < numTarefas; j++) {
-						if (i == j) {
-							if (j == numTarefas - 1) {
-								writer.append("0");
-							} else {
-								writer.append(0 + ",");
-							}
-						} else if (j != numTarefas - 1) {
-							writer.append((int) ((Math.floor(Math.random() * (vMax - vMin)) + vMin)) + ",");
+					int j=0;
+					if (i>0){
+						writer.append("\n");
+					}
+					cores = new BufferedReader(new FileReader(coresTarefas));
+					//String[] linhaCores = (cores.readLine()).split(csvDivisor);
+					while (j<numTarefas){					
+						if (j != numTarefas - 1) {
+							String[] linhaCores = (cores.readLine()).split(csvDivisor);
+							if ((Integer.parseInt(linhaCores[0]) == 4)){
+								writer.append((linhaSemLavagem[j]) + ",");
+								j++;
+								writer.append((linhaComLavagem[j]) + ",");
+								j++;
+							}else if ((Integer.parseInt(linhaCores[0]) == 1)){
+								if (w%2 == 0){
+									writer.append((linhaSemLavagem[j]) + ",");
+									j++;
+								}else{
+									writer.append((linhaComLavagem[j]) + ",");
+									j++;
+								}
+							}							
+							if ((Integer.parseInt(linhaCores[1]) == 4)){
+								writer.append((linhaSemLavagem[j]) + ",");
+								j++;
+								writer.append((linhaComLavagem[j]) + ",");
+								j++;
+							}else if ((Integer.parseInt(linhaCores[1]) == 1)){
+								if (w%2 == 0){
+									writer.append((linhaSemLavagem[j]) + ",");
+									j++;
+								}else{
+									writer.append((linhaComLavagem[j]) + ",");
+									j++;
+								}
+							}							
 						} else {
-							writer.append((int) ((Math.floor(Math.random() * (vMax - vMin)) + vMin)) + "\n");
+							writer.append((linhaSemLavagem[j]) + "\n");
+							j++;
 						}
 					}
 				}

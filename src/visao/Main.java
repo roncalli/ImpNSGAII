@@ -16,23 +16,23 @@ public class Main {
 	public static void main (String[] args) {		
 		LeiaCSV lerArquivos = new LeiaCSV();
 		//Par�metros do sistema
-		int numTarefas = 100;
-		int numMaquinas = 10;
+		int numTarefas = 70;
+		int numMaquinas = 4;
 		int numIndividuos = 100; //n�mero de indiv�duos
 		int numExec = 5; //N�mero de execu��es
-		int melhorMakespanGeracao = 100000;
+		float melhorMakespanGeracao = 100000;
 		int qtdeGerSemMelhora=0;
 		int gatilhoBuscaLocal = 0;
 		boolean buscaLocal = false;
-		int melhorMakespan = 100000;
-		int numGer = 20000; //n�mero de gera��es		
+		float melhorMakespan = 100000;
+		int numGer = 5000; //n�mero de gera��es		
 		int nGetMut = 10; //numero m�dio de genes mutados
 		int varMur = 10; //Tipo uma vari�ncia da muta��o (n_mut = floor(rand*varMut)+qtdMut);
 		int qtdMut =  5; //% Percentual de indiv�duos mutados
 		int qtdMaisDom = 30;//Percentual de mais dominados a compor a nova popula��o
 		Maquina maquina[] = new Maquina[numMaquinas];
 		Tarefa tarefa[] = new Tarefa[numTarefas];
-		int matrizTarefaMaquina[][] = new int[numTarefas][numMaquinas];
+		float matrizTarefaMaquina[][] = new float[numTarefas][numMaquinas];
 		float matrizSetup[][][] = new float[numMaquinas][numTarefas][numTarefas];
 		lerArquivos.popularTabelas(tarefa, maquina, matrizTarefaMaquina,matrizSetup,numMaquinas);
 		//Fim dos par�metros do sistema
@@ -55,14 +55,14 @@ public class Main {
 		
 		// C�lculos das fun��es objetivo
 		// Fun��o Objetivo 1: C�lculo do makespan
-		int [] makespan = new int [numIndividuos];
+		float [] makespan = new float [numIndividuos];
 		CalculoMakespan calculoMakespan = new CalculoMakespan();
 		makespan = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_pop, tarefa, matrizTarefaMaquina,matrizSetup);
 		
 		//Fun��o Objetivo 2: C�lculo do Custo
 		float[] custo = new float[numIndividuos];
 		CalculoCusto calculoCusto = new CalculoCusto();
-		custo = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_pop, matrizTarefaMaquina, maquina);
+		custo = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_pop, matrizTarefaMaquina, maquina, numTarefas);
 		
 		//Classifica��o por n�veis de n�o domin�ncia
 		int[] nivelDominancia = new int[numIndividuos];
@@ -91,7 +91,7 @@ public class Main {
 			seq_Pop_filhos = sequenciamento.sequenciamento_Inicial(numIndividuos, numMaquinas, numTarefas, pop_f, tarefa);
 			
 			//C�lculo makespan da popula��o de filhos
-			int [] makespan_f = new int [numIndividuos];
+			float [] makespan_f = new float [numIndividuos];
 			makespan_f = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_Pop_filhos, tarefa, matrizTarefaMaquina,matrizSetup);
 			
 			//INSERIR A BUSCA LOCAL//
@@ -99,21 +99,21 @@ public class Main {
 				//Verificando qual indivisuo possui o menor atrasoAdiantamento
 				System.out.println("Busca Local");
 				int individuo = 0;
-				int makespanIndividuo = 1000000;
+				float makespanIndividuo = 1000000;
 				for (int w=0; w<numIndividuos; w++) {
 					if (makespan_f[w]<makespanIndividuo) {
 						makespanIndividuo = makespan_f[w];
 						individuo = w;
 					}
 				}
-				BuscaLocal busca = new BuscaLocal();
-				seq_Pop_filhos = busca.buscaLocal(pop_f, seq_Pop_filhos, numMaquinas, maquina, tarefa, matrizTarefaMaquina, matrizSetup, makespanIndividuo, numIndividuos);
+				//BuscaLocal busca = new BuscaLocal();
+				//seq_Pop_filhos = busca.buscaLocal(pop_f, seq_Pop_filhos, numMaquinas, maquina, tarefa, matrizTarefaMaquina, matrizSetup, individuo, numIndividuos);
 				buscaLocal = false;
 			}
 			makespan_f = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_Pop_filhos, tarefa, matrizTarefaMaquina,matrizSetup);
 			//Fun��o Objetivo 2: C�lculo do Custo
 			float[] custo_f = new float[numIndividuos];			
-			custo_f = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_Pop_filhos, matrizTarefaMaquina, maquina);			
+			custo_f = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_Pop_filhos, matrizTarefaMaquina, maquina, numTarefas);			
 			
 			//Concatenando Pais e Filhos
 			int[][] pop_pai_filho = new int[numTarefas][2*numIndividuos];
@@ -143,7 +143,7 @@ public class Main {
 					}	
 				}
 			}
-			int[] makespan_pai_filho = new int[2*numIndividuos];
+			float[] makespan_pai_filho = new float[2*numIndividuos];
 			for (int i=0; i<2*numIndividuos; i++) {
 				if (i<numIndividuos) {
 					makespan_pai_filho[i] = makespan[i];
@@ -211,7 +211,7 @@ public class Main {
 					}					
 				}else {	//C�LCULO DA DIST�NCIA DE MULTID�O
 					int [] posicao_nivel = new int[n_ind_nivel];
-					int [] aux_mksp = new int[n_ind_nivel];
+					float [] aux_mksp = new float[n_ind_nivel];
 					float [] aux_custo = new float[n_ind_nivel];
 					int pos = 0;
 					for (int cont = 0; cont< 2*numIndividuos; cont++) {
@@ -296,11 +296,11 @@ public class Main {
 			seq_pop = seq_pop_linha;
 			
 			makespan = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_pop, tarefa, matrizTarefaMaquina,matrizSetup);
-			custo = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_pop, matrizTarefaMaquina, maquina);
+			custo = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_pop, matrizTarefaMaquina, maquina, numTarefas);
 			
 			nivelDominancia = relacoesDominancia.calculaNivelDominancia(numIndividuos, makespan, custo);			
 			Impressaoes imprimir = new Impressaoes();
-			melhorMakespanGeracao = imprimir.imprimir(g, makespan, custo, seq_pop, numIndividuos, nivelDominancia, numMaquinas);
+			melhorMakespanGeracao = imprimir.imprimir(g, makespan, custo, seq_pop, numIndividuos, nivelDominancia, numMaquinas, numTarefas);
 			System.out.println("Teste");
 			//Incremanta contador de gera��es
 			if (melhorMakespanGeracao<melhorMakespan) {
@@ -317,6 +317,6 @@ public class Main {
 		}
 		//Imprimindo resultados		
 		Impressaoes imprimir = new Impressaoes();
-		imprimir.imprimir(g, makespan, custo, seq_pop, numIndividuos, nivelDominancia,numMaquinas);		
+		imprimir.imprimir(g, makespan, custo, seq_pop, numIndividuos, nivelDominancia,numMaquinas, numTarefas);		
 	}
 }

@@ -8,7 +8,7 @@ import modelo.Maquina;
 import modelo.Tarefa;
 
 public class BuscaLocal {
-	public int [][][] buscaLocal(int [][] pop, int [][][] seq_pop, int numMaquinas, Maquina[] maquina, Tarefa[] tarefa, int[][] matrizTarefaMaquina, float[][][] matrizSetup, int individuo, int numIndividuos){
+	public int [][][] buscaLocal(int [][] pop, int [][][] seq_pop, int numMaquinas, Maquina[] maquina, Tarefa[] tarefa, float[][] matrizTarefaMaquina, float[][][] matrizSetup, int individuo, int numIndividuos){
 		//Verificar qual máquina possui o maior makespan
 		int contNaoMelhora = 0;
 		int maquinaMaiorMakespan = -1;
@@ -32,7 +32,7 @@ public class BuscaLocal {
 		CalculoCusto calculoCusto = new CalculoCusto();
 		//Encontrar a máquina com maior makespan
 		for (int i=0; i<numMaquinas; i++) {			
-			int makespan = calculoMakespan.calculoMakespanSequencia(seq_pop[individuo][i], tarefa, matrizTarefaMaquina, i, matrizSetup);
+			float makespan = calculoMakespan.calculoMakespanSequencia(seq_pop[individuo], tarefa, matrizTarefaMaquina, i, matrizSetup);
 			if (makespan>maiorMakespan) {
 				makespan = maiorMakespan;
 				maquinaMaiorMakespan = i;
@@ -50,16 +50,16 @@ public class BuscaLocal {
 				Collections.shuffle(maquinas);
 				for (int cont=0; cont<numMaquinas; cont++){
 					if (maquinas.get(cont)!=maquinaMaiorMakespan) {
-						int tarMaqMaior = (int)Math.floor(Math.random()*100);
+						int tarMaqMaior = (int)Math.floor(Math.random()*70);
 						while (seq_pop[individuo][maquinaMaiorMakespan][tarMaqMaior]==-2){
-							tarMaqMaior = (int)Math.floor(Math.random()*100);
+							tarMaqMaior = (int)Math.floor(Math.random()*70);
 						}
-						int tarMaqSelecionada = (int)Math.floor(Math.random()*100);
+						int tarMaqSelecionada = (int)Math.floor(Math.random()*70);
 						while (seq_pop[individuo][maquinas.get(cont)][tarMaqSelecionada]==-2){
-							tarMaqSelecionada = (int)Math.floor(Math.random()*100);
+							tarMaqSelecionada = (int)Math.floor(Math.random()*70);
 						} 
 						//Calculando o Makespan e Custo Antes
-						int makespanAntes = calculoMakespan.calculoMakespanSequencia(seq_pop_aux, tarefa, matrizTarefaMaquina, numMaquinas, matrizSetup);
+						float makespanAntes = calculoMakespan.calculoMakespanSequencia(seq_pop_aux, tarefa, matrizTarefaMaquina, numMaquinas, matrizSetup);
 						float custoAntes = calculoCusto.calculoCustoSequencia(seq_pop_aux, tarefa, matrizTarefaMaquina, numMaquinas, maquina);
 						//Efetuando a troca
 						int aux = maquinaMaiorMakespan;
@@ -70,7 +70,7 @@ public class BuscaLocal {
 						seq_pop_aux[maquinas.get(cont)][tarMaqSelecionada] = aux;
 						//Troca Efetuada
 						//Calculando o Makespan e Custo Antes
-						int makespanApos = calculoMakespan.calculoMakespanSequencia(seq_pop_aux, tarefa, matrizTarefaMaquina, numMaquinas, matrizSetup);
+						float makespanApos = calculoMakespan.calculoMakespanSequencia(seq_pop_aux, tarefa, matrizTarefaMaquina, numMaquinas, matrizSetup);
 						float custoApos = calculoCusto.calculoCustoSequencia(seq_pop_aux, tarefa, matrizTarefaMaquina, numMaquinas, maquina);
 						if (makespanApos<makespanAntes){//Melhorou
 							seq_pop[individuo] = seq_pop_aux;
