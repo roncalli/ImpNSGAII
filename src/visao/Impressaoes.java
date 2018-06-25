@@ -7,7 +7,7 @@ public class Impressaoes {
 		float melhorMakespan = 10000;
 		int ind_mm= 0 ;
 		float piorCusto = 0;
-		float melhorCusto = 10000;
+		float melhorCusto = 1000000;
 		int ind_mc = 0;
 		System.out.println("Imprimindo os ítens da geração: "+geracao);
 		System.out.println("----------------------------------------------------------------------");
@@ -39,7 +39,7 @@ public class Impressaoes {
 		for (int i=0;i<numMaquinas; i++) {
 			int j=0;
 			System.out.println("Máquina: "+i);
-			while (seq_pop[ind_mm][i][j]!=-2) {
+			while ((seq_pop[ind_mm][i][j]!=-2)) {
 				System.out.print(seq_pop[ind_mm][i][j]+"  -  ");
 				if (seq_pop[ind_mm][i][j+1] == -2) {
 					System.out.println();

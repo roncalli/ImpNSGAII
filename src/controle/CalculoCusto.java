@@ -13,7 +13,7 @@ public class CalculoCusto {
 				int cont=0;
 				float aux_custo = 0;
 				while (seq_pop[i][j][cont]!=-2) {
-					aux_custo = aux_custo + matrizTarefaMaquina[seq_pop[i][j][cont]][j]*maquina[j].getCusto();
+					aux_custo = aux_custo + (int)matrizTarefaMaquina[seq_pop[i][j][cont]][j]*(int)maquina[j].getCusto();
 					cont++;
 					if (cont == numTarefas) {
 						break;
@@ -26,7 +26,7 @@ public class CalculoCusto {
 		for (int i=0;i<numIndividuos;i++) {			
 			float aux_custo = 0;
 			for (int j=0;j<numMaquinas;j++) {									
-				aux_custo = aux_custo + matrizCusto[i][j]; 				
+				aux_custo = aux_custo + (int)matrizCusto[i][j]; 				
 			}
 			custo[i] = aux_custo;			
 		}		
@@ -50,7 +50,7 @@ public class CalculoCusto {
 		for (int i=0; i<numMaquinas; i++){
 			for (int j=0; j<tarefa.length; j++){
 				if (seq_pop[i][j]!=-2){
-					 custo = custo + matrizTarefaMaquina[seq_pop[i][j]][i]*maquina[i].getCusto();
+					 custo = custo + (int)matrizTarefaMaquina[seq_pop[i][j]][i]*(int)maquina[i].getCusto();
 				}else{
 					break;
 				}

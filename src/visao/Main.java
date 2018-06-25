@@ -171,9 +171,7 @@ public class Main {
 			int nivel = 1; //n�vel de domin�ncia
 			int j=0; // n�mero de indiv�duos adicionados
 			int ind_vet = 0;
-			//criando vetor com os mais dominados (para gerar diversidade populacional)
-			int [] maisDominados = new int[((numIndividuos*qtdMaisDom)/100)];
-			maisDominados = relacoesDominancia.retornarIndividuosMaisDominados(numIndividuos, nivelDominancia, qtdMaisDom);
+			//criando vetor com os mais dominados (para gerar diversidade populacional)			
 			while (j<numIndividuos) {//Enquanto n�o selecionar 100 indiv�duos
 				//C�lculo de indiv�duos de n�vel j				
 				int n_ind_nivel = 0; //n�mero de individuos do n�vel X
@@ -202,7 +200,12 @@ public class Main {
 							if (!solucaoJaIncluida){
 								for (int k =0; k<numTarefas; k++) {
 									if (nivelDominancia[cont]==nivel) {				
-										pop_linha[k][ind_vet] = pop_pai_filho[k][cont];								
+										pop_linha[k][ind_vet] = pop_pai_filho[k][cont];											
+									}
+								}
+								for (int w=0; w<numMaquinas; w++){
+									for (int k =0; k<numTarefas; k++) {													
+										seq_pop_linha[ind_vet][w][k] = 	seq_pai_filho[cont][w][k];																				
 									}
 								}
 								ind_vet++;
@@ -249,12 +252,22 @@ public class Main {
 					for (int cont = 0; cont<2; cont++) {
 						if (cont==0) {
 							for (int k =0; k<numTarefas; k++) {								
-								pop_linha[k][ind_vet] = pop_pai_filho[k][posicao_nivel[distMultidao.length-1]];								
+								pop_linha[k][ind_vet] = pop_pai_filho[k][posicao_nivel[distMultidao.length-1]];									
+							}
+							for (int w=0; w<numMaquinas; w++){
+								for (int k =0; k<numTarefas; k++) {													
+									seq_pop_linha[ind_vet][w][k] = 	seq_pai_filho[cont][w][k];																				
+								}
 							}
 							inseridos_borda++;
 						}else { // if cont==1
 							for (int k =0; k<numTarefas; k++) {								
-								pop_linha[k][ind_vet] = pop_pai_filho[k][posicao_nivel[distMultidao.length-2]];
+								pop_linha[k][ind_vet] = pop_pai_filho[k][posicao_nivel[distMultidao.length-2]];										
+							}
+							for (int w=0; w<numMaquinas; w++){
+								for (int k =0; k<numTarefas; k++) {													
+									seq_pop_linha[ind_vet][w][k] = 	seq_pai_filho[cont][w][k];																				
+								}
 							}
 							inseridos_borda++;
 						}
@@ -273,7 +286,12 @@ public class Main {
 							}
 							if (!solucaoJaIncluida){
 								for (int k =0; k<numTarefas; k++) {								
-									pop_linha[k][ind_vet] = pop_pai_filho[k][posicao_nivel[cont]];																
+									pop_linha[k][ind_vet] = pop_pai_filho[k][posicao_nivel[cont]];									
+								}
+								for (int w=0; w<numMaquinas; w++){
+									for (int k =0; k<numTarefas; k++) {													
+										seq_pop_linha[ind_vet][w][k] = 	seq_pai_filho[cont][w][k];																				
+									}
 								}
 								ind_vet++;
 								if (ind_vet >=100) {									
@@ -283,8 +301,8 @@ public class Main {
 						}
 					}					
 				}
-				//VERIFICAR
-				seq_pop_linha = sequenciamento.sequenciamento_Inicial(numIndividuos, numMaquinas, numTarefas, pop_linha, tarefa);
+				//Verificar
+				//seq_pop_linha = sequenciamento.sequenciamento_Inicial(numIndividuos, numMaquinas, numTarefas, pop_linha, tarefa);
 				//VERIFICAR
 				//j+=n_ind_nivel;
 				j = ind_vet;				

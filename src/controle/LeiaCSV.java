@@ -19,7 +19,9 @@ public class LeiaCSV {
 
 	public void popularTabelas(Tarefa[] tarefas, Maquina[] maquinas, float[][] matrizTarefaMaquina, float matrizSetup[][][], int numMaquinas) {
 
-		String arquivoTarefa = "D:/FELIPE/TESTE/Tarefa.csv";		
+		String arquivoTarefa = "D:/FELIPE/TESTE/Tarefa.csv";	
+		String arquivoValorMaquina = "D:/FELIPE/TESTE/ValorMaquina.csv"; 
+		//String arquivoMaquina = "D:/FELIPE/TESTE/temposMaquina70IOFAux2.csv";
 		String arquivoMaquina = "D:/FELIPE/TESTE/temposMaquina70IOF.csv";
 		String arquivoSetup = "D:/FELIPE/TESTE/TabelaSetupMaquina";
 		BufferedReader br = null;
@@ -49,12 +51,15 @@ public class LeiaCSV {
 		}
 		// LENDO O ARQUIVO DE MAQUINAS
 		try {
-
-			br = new BufferedReader(new FileReader(arquivoMaquina));
+			BufferedReader brAux = null;
+			brAux = new BufferedReader(new FileReader(arquivoValorMaquina));
+			br = new BufferedReader(new FileReader(arquivoMaquina));			
+			linha = brAux.readLine();
+			String[] valor = linha.split(csvDivisor);
 			for (int i = 0; i < maquinas.length; i++) {
 				maquinas[i] = new Maquina(i);
 				//ALTERAR DEPOIS 
-				maquinas[i].setCusto(1);
+				maquinas[i].setCusto(Float.parseFloat(valor[i]));
 			}
 			int i = 0;
 			while ((linha = br.readLine()) != null) {
