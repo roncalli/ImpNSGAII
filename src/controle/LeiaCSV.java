@@ -86,7 +86,7 @@ public class LeiaCSV {
 		}
 		// Lendo os Arquivos de SETUP
 		for (int w = 0; w < numMaquinas; w++) {
-			arquivoSetup = "D:/FELIPE/TESTE/TabelaSetupMaquinaAUX" + w + ".csv";
+			arquivoSetup = "D:/FELIPE/TESTE/TabelaSetupMaquinaIOF" + w + ".csv";
 			try {
 				br = new BufferedReader(new FileReader(arquivoSetup));
 				int i = 0;
