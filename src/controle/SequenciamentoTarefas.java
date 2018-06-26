@@ -19,33 +19,27 @@ public class SequenciamentoTarefas {
 				}				
 			}
 		}
+	
 		for (int j=0;j<numIndividuos;j++) {
-			for (int k=0; k<numMaquinas;k++) {
-				int vet_tarefa[] = new int[numTarefas]; //Tarefas executadas pela máquina k
-				int vet_peso[] = new int [numTarefas]; //Contém os pesos das tarefas executadas pela máquina k
-				int cont = 0;
-				for (int i=0; i<numTarefas;i++) {
-					if (pop[i][j] == k) {
-						vet_tarefa[cont] =  i;
-						vet_peso[cont] = tarefa[i].getPrioridade();
-						cont++;
-					}
-				}
-				int cont2=0;				
-				for (int m=0; m<cont; m++) {
-					int prioridade = -1;
-					int indice = -1;
-					for (int n=0; n<cont; n++) {
-						if (vet_peso[n]>prioridade) {
-							indice = n;
-							prioridade = vet_peso[n];							
-						}
-					}
-					seq_pop[j][k][m] = vet_tarefa[indice];
-					vet_peso[indice] = -1;
+			
+			List<Integer> tarefas = new ArrayList<Integer>();
+			for (int i = 0; i < numTarefas; i++) { //Sequencia da mega sena
+			    tarefas.add(i);
+			}
+			//Embaralhamos os números:
+			Collections.shuffle(tarefas);
+			int pos = 0;
+			int cont = 0;
+			int maq = 0;
+			while (cont<numTarefas){
+				seq_pop[j][maq][pos] = tarefas.get(cont);
+				cont++;
+				pos++;
+				if (pos == ((numTarefas/numMaquinas)+1)&&(maq!=3)){
+					pos = 0;
+					maq++;
 				}
 			}
-		
 		}
 		return seq_pop;
 	}

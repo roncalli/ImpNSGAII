@@ -41,10 +41,16 @@ public class Impressaoes {
 			System.out.println("Máquina: "+i);
 			while ((seq_pop[ind_mm][i][j]!=-2)) {
 				System.out.print(seq_pop[ind_mm][i][j]+"  -  ");
+				if (j == numTarefas-1){
+					break;
+				}
 				if (seq_pop[ind_mm][i][j+1] == -2) {
 					System.out.println();
 				}
 				j++;
+				if (j == numTarefas){
+					break;
+				}
 			}
 		}	
 		

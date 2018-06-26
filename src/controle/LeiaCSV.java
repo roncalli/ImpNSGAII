@@ -21,8 +21,9 @@ public class LeiaCSV {
 
 		String arquivoTarefa = "D:/FELIPE/TESTE/Tarefa.csv";	
 		String arquivoValorMaquina = "D:/FELIPE/TESTE/ValorMaquina.csv"; 
-		//String arquivoMaquina = "D:/FELIPE/TESTE/temposMaquina70IOFAux2.csv";
-		String arquivoMaquina = "D:/FELIPE/TESTE/temposMaquina70IOF.csv";
+		String arquivoMaquina = "D:/FELIPE/TESTE/temposMaquina70IOFAux2.csv";
+		//String arquivoMaquina = "D:/FELIPE/TESTE/TabelaTarefaMaquina.csv";
+		//String arquivoMaquina = "D:/FELIPE/TESTE/temposMaquina70IOF.csv";
 		String arquivoSetup = "D:/FELIPE/TESTE/TabelaSetupMaquina";
 		BufferedReader br = null;
 		String linha = "";
@@ -33,7 +34,7 @@ public class LeiaCSV {
 			int i = 0;
 			while ((linha = br.readLine()) != null) {
 				String[] objeto = linha.split(csvDivisor);
-				tarefas[i] = new Tarefa(Integer.valueOf(objeto[objeto.length - 3]), Integer.valueOf(objeto[objeto.length - 2]), Float.valueOf(objeto[objeto.length - 1]), true);
+				tarefas[i] = new Tarefa(Integer.valueOf(objeto[objeto.length - 3]), Integer.valueOf(objeto[objeto.length - 2]), Float.valueOf(objeto[objeto.length - 1]), false);
 				i++;
 			}
 		} catch (FileNotFoundException e) {
@@ -85,7 +86,7 @@ public class LeiaCSV {
 		}
 		// Lendo os Arquivos de SETUP
 		for (int w = 0; w < numMaquinas; w++) {
-			arquivoSetup = "D:/FELIPE/TESTE/TabelaSetupMaquinaIOF" + w + ".csv";
+			arquivoSetup = "D:/FELIPE/TESTE/TabelaSetupMaquinaAUX" + w + ".csv";
 			try {
 				br = new BufferedReader(new FileReader(arquivoSetup));
 				int i = 0;

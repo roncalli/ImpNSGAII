@@ -18,9 +18,9 @@ public class CalculoMakespan {
 						break;
 					}
 					if (seq_pop[i][j][cont+1]!=-2) {
-						aux_makespan = (int)aux_makespan + (int)matrizTarefaMaquina[seq_pop[i][j][cont]][j]+(int)matrizSetup[j][seq_pop[i][j][cont]][seq_pop[i][j][cont+1]];
+						aux_makespan = aux_makespan + matrizTarefaMaquina[seq_pop[i][j][cont]][j]+matrizSetup[j][seq_pop[i][j][cont]][seq_pop[i][j][cont+1]];
 					}else {
-						aux_makespan = (int)aux_makespan + (int)matrizTarefaMaquina[seq_pop[i][j][cont]][j];
+						aux_makespan = aux_makespan + matrizTarefaMaquina[seq_pop[i][j][cont]][j];
 					}					
 					cont++;
 				}
@@ -69,9 +69,9 @@ public class CalculoMakespan {
 			makespan = 0;
 			for (int j=0; j<tarefa.length; j++){
 				if (seq_pop[i][j+1]!=-2){
-					 makespan = makespan + (int)matrizTarefaMaquina[seq_pop[i][j]][i] + (int)matrizSetup[i][seq_pop[i][j]][seq_pop[i][j+1]];
+					 makespan = makespan + matrizTarefaMaquina[seq_pop[i][j]][i] + matrizSetup[i][seq_pop[i][j]][seq_pop[i][j+1]];
 				}else if (seq_pop[i][j]!=-2){
-					makespan = makespan + (int)matrizTarefaMaquina[seq_pop[i][j]][i];
+					makespan = makespan + matrizTarefaMaquina[seq_pop[i][j]][i];
 				}else{
 					break;
 				}
