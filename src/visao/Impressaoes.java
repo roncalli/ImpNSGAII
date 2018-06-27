@@ -1,5 +1,7 @@
 package visao;
 
+import controle.RelacoesDominancia;
+
 public class Impressaoes {
 
 	public float imprimir(int geracao,float[] makespan, float[]custo, int[][][]seq_pop, int numIndividuos, int[] nivelDominancia, int numMaquinas, int numTarefas) {
@@ -8,28 +10,29 @@ public class Impressaoes {
 		int ind_mm= 0 ;
 		float piorCusto = 0;
 		float melhorCusto = 1000000;
-		int ind_mc = 0;
+		int ind_mc = 0;				
 		System.out.println("Imprimindo os ítens da geração: "+geracao);
 		System.out.println("----------------------------------------------------------------------");
 		System.out.println();
-		System.out.println("Indivíduo     -     Makespan     -    Custo");
+		System.out.println("Indivíduo     -     Makespan     -    Custo");	
+		nivelDominancia = imprimirNaoDominados(makespan, custo, numIndividuos);
 		for (int i=0; i<numIndividuos; i++) {
-			if (nivelDominancia[i] == 1) {//Imprimindo apenas as soluções não dominadas
-				System.out.println(i+"          -          "+makespan[i]+"          -          "+custo[i]);
-				if (makespan[i]<melhorMakespan) {
-					melhorMakespan = makespan[i];
-					ind_mm = i;
+			if (nivelDominancia[i] != -2) {//Imprimindo apenas as soluções não dominadas
+				System.out.println(i+"          -          "+makespan[nivelDominancia[i]]+"          -          "+custo[nivelDominancia[i]]);
+				if (makespan[nivelDominancia[i]]<melhorMakespan) {
+					melhorMakespan = makespan[nivelDominancia[i]];
+					ind_mm = nivelDominancia[i];
 				}
-				if (makespan[i]>piorMakespan) {
-					piorMakespan = makespan[i];
+				if (makespan[nivelDominancia[i]]>piorMakespan) {
+					piorMakespan = makespan[nivelDominancia[i]];
 				}
 				
-				if (custo[i]<melhorCusto) {
-					melhorCusto= custo[i];
-					ind_mc = i;
+				if (custo[nivelDominancia[i]]<melhorCusto) {
+					melhorCusto= custo[nivelDominancia[i]];
+					ind_mc = nivelDominancia[i];
 				}
-				if (custo[i]>piorCusto) {
-					piorCusto= custo[i];
+				if (custo[nivelDominancia[i]]>piorCusto) {
+					piorCusto= custo[nivelDominancia[i]];
 				}
 			}
 		}
@@ -92,5 +95,36 @@ public class Impressaoes {
 		System.out.println("----------------------------------------------------------------------");
 		System.out.println();
 		System.out.println();
+	}
+	public int[] imprimirNaoDominados(float[] makespan, float[] custo, int numIndividuos) {
+		int [] listaNaoDominados = new int[numIndividuos];
+		for (int i =0; i<numIndividuos; i++) {
+			listaNaoDominados[i] = -2;
+		}
+		int pos=0;
+		for (int i=0; i<numIndividuos; i++) {
+			boolean naoDominado = true;
+			for (int j=0; j<numIndividuos; j++) {
+				if (i!=j) {
+					if ((makespan[j]<makespan[i])&&(custo[j]<custo[i])) {
+						naoDominado = false;
+						break;
+					}
+					if ((makespan[j]<=makespan[i])&&(custo[j]<custo[i])) {
+						naoDominado = false;
+						break;
+					}
+					if ((makespan[j]<makespan[i])&&(custo[j]<=custo[i])) {
+						naoDominado = false;
+						break;
+					}
+				}				
+			}
+			if (naoDominado) {
+				listaNaoDominados[pos] = i;
+				pos++;
+			}
+		}
+		return listaNaoDominados;
 	}
 }
