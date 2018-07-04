@@ -16,10 +16,10 @@ public class Main {
 	public static void main (String[] args) throws IOException {		
 		LeiaGerarCSV lerArquivos = new LeiaGerarCSV();
 		//Parâmetros do sistema
-		int numTarefas = 100;
-		//int numTarefas = 200;
-		int entrega = 454;
-		//int entrega = 851;
+		//int numTarefas = 100;
+		int numTarefas = 200;
+		//int entrega = 454;
+		int entrega = 851;
 		long melhoratrasoAdiantamento = 1000000;
 		int qtdeGerSemMelhora = 0;
 		int gatilhoBuscaLocal = 10;
@@ -28,7 +28,7 @@ public class Main {
 		int numIndividuos = 100; //número de indivíduos
 		int [] melhor_seq = new int[numTarefas];
 		
-		int numGer = 20000; //número de gerações
+		int numGer = 50000; //número de gerações
 		
 		//true utiliza arquivo gerado anteriomente pelo grasp
 		boolean usaGrasp=true;
@@ -66,7 +66,10 @@ public class Main {
 		for (int w=0; w<10; w++) {
 			seq_pop[w][0] = seq_pop_teste[w][0];
 		}
-		
+		//Rodando com a sequencia inicial gerada pelo GRASP
+		if(usaGrasp) {
+			lerArquivos.popularSequenciaInicial(seq_pop,numTarefas);
+		}
 		// Cálculos das funções objetivo
 		// Função Objetivo 1: Cálculo do atrasoAdiantamento
 		long [] atrasoAdiantamento = new long [numIndividuos];
@@ -81,10 +84,6 @@ public class Main {
 		
 		int g = 0; // geração
 						
-		//Rodando com a sequencia inicial gerada pelo GRASP
-		if(usaGrasp) {
-		lerArquivos.popularSequenciaInicial(seq_pop,numTarefas);
-		}
 		
 		while(g<numGer) {			
 			//Seleciona os pais utilizando torneio de multidão

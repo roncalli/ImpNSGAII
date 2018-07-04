@@ -3,10 +3,10 @@ package controle;
 public class RelacoesDominancia {
 
 	public int verificaDominancia (float sol1, float sol2) {		
-		if ((sol1<sol2)){ // Solução 1 domina a solução 2		
+		if ((sol1<=sol2)){ // Solução 1 domina a solução 2		
 			return 1;
 		}
-		if ((sol2<sol1)){ // Solução 2 domina a solução 1
+		if ((sol2<=sol1)){ // Solução 2 domina a solução 1
 			return 2;
 		}else {
 			return 0;

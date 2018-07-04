@@ -13,8 +13,9 @@ import modelo.Tarefa;
 public class LeiaGerarCSV {
 
 	public void popularSequenciaInicial(int[][][] seq_pop, int numTarefas){
-		String arquivoSequencia = "D:/test1.csv";
-		//String arquivoSequencia = "D:/test2.csv";
+		//String arquivoSequencia = "D:/seq_pop_10.csv";
+		//String arquivoSequencia = "D:/test1.csv";
+		String arquivoSequencia = "D:/test2.csv";
 		BufferedReader br = null;
 		String linha = "";
 		String csvDivisor = ",";
@@ -26,6 +27,7 @@ public class LeiaGerarCSV {
 				String[] objeto = linha.split(csvDivisor);
 				for (int w=0; w<numTarefas; w++){
 					seq_pop[j][0][w] = Integer.parseInt(objeto[w])-1; 
+					//seq_pop[j][0][w] = Integer.parseInt(objeto[w]);
 				}			
 				j++;
 			}
@@ -46,8 +48,9 @@ public class LeiaGerarCSV {
 	}
 	
 	public void popularTabelas(Tarefa[] tarefas, Maquina[] maquinas, int[][] matrizTarefaMaquina, int numMaquinas) {
-		String arquivoTarefaMaquina = "D:/sch100k1.csv";		
-		//String arquivoTarefaMaquina = "D:/sch200k1.csv";
+		//String arquivoTarefaMaquina = "D:/teste10.csv";		
+		//String arquivoTarefaMaquina = "D:/sch100k1.csv";		
+		String arquivoTarefaMaquina = "D:/sch200k1.csv";
 		BufferedReader br = null;
 		String linha = "";
 		String csvDivisor = ",";

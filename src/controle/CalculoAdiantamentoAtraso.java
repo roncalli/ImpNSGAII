@@ -15,9 +15,7 @@ public class CalculoAdiantamentoAtraso {
 				int cont=0;
 				long aux_adiantamentoAtraso = 0;
 				while (seq_pop[i][j][cont]!=-2) {	
-					if (cont+1 == tarefa.length) {
-						break;
-					}
+					tempo = tempo+matrizTarefaMaquina[seq_pop[i][j][cont]][j];
 					long adiantamento = tarefa[seq_pop[i][j][cont]].getPenalidadeAdiantamento()*(entrega-tempo);
 					if (adiantamento<=0) {
 						adiantamento = 0;
@@ -27,8 +25,11 @@ public class CalculoAdiantamentoAtraso {
 						atraso = 0;
 					}
 					aux_adiantamentoAtraso = aux_adiantamentoAtraso + adiantamento + atraso;					
-					tempo = tempo+matrizTarefaMaquina[seq_pop[i][j][cont]][j];															
+					//tempo = tempo+matrizTarefaMaquina[seq_pop[i][j][cont]][j];															
 					cont++;
+					if (cont == tarefa.length) {
+						break;
+					}
 				}
 				calculoAdiantamentoAtraso[i][j] = aux_adiantamentoAtraso;
 			}
@@ -54,9 +55,7 @@ public class CalculoAdiantamentoAtraso {
 		long aux_adiantamentoAtraso = 0;
 		for (int j=0; j<numMaquinas; j++){
 			while (seq_pop[cont]!=-2) {	
-				if (cont+1 == tarefa.length) {
-					break;
-				}
+				tempo = tempo+matrizTarefaMaquina[seq_pop[cont]][j];
 				long adiantamento = tarefa[seq_pop[cont]].getPenalidadeAdiantamento()*(entrega-tempo);
 				if (adiantamento<=0) {
 					adiantamento = 0;
@@ -65,9 +64,11 @@ public class CalculoAdiantamentoAtraso {
 				if (atraso<=0) {
 					atraso = 0;
 				}
-				aux_adiantamentoAtraso = aux_adiantamentoAtraso + adiantamento + atraso;					
-				tempo = tempo+matrizTarefaMaquina[seq_pop[cont]][j];															
+				aux_adiantamentoAtraso = aux_adiantamentoAtraso + adiantamento + atraso;															
 				cont++;
+				if (cont == tarefa.length) {
+					break;
+				}
 			}
 		}
 		return aux_adiantamentoAtraso;
