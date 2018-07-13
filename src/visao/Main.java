@@ -15,88 +15,105 @@ import modelo.Tarefa;
 public class Main {
 	public static void main (String[] args) {		
 		LeiaCSV lerArquivos = new LeiaCSV();
-		//Parâmetros do sistema
-		int numTarefas = 100;
-		int numMaquinas = 10;
-		int numIndividuos = 100; //número de indivíduos
-		int numExec = 5; //Número de execuções
-		int numGer = 50000; //número de gerações		
-		int nGetMut = 10; //numero médio de genes mutados
-		int varMur = 10; //Tipo uma variância da mutação (n_mut = floor(rand*varMut)+qtdMut);
-		int qtdMut =  5; //% Percentual de indivíduos mutados
-		int qtdMaisDom = 30;//Percentual de mais dominados a compor a nova população
+		//Parï¿½metros do sistema
+		int numTarefas = 70;
+		int numMaquinas = 4;
+		int numIndividuos = 100; //nï¿½mero de indivï¿½duos
+		int numExec = 5; //Nï¿½mero de execuï¿½ï¿½es
+		float melhorMakespanGeracao = 100000;
+		int qtdeGerSemMelhora=0;
+		int gatilhoBuscaLocal = 0;
+		boolean buscaLocal = false;
+		float melhorMakespan = 100000;
+		int numGer = 10000; //nï¿½mero de geraï¿½ï¿½es		
+		int nGetMut = 10; //numero mï¿½dio de genes mutados
+		int varMur = 10; //Tipo uma variï¿½ncia da mutaï¿½ï¿½o (n_mut = floor(rand*varMut)+qtdMut);
+		int qtdMut =  5; //% Percentual de indivï¿½duos mutados
+		int qtdMaisDom = 30;//Percentual de mais dominados a compor a nova populaï¿½ï¿½o
 		Maquina maquina[] = new Maquina[numMaquinas];
 		Tarefa tarefa[] = new Tarefa[numTarefas];
-		int matrizTarefaMaquina[][] = new int[numTarefas][numMaquinas];
+		float matrizTarefaMaquina[][] = new float[numTarefas][numMaquinas];
 		float matrizSetup[][][] = new float[numMaquinas][numTarefas][numTarefas];
 		lerArquivos.popularTabelas(tarefa, maquina, matrizTarefaMaquina,matrizSetup,numMaquinas);
-		//Fim dos parâmetros do sistema
+		//Fim dos parï¿½metros do sistema
 		
 		
-		// pop (tarefa, individuo) - valor da célula é a máquina
+		// pop (tarefa, individuo) - valor da cï¿½lula ï¿½ a mï¿½quina
 		int [][] pop = new int [numTarefas][numIndividuos];		
-		// Gera 100% dos indivíduos de maneira aleatória
+		// Gera 100% dos indivï¿½duos de maneira aleatï¿½ria
 		for (int i=0; i<numTarefas; i++) {
 			for (int j=0; j<numIndividuos; j++) {
 				pop[i][j] = (int) (Math.floor(Math.random()*numMaquinas));
 			}
 		}
-		// Sequenciamento da População
+		// Sequenciamento da Populaï¿½ï¿½o
 		// Formato:(sequencia da individuo, maquina, tarefa)
 		int [][][] seq_pop = new int[numIndividuos][numMaquinas][numTarefas];
 		SequenciamentoTarefas sequenciamento = new SequenciamentoTarefas();
 		seq_pop = sequenciamento.sequenciamento_Inicial(numIndividuos, numMaquinas, numTarefas, pop, tarefa);
 		
 		
-		// Cálculos das funções objetivo
-		// Função Objetivo 1: Cálculo do makespan
-		int [] makespan = new int [numIndividuos];
+		// Cï¿½lculos das funï¿½ï¿½es objetivo
+		// Funï¿½ï¿½o Objetivo 1: Cï¿½lculo do makespan
+		float [] makespan = new float [numIndividuos];
 		CalculoMakespan calculoMakespan = new CalculoMakespan();
 		makespan = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_pop, tarefa, matrizTarefaMaquina,matrizSetup);
 		
-		//Função Objetivo 2: Cálculo do Custo
+		//Funï¿½ï¿½o Objetivo 2: Cï¿½lculo do Custo
 		float[] custo = new float[numIndividuos];
 		CalculoCusto calculoCusto = new CalculoCusto();
-		custo = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_pop, matrizTarefaMaquina, maquina);
+		custo = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_pop, matrizTarefaMaquina, maquina, numTarefas);
 		
-		//Classificação por níveis de não dominância
+		//Classificaï¿½ï¿½o por nï¿½veis de nï¿½o dominï¿½ncia
 		int[] nivelDominancia = new int[numIndividuos];
 		RelacoesDominancia relacoesDominancia = new RelacoesDominancia();
 		nivelDominancia = relacoesDominancia.calculaNivelDominancia(numIndividuos, makespan, custo);
 		
-		int g = 0; // geração
-		// Imprimindo Primeira Geração
+		int g = 0; // geraï¿½ï¿½o
+		// Imprimindo Primeira Geraï¿½ï¿½o
 						
 		while(g<numGer) {
-			//Seleciona os pais utilizando torneio de multidão
+			//Seleciona os pais utilizando torneio de multidï¿½o
 			int [] resTorneio = new int[numIndividuos];
 			Operadores operadores = new Operadores();
 			resTorneio = operadores.operadorTorneio(numIndividuos, nivelDominancia);
 			
-			//População gerada pelo cruzamento
+			//Populaï¿½ï¿½o gerada pelo cruzamento
 			int[][] pop_f = new int[numTarefas][numIndividuos];
 			pop_f = operadores.operadorCruzamento(numTarefas, numIndividuos, resTorneio, pop);
 			
 			
-			//População gerada pela mutação
+			//Populaï¿½ï¿½o gerada pela mutaï¿½ï¿½o
 			pop_f = operadores.operadorMutacao(numIndividuos, numMaquinas, numTarefas, qtdMut, varMur,pop_f);						
 			
-			//Sequenciamento da População de Filhos
+			//Sequenciamento da Populaï¿½ï¿½o de Filhos
 			int[][][] seq_Pop_filhos = new int[numIndividuos][numMaquinas][numTarefas];
 			seq_Pop_filhos = sequenciamento.sequenciamento_Inicial(numIndividuos, numMaquinas, numTarefas, pop_f, tarefa);
 			
-//			//Inserir Busca Local após XX gerações, aumentando a popúlação em N soluções, o restamte continua da mesma maneira
-//			BuscaLocal buscaLocal = new BuscaLocal();
-//			for (int cont=0; cont<numIndividuos; cont++) {
-//				buscaLocal.buscaLocalN1N2(pop_f, seq_Pop_filhos, numMaquinas, maquina, tarefa, matrizTarefaMaquina, matrizSetup, cont);
-//			}
-			//Cálculo makespan da população de filhos
-			int [] makespan_f = new int [numIndividuos];
+			//Cï¿½lculo makespan da populaï¿½ï¿½o de filhos
+			float [] makespan_f = new float [numIndividuos];
 			makespan_f = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_Pop_filhos, tarefa, matrizTarefaMaquina,matrizSetup);
 			
-			//Função Objetivo 2: Cálculo do Custo
+			//INSERIR A BUSCA LOCAL//
+			if (buscaLocal) {
+				//Verificando qual indivisuo possui o menor atrasoAdiantamento
+				System.out.println("Busca Local");
+				int individuo = 0;
+				float makespanIndividuo = 1000000;
+				for (int w=0; w<numIndividuos; w++) {
+					if (makespan_f[w]<makespanIndividuo) {
+						makespanIndividuo = makespan_f[w];
+						individuo = w;
+					}
+				}
+				BuscaLocal busca = new BuscaLocal();
+				seq_Pop_filhos = busca.buscaLocal(pop_f, seq_Pop_filhos, numMaquinas, maquina, tarefa, matrizTarefaMaquina, matrizSetup, individuo, numIndividuos);
+				buscaLocal = false;
+			}
+			makespan_f = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_Pop_filhos, tarefa, matrizTarefaMaquina,matrizSetup);
+			//Funï¿½ï¿½o Objetivo 2: Cï¿½lculo do Custo
 			float[] custo_f = new float[numIndividuos];			
-			custo_f = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_Pop_filhos, matrizTarefaMaquina, maquina);			
+			custo_f = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_Pop_filhos, matrizTarefaMaquina, maquina, numTarefas);			
 			
 			//Concatenando Pais e Filhos
 			int[][] pop_pai_filho = new int[numTarefas][2*numIndividuos];
@@ -126,7 +143,7 @@ public class Main {
 					}	
 				}
 			}
-			int[] makespan_pai_filho = new int[2*numIndividuos];
+			float[] makespan_pai_filho = new float[2*numIndividuos];
 			for (int i=0; i<2*numIndividuos; i++) {
 				if (i<numIndividuos) {
 					makespan_pai_filho[i] = makespan[i];
@@ -144,23 +161,21 @@ public class Main {
 				}
 			}
 				
-			//Ranquamento de não dominância dos 2n indivíduos
-			//nível de não dominância
+			//Ranquamento de nï¿½o dominï¿½ncia dos 2n indivï¿½duos
+			//nï¿½vel de nï¿½o dominï¿½ncia
 			nivelDominancia = relacoesDominancia.calculaNivelDominancia((2*numIndividuos), makespan_pai_filho, custo_pai_filho);
 			
-			//Criando a nova população
-			int[][] pop_linha = new int[numTarefas][numIndividuos]; //Nova população
+			//Criando a nova populaï¿½ï¿½o
+			int[][] pop_linha = new int[numTarefas][numIndividuos]; //Nova populaï¿½ï¿½o
 			int[][][] seq_pop_linha = new int[numIndividuos][numMaquinas][numTarefas]; //nova sequencia
-			int nivel = 1; //nível de dominância
-			int j=0; // número de indivíduos adicionados
+			int nivel = 1; //nï¿½vel de dominï¿½ncia
+			int j=0; // nï¿½mero de indivï¿½duos adicionados
 			int ind_vet = 0;
-			//criando vetor com os mais dominados (para gerar diversidade populacional)
-			int [] maisDominados = new int[((numIndividuos*qtdMaisDom)/100)];
-			maisDominados = relacoesDominancia.retornarIndividuosMaisDominados(numIndividuos, nivelDominancia, qtdMaisDom);
-			while (j<numIndividuos) {//Enquanto não selecionar 100 indivíduos
-				//Cálculo de indivíduos de nível j				
-				int n_ind_nivel = 0; //número de individuos do nível X
-				//Calculando o número de indivíduos em um determinado nível
+			//criando vetor com os mais dominados (para gerar diversidade populacional)			
+			while (j<numIndividuos) {//Enquanto nï¿½o selecionar 100 indivï¿½duos
+				//Cï¿½lculo de indivï¿½duos de nï¿½vel j				
+				int n_ind_nivel = 0; //nï¿½mero de individuos do nï¿½vel X
+				//Calculando o nï¿½mero de indivï¿½duos em um determinado nï¿½vel
 				int maiorNivelDominancia = 0;
 				for (int cont = 0; cont< 2*numIndividuos; cont++) {
 					if (nivelDominancia[cont]>maiorNivelDominancia) {
@@ -174,7 +189,7 @@ public class Main {
 					break;
 				}
 				
-				//Adicionando todos os indivíduos dos níveis mais baixos
+				//Adicionando todos os indivï¿½duos dos nï¿½veis mais baixos
 				if (j+n_ind_nivel < 100) {
 					for (int cont = 0; cont< 2*numIndividuos; cont++) {
 						if (nivelDominancia[cont]==nivel) {
@@ -185,16 +200,21 @@ public class Main {
 							if (!solucaoJaIncluida){
 								for (int k =0; k<numTarefas; k++) {
 									if (nivelDominancia[cont]==nivel) {				
-										pop_linha[k][ind_vet] = pop_pai_filho[k][cont];								
+										pop_linha[k][ind_vet] = pop_pai_filho[k][cont];											
+									}
+								}
+								for (int w=0; w<numMaquinas; w++){
+									for (int k =0; k<numTarefas; k++) {													
+										seq_pop_linha[ind_vet][w][k] = 	seq_pai_filho[cont][w][k];																				
 									}
 								}
 								ind_vet++;
 							}
 						}	
 					}					
-				}else {	//CÁLCULO DA DISTÂNCIA DE MULTIDÃO
+				}else {	//Cï¿½LCULO DA DISTï¿½NCIA DE MULTIDï¿½O
 					int [] posicao_nivel = new int[n_ind_nivel];
-					int [] aux_mksp = new int[n_ind_nivel];
+					float [] aux_mksp = new float[n_ind_nivel];
 					float [] aux_custo = new float[n_ind_nivel];
 					int pos = 0;
 					for (int cont = 0; cont< 2*numIndividuos; cont++) {
@@ -214,7 +234,7 @@ public class Main {
 					}
 					float aux = 0;
 					int auxPos = 0;
-					//Ordenando após calcular a distância de multidão
+					//Ordenando apï¿½s calcular a distï¿½ncia de multidï¿½o
 					for (int w = 0; w<distMultidao.length; w++) {
 						for (int k=w; k<distMultidao.length; k++) {
 							if (distMultidao[k]>distMultidao[w]) {
@@ -227,28 +247,38 @@ public class Main {
 							}
 						}
 					}					
-					//Incluindo as soluções de fronteira encontradas na Distância de Multidão
+					//Incluindo as soluï¿½ï¿½es de fronteira encontradas na Distï¿½ncia de Multidï¿½o
 					int inseridos_borda = 0;
 					for (int cont = 0; cont<2; cont++) {
 						if (cont==0) {
 							for (int k =0; k<numTarefas; k++) {								
-								pop_linha[k][ind_vet] = pop_pai_filho[k][posicao_nivel[distMultidao.length-1]];								
+								pop_linha[k][ind_vet] = pop_pai_filho[k][posicao_nivel[distMultidao.length-1]];									
+							}
+							for (int w=0; w<numMaquinas; w++){
+								for (int k =0; k<numTarefas; k++) {													
+									seq_pop_linha[ind_vet][w][k] = 	seq_pai_filho[cont][w][k];																				
+								}
 							}
 							inseridos_borda++;
 						}else { // if cont==1
 							for (int k =0; k<numTarefas; k++) {								
-								pop_linha[k][ind_vet] = pop_pai_filho[k][posicao_nivel[distMultidao.length-2]];
+								pop_linha[k][ind_vet] = pop_pai_filho[k][posicao_nivel[distMultidao.length-2]];										
+							}
+							for (int w=0; w<numMaquinas; w++){
+								for (int k =0; k<numTarefas; k++) {													
+									seq_pop_linha[ind_vet][w][k] = 	seq_pai_filho[cont][w][k];																				
+								}
 							}
 							inseridos_borda++;
 						}
 						ind_vet++;	
-						if (ind_vet == 100) {//Apenas um indivíduo no nível escolhido							
+						if (ind_vet == 100) {//Apenas um indivï¿½duo no nï¿½vel escolhido							
 							break;
 						}
 					}
-					int n = numIndividuos - j; //Número de indivíduos para completar a população tirando as duas soluções de borda incluidas
+					int n = numIndividuos - j; //Nï¿½mero de indivï¿½duos para completar a populaï¿½ï¿½o tirando as duas soluï¿½ï¿½es de borda incluidas
 					for (int cont = inseridos_borda; cont<n; cont++) {
-						//JÁ INCLUIDO OS INDIVIDUOS DAS EXTREMIDADES =-1
+						//Jï¿½ INCLUIDO OS INDIVIDUOS DAS EXTREMIDADES =-1
 						if (distMultidao[cont]!=-1) {
 							boolean solucaoJaIncluida = false;
 							if (cont>0){
@@ -256,7 +286,12 @@ public class Main {
 							}
 							if (!solucaoJaIncluida){
 								for (int k =0; k<numTarefas; k++) {								
-									pop_linha[k][ind_vet] = pop_pai_filho[k][posicao_nivel[cont]];																
+									pop_linha[k][ind_vet] = pop_pai_filho[k][posicao_nivel[cont]];									
+								}
+								for (int w=0; w<numMaquinas; w++){
+									for (int k =0; k<numTarefas; k++) {													
+										seq_pop_linha[ind_vet][w][k] = 	seq_pai_filho[cont][w][k];																				
+									}
 								}
 								ind_vet++;
 								if (ind_vet >=100) {									
@@ -266,29 +301,40 @@ public class Main {
 						}
 					}					
 				}
-				//VERIFICAR
-				seq_pop_linha = sequenciamento.sequenciamento_Inicial(numIndividuos, numMaquinas, numTarefas, pop_linha, tarefa);
+				//Verificar
+				//seq_pop_linha = sequenciamento.sequenciamento_Inicial(numIndividuos, numMaquinas, numTarefas, pop_linha, tarefa);
 				//VERIFICAR
 				//j+=n_ind_nivel;
 				j = ind_vet;				
 				nivel++;								
 			}	
 	
-			//% Atribui a população e a sequência dos indivíduos da população
+			//% Atribui a populaï¿½ï¿½o e a sequï¿½ncia dos indivï¿½duos da populaï¿½ï¿½o
 			pop = pop_linha;
 			seq_pop = seq_pop_linha;
 			
 			makespan = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_pop, tarefa, matrizTarefaMaquina,matrizSetup);
-			custo = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_pop, matrizTarefaMaquina, maquina);
+			custo = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_pop, matrizTarefaMaquina, maquina, numTarefas);
 			
 			nivelDominancia = relacoesDominancia.calculaNivelDominancia(numIndividuos, makespan, custo);			
 			Impressaoes imprimir = new Impressaoes();
-			imprimir.imprimir(g, makespan, custo, seq_pop, numIndividuos, nivelDominancia, numMaquinas);
+			melhorMakespanGeracao = imprimir.imprimir(g, makespan, custo, seq_pop, numIndividuos, nivelDominancia, numMaquinas, numTarefas);
 			System.out.println("Teste");
-			//Incremanta contador de gerações
-			g++;		}
+			//Incremanta contador de geraï¿½ï¿½es
+			if (melhorMakespanGeracao<melhorMakespan) {
+				melhorMakespan = melhorMakespanGeracao;
+				qtdeGerSemMelhora = 0;
+			}else {
+				qtdeGerSemMelhora++;
+			}
+			if (qtdeGerSemMelhora == gatilhoBuscaLocal) {
+				buscaLocal = true;
+				qtdeGerSemMelhora = 0;
+			}			
+			g++;
+		}
 		//Imprimindo resultados		
 		Impressaoes imprimir = new Impressaoes();
-		imprimir.imprimir(g, makespan, custo, seq_pop, numIndividuos, nivelDominancia,numMaquinas);		
+		imprimir.imprimir(g, makespan, custo, seq_pop, numIndividuos, nivelDominancia,numMaquinas, numTarefas);		
 	}
 }

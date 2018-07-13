@@ -86,9 +86,16 @@ public class Operadores {
 		return pop_f;
 	}
 	
-	public int [][] operadorMutacao(int numIndividuos, int numMaquinas, int numTarefas, int qtdMut, int varMur, int[][]pop_f){		
+	public int [][] operadorMutacao(int numIndividuos, int numMaquinas, int numTarefas, int qtdMut, int varMur, int[][]pop_f){
+		
 		int pm = (int)(Math.floor(qtdMut*numIndividuos)/100); //Percentual de Mutação
-		int n_mut = (int) (Math.floor(Math.random()*varMur)+qtdMut); //Número de Genes Mutáveis
+		double randomVarMu=Math.floor(Math.random()*varMur);
+		double relacaoPesoQtdMuttarefasMaquina= (qtdMut*(Double.parseDouble(numMaquinas+"")/numTarefas));
+		
+		
+		int n_mut = ((int) (randomVarMu*relacaoPesoQtdMuttarefasMaquina));//Número de Genes Mutáveis
+		//int pm = (int)(Math.floor(qtdMut*numIndividuos)/100); //Percentual de Mutação
+		//int n_mut = (int) (Math.floor(Math.random()*varMur)+qtdMut); //Número de Genes Mutáveis
 		
 		//Selecionar individuos para mutação		
 		for (int i=0; i<pm; i++) {
@@ -102,13 +109,13 @@ public class Operadores {
 		return pop_f;
 	}
 	
-	public float [][] calculoDistanciaMultidao(int [] makespan, float[] custo, int numFobj, int[] posicao_nivel) {
+	public float [][] calculoDistanciaMultidao(float [] makespan, float[] custo, int numFobj, int[] posicao_nivel) {
 		float [][] distMultidao = new float[makespan.length][2];
 		for (int w = 0; w<numFobj; w++){
 			if (w == 0){
 				//Ordenando Makespan			
 				for (int i = 0; i<makespan.length; i++) {
-					int aux = -1;
+					float aux = -1;
 					int auxPos = -1;
 					for (int j=i; j<makespan.length; j++) {
 						if (makespan[j]<makespan[i]) {
@@ -159,7 +166,7 @@ public class Operadores {
 		return distMultidao;
 	}
 	
-	public boolean verificaSolucoesIguais(int[] makespan_pai_filho, float[] custo_pai_filho, int posicao){
+	public boolean verificaSolucoesIguais(float[] makespan_pai_filho, float[] custo_pai_filho, int posicao){
 		for (int i=0; i<posicao; i++){
 			if((makespan_pai_filho[i] == makespan_pai_filho[posicao])&&(custo_pai_filho[i]==custo_pai_filho[posicao])){
 				return true;
