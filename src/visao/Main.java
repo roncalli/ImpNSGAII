@@ -1,5 +1,6 @@
 package visao;
 
+import java.io.IOException;
 import java.util.Random;
 
 import controle.BuscaLocal;
@@ -13,23 +14,21 @@ import modelo.Maquina;
 import modelo.Tarefa;
 
 public class Main {
-	public static void main (String[] args) {		
+	public static void main (String[] args) throws IOException {	
+		long tempoInicial = System.currentTimeMillis();
 		LeiaCSV lerArquivos = new LeiaCSV();
 		//Par�metros do sistema
 		int numTarefas = 70;
 		int numMaquinas = 4;
 		int numIndividuos = 100; //n�mero de indiv�duos
-		int numExec = 5; //N�mero de execu��es
 		float melhorMakespanGeracao = 100000;
 		int qtdeGerSemMelhora=0;
 		int gatilhoBuscaLocal = 0;
 		boolean buscaLocal = false;
 		float melhorMakespan = 100000;
 		int numGer = 10000; //n�mero de gera��es		
-		int nGetMut = 10; //numero m�dio de genes mutados
 		int varMur = 10; //Tipo uma vari�ncia da muta��o (n_mut = floor(rand*varMut)+qtdMut);
-		int qtdMut =  5; //% Percentual de indiv�duos mutados
-		int qtdMaisDom = 30;//Percentual de mais dominados a compor a nova popula��o
+		int qtdMut =  10; //% Percentual de indiv�duos mutados
 		Maquina maquina[] = new Maquina[numMaquinas];
 		Tarefa tarefa[] = new Tarefa[numTarefas];
 		float matrizTarefaMaquina[][] = new float[numTarefas][numMaquinas];
@@ -330,8 +329,23 @@ public class Main {
 			if (qtdeGerSemMelhora == gatilhoBuscaLocal) {
 				buscaLocal = true;
 				qtdeGerSemMelhora = 0;
-			}			
+			}
 			g++;
+			if (g==500) {
+				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan, custo, tempoInicial,nivelDominancia);
+			}
+			if (g==1000) {
+				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan, custo, tempoInicial,nivelDominancia);
+			}
+			if (g==2000) {
+				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan, custo, tempoInicial,nivelDominancia);
+			}
+			if (g==5000) {
+				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan, custo, tempoInicial,nivelDominancia);
+			}
+			if (g==10000) {
+				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan, custo, tempoInicial,nivelDominancia);
+			}			
 		}
 		//Imprimindo resultados		
 		Impressaoes imprimir = new Impressaoes();

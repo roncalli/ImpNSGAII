@@ -3,10 +3,14 @@ package controle;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+
+import javax.print.attribute.standard.NumberOfInterveningJobs;
 
 import modelo.Maquina;
 import modelo.Tarefa;
+import visao.Impressaoes;
 
 public class LeiaCSV {
 
@@ -19,12 +23,12 @@ public class LeiaCSV {
 
 	public void popularTabelas(Tarefa[] tarefas, Maquina[] maquinas, float[][] matrizTarefaMaquina, float matrizSetup[][][], int numMaquinas) {
 
-		String arquivoTarefa = "D:/FELIPE/TESTE/Tarefa.csv";	
-		String arquivoValorMaquina = "D:/FELIPE/TESTE/ValorMaquina.csv"; 
-		String arquivoMaquina = "D:/FELIPE/TESTE/temposMaquina70IOFAux2.csv";
+		String arquivoTarefa = "D:/FELIPE/FINAL/Tarefa.csv";	
+		String arquivoValorMaquina = "D:/FELIPE/FINAL/ValorMaquina.csv"; 
+		String arquivoMaquina = "D:/FELIPE/FINAL/temposMaquina70IOFAux.csv";
 		//String arquivoMaquina = "D:/FELIPE/TESTE/TabelaTarefaMaquina.csv";
 		//String arquivoMaquina = "D:/FELIPE/TESTE/temposMaquina70IOF.csv";
-		String arquivoSetup = "D:/FELIPE/TESTE/TabelaSetupMaquina";
+		String arquivoSetup = "D:/FELIPE/FINAL/TabelaSetupMaquina";
 		BufferedReader br = null;
 		String linha = "";
 		String csvDivisor = ",";
@@ -86,7 +90,7 @@ public class LeiaCSV {
 		}
 		// Lendo os Arquivos de SETUP
 		for (int w = 0; w < numMaquinas; w++) {
-			arquivoSetup = "D:/FELIPE/TESTE/TabelaSetupMaquinaIOF" + w + ".csv";
+			arquivoSetup = "D:/FELIPE/FINAL/TabelaSetupMaquinaIOF" + w + ".csv";
 			try {
 				br = new BufferedReader(new FileReader(arquivoSetup));
 				int i = 0;
@@ -118,10 +122,22 @@ public class LeiaCSV {
 		}
 	}
 	
-	public int retornaNumTarefas(){
-		
-		
-		
-		return 0;
+	public void gerarCsvSolucao(int numIndividuos, int ger, float[] makespan, float[] custo, long tempoInicial, int[] nivelDominancia) throws IOException {
+		String nomeArquivo = "D:/FELIPE/FINAL/Resultados Imagens 3 Execuções/Resultado"+ger+"_3.csv"; 
+		FileWriter arquivoSaída = new FileWriter(nomeArquivo);	
+		Impressaoes impressaoes = new Impressaoes();
+		nivelDominancia = impressaoes.imprimirNaoDominados(makespan, custo, numIndividuos);		
+		for (int i=0; i<numIndividuos; i++) {
+			if (nivelDominancia[i] != -2) {
+				arquivoSaída.append(makespan[nivelDominancia[i]]+","+custo[nivelDominancia[i]]+"\n");
+			}
+		}		
+		arquivoSaída.flush();
+		arquivoSaída.close();
+		nomeArquivo = "D:/FELIPE/FINAL/Resultados Imagens 3 Execuções/ResultadoTempo"+ger+"_3.csv";
+		arquivoSaída = new FileWriter(nomeArquivo);	
+		arquivoSaída.append("Tempo Total: "+((System.currentTimeMillis()-tempoInicial)/1000)+" segundos");
+		arquivoSaída.flush();
+		arquivoSaída.close();
 	}
 }
