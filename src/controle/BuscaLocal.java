@@ -8,20 +8,16 @@ import modelo.Maquina;
 import modelo.Tarefa;
 
 public class BuscaLocal {
-	public int [][][] buscaLocal(int [][] pop, int [][][] seq_pop, int numMaquinas, Maquina[] maquina, Tarefa[] tarefa, float[][] matrizTarefaMaquina, float[][][] matrizSetup, int individuo, int numIndividuos){
+	public int [][][] buscaLocal(int [][][] seq_pop, int numMaquinas, Maquina[] maquina, Tarefa[] tarefa, float[][] matrizTarefaMaquina, float[][][] matrizSetup, int individuo, int numIndividuos){
 		//Verificar qual máquina possui o maior makespan
 		int contNaoMelhora = 0;
 		int maquinaMaiorMakespan = -1;
 		int maquinaMenorMakespan = -1;
 		float maiorMakespan = 0;
-		float menorMakespan = 1000000;
-		int [] pop_aux = new int[tarefa.length];
+		float menorMakespan = 1000000;		
 		int [][] seq_pop_aux = new int[numMaquinas][tarefa.length];
 		
-		//Copiando a Populacao
-		for (int i=0; i<tarefa.length; i++){
-			pop_aux[i] = pop[i][individuo];
-		}
+		
 		
 		//Copiando a Sequencia
 		for (int i=0; i<numMaquinas; i++){
@@ -78,8 +74,7 @@ public class BuscaLocal {
 				if (seq_pop_aux[maquinaMaiorMakespan][w]!=-2){
 					posMaior++;
 				}
-			}
-			pop_aux[seq_pop_aux[maquinaMaiorMakespan][tarMaqMaior]] = maquinaMenorMakespan;
+			}			
 			seq_pop_aux[maquinaMenorMakespan][posMenor] = seq_pop_aux[maquinaMaiorMakespan][tarMaqMaior];
 			seq_pop_aux[maquinaMaiorMakespan][tarMaqMaior] = seq_pop_aux[maquinaMaiorMakespan][posMaior-1];
 			seq_pop_aux[maquinaMaiorMakespan][posMaior-1] = -2;
@@ -88,17 +83,11 @@ public class BuscaLocal {
 			float makespanApos = calculoMakespan.calculoMakespanSequencia(seq_pop_aux, tarefa, matrizTarefaMaquina, numMaquinas, matrizSetup);
 			float custoApos = calculoCusto.calculoCustoSequencia(seq_pop_aux, tarefa, matrizTarefaMaquina, numMaquinas, maquina);
 			if (makespanApos<makespanAntes){//Melhorou
-				seq_pop[individuo] = seq_pop_aux;
-				for (int w=0; w<tarefa.length; w++){
-					pop[w][individuo] = pop_aux[w];
-				}
+				seq_pop[individuo] = seq_pop_aux;				
 				melhorou = true;
 				break;
 			}else if(custoApos<custoAntes){
-				seq_pop[individuo] = seq_pop_aux;
-				for (int w=0; w<tarefa.length; w++){
-					pop[w][individuo] = pop_aux[w];
-				}
+				seq_pop[individuo] = seq_pop_aux;				
 				melhorou = true;
 				break;
 			}

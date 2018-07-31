@@ -33,134 +33,24 @@ public class Operadores {
 	}
 	
 	
-	public int[][] operadorCruzamento_old(int numTarefas, int numIndividuos, int[] resTorneio, int[][] pop){//Antigo
-		int n_corte = (int) Math.floor(Math.random()*6)+5; //Números de regiões de corte
-		int[] v_corte = new int[n_corte]; //Vetor dos pontos de corte
-		for (int i=0; i<n_corte; i++) {
-			v_corte[i] = (int) Math.floor(Math.random()*99);
-		}
-		Arrays.sort(v_corte);
-		int[][] pop_f = new int[numTarefas][numIndividuos];
-		
-		//Cruzamento dos indivíduos selecionados
-		int cont = (int)Math.floor(numIndividuos/2);
-		for(int j=0; j<cont; j++) {
-			int flag = 0;
-			int cont_tarefa = 0; //Contador de Tarefa
-			int num_corte = 0;
-			//Realização do cruzamento com n pontos de corte
-			int op1 = (int) (Math.floor(Math.random()*100)); // Escolha aleatória dois individuos para o cruzamento
-			int op2 = (int) (Math.floor(Math.random()*100)); // Escolha aleatória dois individuos para o cruzamento			
-			while (op1 == op2) { // Garantir que op1 seja o mesmo individuo de op2
-				op2 = (int) (Math.floor(Math.random()*100));
-			}
-			int pai1 = resTorneio[op1];
-			int pai2 = resTorneio[op2];
-			while(cont_tarefa <numTarefas) {
-				if(flag == 0) {
-					pop_f[cont_tarefa][(2*j)] = pop[cont_tarefa][pai1];
-					pop_f[cont_tarefa][(2*j+1)] = pop[cont_tarefa][pai2];
-				}else {
-					pop_f[cont_tarefa][(2*j)] = pop[cont_tarefa][pai2];
-					pop_f[cont_tarefa][(2*j+1)] = pop[cont_tarefa][pai1];
-				}
-				cont_tarefa++;
-				if (cont_tarefa <= num_corte) {
-					if(cont_tarefa>v_corte[num_corte-1]) {
-						num_corte++;
-						if (flag == 0) {
-							flag = 1;
-						}else {
-							flag = 0;
-						}
-					}	
-				}else {
-					if (flag == 0) {
-						flag = 1;
-					}else {
-						flag = 0;
-					}
-				}
-			}
-		}		
-		return pop_f;
-	}
+	public int[][][] operadorCruzamento(int numTarefas, int numIndividuos, int numMaquinas, int[] resTorneio, int[][][] seq_pop){//Novo
 	
-	
-	public int[][] operadorCruzamento(int numTarefas, int numIndividuos, int[] resTorneio, int[][] pop){//Novo
-		int n_corte = (int) Math.floor(Math.random()*6)+5; //Números de regiões de corte
-		int[] v_corte = new int[n_corte]; //Vetor dos pontos de corte
-		for (int i=0; i<n_corte; i++) {
-			v_corte[i] = (int) Math.floor(Math.random()*99);
-		}
-		Arrays.sort(v_corte);
-		int[][] pop_f = new int[numTarefas][numIndividuos];
-		
-		//Cruzamento dos indivíduos selecionados
-		
-		for (int i=0; i<numTarefas; i++){
-			for (int j=0; j<numIndividuos; j++){
-				pop_f[i][j] = pop[i][j];
-			}
-		}
-		int cont = (int)Math.floor(numIndividuos/2);
-		for(int j=0; j<cont; j++) {
-			int flag = 0;
-			int cont_tarefa = v_corte[0]; //Contador de Tarefa
-			int num_corte = 0;
-			//Realização do cruzamento com n pontos de corte
-			int op1 = (int) (Math.floor(Math.random()*100)); // Escolha aleatória dois individuos para o cruzamento
-			int op2 = (int) (Math.floor(Math.random()*100)); // Escolha aleatória dois individuos para o cruzamento			
-			while (op1 == op2) { // Garantir que op1 seja o mesmo individuo de op2
-				op2 = (int) (Math.floor(Math.random()*100));
-			}
-			int pai1 = resTorneio[op1];
-			int pai2 = resTorneio[op2];
-			for (int w=0; w<numTarefas; w++){
-				if (w == v_corte[num_corte]){
-					if (flag == 0){
-						flag = 1; 
-					}else{
-						flag = 0;
-					}
-					num_corte++;
-					if (num_corte==n_corte){
-						break;
-					}
-				}
-				if (flag == 1){//Trocar do indivíduo 1 com o 2
-					int aux = pop_f[w][pai1];
-					pop_f[w][pai1] = pop[w][pai2];
-					pop_f[w][pai2] = aux;
-				}
-			}
-		}
-		return pop_f;
+		//Refazer
+		int[][][] seq_pop_f = new int[numMaquinas][numIndividuos][numTarefas];	
+		return seq_pop_f;
 	}
 	
 	
 	
 	
 	
-	public int [][] operadorMutacao(int numIndividuos, int numMaquinas, int numTarefas, int qtdMut, int varMur, int[][]pop_f){
-		
-		int pm = (int)(Math.floor(qtdMut*numIndividuos)/100); //Percentual de Mutação
-		
-		int n_mut = (int)((pm*numTarefas)/100);
-		//int n_mut = ((int) (randomVarMu*relacaoPesoQtdMuttarefasMaquina));//Número de Genes Mutáveis
-		
-		
-		//Selecionar individuos para mutação		
-		for (int i=0; i<pm; i++) {
-			int filho = (int) Math.floor(Math.random()*numIndividuos);
-			for (int j=0; j<n_mut; j++) {
-				int ind_Pop_Mut = (int)Math.floor(Math.random()*numTarefas);
-				int alt_Pop_Mut = (int) Math.floor(Math.random()*numMaquinas);
-				pop_f[ind_Pop_Mut][filho] = alt_Pop_Mut; 
-			}
-		}
-		return pop_f;
+	public int [][][] operadorMutacao(int numIndividuos, int numMaquinas, int numTarefas, int qtdMut, int varMur, int[][][]seq_pop){
+		//Refazer
+		int[][][] seq_pop_f = new int[numMaquinas][numIndividuos][numTarefas];	
+		return seq_pop_f;
 	}
+	
+	
 	
 	public float [][] calculoDistanciaMultidao(float [] makespan, float[] custo, int numFobj, int[] posicao_nivel) {
 		float [][] distMultidao = new float[makespan.length][2];

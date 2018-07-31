@@ -8,7 +8,7 @@ import modelo.Tarefa;
 
 public class SequenciamentoTarefas {
 	
-	public int [][][] sequenciamento_Inicial(int numIndividuos, int numMaquinas, int numTarefas, int [][]pop, Tarefa [] tarefa){
+	public int [][][] sequenciamento_Inicial(int numIndividuos, int numMaquinas, int numTarefas, Tarefa [] tarefa){
 		// Sequenciamento da População
 		// Formato:(sequencia da tarefa, maquina, individuo)
 		int [][][] seq_pop = new int[numIndividuos][numMaquinas][numTarefas];

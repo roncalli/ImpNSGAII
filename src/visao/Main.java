@@ -1,6 +1,9 @@
 package visao;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 import controle.BuscaLocal;
@@ -37,19 +40,14 @@ public class Main {
 		//Fim dos par�metros do sistema
 		
 		
-		// pop (tarefa, individuo) - valor da c�lula � a m�quina
-		int [][] pop = new int [numTarefas][numIndividuos];		
+		// pop (tarefa, individuo) - valor da c�lula � a m�quina		
 		// Gera 100% dos indiv�duos de maneira aleat�ria
-		for (int i=0; i<numTarefas; i++) {
-			for (int j=0; j<numIndividuos; j++) {
-				pop[i][j] = (int) (Math.floor(Math.random()*numMaquinas));
-			}
-		}
 		// Sequenciamento da Popula��o
-		// Formato:(sequencia da individuo, maquina, tarefa)
-		int [][][] seq_pop = new int[numIndividuos][numMaquinas][numTarefas];
+		// Formato:(sequencia da individuo, maquina, tarefa)	
+		
+		int [][][] seq_pop = new int[numIndividuos][numMaquinas][numTarefas];				
 		SequenciamentoTarefas sequenciamento = new SequenciamentoTarefas();
-		seq_pop = sequenciamento.sequenciamento_Inicial(numIndividuos, numMaquinas, numTarefas, pop, tarefa);
+		seq_pop = sequenciamento.sequenciamento_Inicial(numIndividuos, numMaquinas, numTarefas, tarefa);
 		
 		
 		// C�lculos das fun��es objetivo
@@ -78,16 +76,22 @@ public class Main {
 			resTorneio = operadores.operadorTorneio(numIndividuos, nivelDominancia);
 			
 			//Popula��o gerada pelo cruzamento
-			int[][] pop_f = new int[numTarefas][numIndividuos];
-			pop_f = operadores.operadorCruzamento(numTarefas, numIndividuos, resTorneio, pop);
+			int[][][] seq_Pop_filhos = new int[numIndividuos][numMaquinas][numTarefas];			
+			//seq_Pop_filhos = operadores.operadorCruzamento(numTarefas, numIndividuos, numMaquinas, resTorneio, seq_pop);
 			
 			
 			//Popula��o gerada pela muta��o
-			pop_f = operadores.operadorMutacao(numIndividuos, numMaquinas, numTarefas, qtdMut, varMur,pop_f);						
-			
-			//Sequenciamento da Popula��o de Filhos
-			int[][][] seq_Pop_filhos = new int[numIndividuos][numMaquinas][numTarefas];
-			seq_Pop_filhos = sequenciamento.sequenciamento_Inicial(numIndividuos, numMaquinas, numTarefas, pop_f, tarefa);
+			//seq_Pop_filhos = operadores.operadorMutacao(numIndividuos, numMaquinas, numTarefas, qtdMut, varMur,seq_Pop_filhos);						
+											
+			//PALEATIVO
+			for (int w=0; w<numIndividuos; w++) {
+				for (int q=0; q<numMaquinas; q++) {
+					for (int t=0; t<numTarefas; t++) {
+						seq_Pop_filhos[w][q][t] = seq_pop[w][q][t];
+					}
+				}
+			}
+			//PALEATIVO
 			
 			//C�lculo makespan da popula��o de filhos
 			float [] makespan_f = new float [numIndividuos];
@@ -106,7 +110,7 @@ public class Main {
 					}
 				}
 				BuscaLocal busca = new BuscaLocal();
-				seq_Pop_filhos = busca.buscaLocal(pop_f, seq_Pop_filhos, numMaquinas, maquina, tarefa, matrizTarefaMaquina, matrizSetup, individuo, numIndividuos);
+				seq_Pop_filhos = busca.buscaLocal(seq_Pop_filhos, numMaquinas, maquina, tarefa, matrizTarefaMaquina, matrizSetup, individuo, numIndividuos);
 				buscaLocal = false;
 			}
 			makespan_f = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_Pop_filhos, tarefa, matrizTarefaMaquina,matrizSetup);
@@ -115,17 +119,7 @@ public class Main {
 			custo_f = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_Pop_filhos, matrizTarefaMaquina, maquina, numTarefas);			
 			
 			//Concatenando Pais e Filhos
-			int[][] pop_pai_filho = new int[numTarefas][2*numIndividuos];
-			for (int i=0; i<numTarefas; i++) {			
-				for (int j=0; j<2*numIndividuos;j++) {
-					if (j<numIndividuos){
-						pop_pai_filho[i][j] = pop[i][j]; 						
-					}else {										
-						pop_pai_filho[i][j] = pop_f[i][j-100];						
-					}					
-				}
-			}
-			
+						
 			int [][][]seq_pai_filho = new int[2*numIndividuos][numMaquinas][numTarefas];
 			for (int i=0; i<2*numIndividuos; i++) {
 				if (i<numIndividuos) {
@@ -196,12 +190,7 @@ public class Main {
 							if (cont>0){
 								solucaoJaIncluida = operadores.verificaSolucoesIguais(makespan_pai_filho, custo_pai_filho, cont);
 							}
-							if (!solucaoJaIncluida){
-								for (int k =0; k<numTarefas; k++) {
-									if (nivelDominancia[cont]==nivel) {				
-										pop_linha[k][ind_vet] = pop_pai_filho[k][cont];											
-									}
-								}
+							if (!solucaoJaIncluida){								
 								for (int w=0; w<numMaquinas; w++){
 									for (int k =0; k<numTarefas; k++) {													
 										seq_pop_linha[ind_vet][w][k] = 	seq_pai_filho[cont][w][k];																				
@@ -249,20 +238,14 @@ public class Main {
 					//Incluindo as solu��es de fronteira encontradas na Dist�ncia de Multid�o
 					int inseridos_borda = 0;
 					for (int cont = 0; cont<2; cont++) {
-						if (cont==0) {
-							for (int k =0; k<numTarefas; k++) {								
-								pop_linha[k][ind_vet] = pop_pai_filho[k][posicao_nivel[distMultidao.length-1]];									
-							}
+						if (cont==0) {							
 							for (int w=0; w<numMaquinas; w++){
 								for (int k =0; k<numTarefas; k++) {													
 									seq_pop_linha[ind_vet][w][k] = 	seq_pai_filho[cont][w][k];																				
 								}
 							}
 							inseridos_borda++;
-						}else { // if cont==1
-							for (int k =0; k<numTarefas; k++) {								
-								pop_linha[k][ind_vet] = pop_pai_filho[k][posicao_nivel[distMultidao.length-2]];										
-							}
+						}else { // if cont==1							
 							for (int w=0; w<numMaquinas; w++){
 								for (int k =0; k<numTarefas; k++) {													
 									seq_pop_linha[ind_vet][w][k] = 	seq_pai_filho[cont][w][k];																				
@@ -283,10 +266,7 @@ public class Main {
 							if (cont>0){
 								solucaoJaIncluida = operadores.verificaSolucoesIguais(makespan_pai_filho, custo_pai_filho, cont);
 							}
-							if (!solucaoJaIncluida){
-								for (int k =0; k<numTarefas; k++) {								
-									pop_linha[k][ind_vet] = pop_pai_filho[k][posicao_nivel[cont]];									
-								}
+							if (!solucaoJaIncluida){								
 								for (int w=0; w<numMaquinas; w++){
 									for (int k =0; k<numTarefas; k++) {													
 										seq_pop_linha[ind_vet][w][k] = 	seq_pai_filho[cont][w][k];																				
@@ -308,8 +288,7 @@ public class Main {
 				nivel++;								
 			}	
 	
-			//% Atribui a popula��o e a sequ�ncia dos indiv�duos da popula��o
-			pop = pop_linha;
+			//% Atribui a popula��o e a sequ�ncia dos indiv�duos da popula��o			
 			seq_pop = seq_pop_linha;
 			
 			makespan = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_pop, tarefa, matrizTarefaMaquina,matrizSetup);
