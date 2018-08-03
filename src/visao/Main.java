@@ -29,8 +29,7 @@ public class Main {
 		int gatilhoBuscaLocal = 0;
 		boolean buscaLocal = false;
 		float melhorMakespan = 100000;
-		int numGer = 10000; //nï¿½mero de geraï¿½ï¿½es		
-		int varMur = 10; //Tipo uma variï¿½ncia da mutaï¿½ï¿½o (n_mut = floor(rand*varMut)+qtdMut);
+		int numGer = 20000; //nï¿½mero de geraï¿½ï¿½es		
 		int qtdMut =  10; //% Percentual de indivï¿½duos mutados
 		Maquina maquina[] = new Maquina[numMaquinas];
 		Tarefa tarefa[] = new Tarefa[numTarefas];
@@ -77,21 +76,12 @@ public class Main {
 			
 			//Populaï¿½ï¿½o gerada pelo cruzamento
 			int[][][] seq_Pop_filhos = new int[numIndividuos][numMaquinas][numTarefas];			
-			//seq_Pop_filhos = operadores.operadorCruzamento(numTarefas, numIndividuos, numMaquinas, resTorneio, seq_pop);
+			seq_Pop_filhos = operadores.operadorCruzamento(numTarefas, numIndividuos, numMaquinas, resTorneio, seq_pop);
 			
 			
-			//Populaï¿½ï¿½o gerada pela mutaï¿½ï¿½o
-			//seq_Pop_filhos = operadores.operadorMutacao(numIndividuos, numMaquinas, numTarefas, qtdMut, varMur,seq_Pop_filhos);						
-											
-			//PALEATIVO
-			for (int w=0; w<numIndividuos; w++) {
-				for (int q=0; q<numMaquinas; q++) {
-					for (int t=0; t<numTarefas; t++) {
-						seq_Pop_filhos[w][q][t] = seq_pop[w][q][t];
-					}
-				}
-			}
-			//PALEATIVO
+			//Populaç
+			//seq_Pop_filhos = operadores.operadorMutacao(numIndividuos, numMaquinas, numTarefas, qtdMut, varMur,seq_Pop_filhos);
+			seq_Pop_filhos = operadores.operadorMutacao(numIndividuos, numMaquinas, numTarefas, qtdMut, seq_Pop_filhos);									
 			
 			//Cï¿½lculo makespan da populaï¿½ï¿½o de filhos
 			float [] makespan_f = new float [numIndividuos];
@@ -159,7 +149,6 @@ public class Main {
 			nivelDominancia = relacoesDominancia.calculaNivelDominancia((2*numIndividuos), makespan_pai_filho, custo_pai_filho);
 			
 			//Criando a nova populaï¿½ï¿½o
-			int[][] pop_linha = new int[numTarefas][numIndividuos]; //Nova populaï¿½ï¿½o
 			int[][][] seq_pop_linha = new int[numIndividuos][numMaquinas][numTarefas]; //nova sequencia
 			int nivel = 1; //nï¿½vel de dominï¿½ncia
 			int j=0; // nï¿½mero de indivï¿½duos adicionados
@@ -279,18 +268,20 @@ public class Main {
 							}
 						}
 					}					
-				}
-				//Verificar
-				//seq_pop_linha = sequenciamento.sequenciamento_Inicial(numIndividuos, numMaquinas, numTarefas, pop_linha, tarefa);
-				//VERIFICAR
-				//j+=n_ind_nivel;
+				}				
 				j = ind_vet;				
 				nivel++;								
 			}	
 	
-			//% Atribui a populaï¿½ï¿½o e a sequï¿½ncia dos indivï¿½duos da populaï¿½ï¿½o			
-			seq_pop = seq_pop_linha;
-			
+			//% Atribui a populaï¿½ï¿½o e a sequï¿½ncia dos indivï¿½duos da populaï¿½ï¿½o		
+			//Copiando os indivíduos de seq_pop para seq_pop_f
+			for (int q=0; q<numIndividuos; q++){
+				for (int w=0; w<numMaquinas; w++){
+					for (int r=0; r<numTarefas; r++){
+						seq_pop[q][w][r] = seq_pop_linha[q][w][r];
+					}
+				}
+			}
 			makespan = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_pop, tarefa, matrizTarefaMaquina,matrizSetup);
 			custo = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_pop, matrizTarefaMaquina, maquina, numTarefas);
 			
