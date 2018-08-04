@@ -29,7 +29,7 @@ public class Main {
 		int gatilhoBuscaLocal = 0;
 		boolean buscaLocal = false;
 		float melhorMakespan = 100000;
-		int numGer = 20000; //n�mero de gera��es		
+		int numGer = 1000; //n�mero de gera��es		
 		int qtdMut =  10; //% Percentual de indiv�duos mutados
 		Maquina maquina[] = new Maquina[numMaquinas];
 		Tarefa tarefa[] = new Tarefa[numTarefas];
@@ -88,6 +88,8 @@ public class Main {
 			makespan_f = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_Pop_filhos, tarefa, matrizTarefaMaquina,matrizSetup);
 			
 			//INSERIR A BUSCA LOCAL//
+			//BuscaLocalFalse
+			buscaLocal = false;
 			if (buscaLocal) {
 				//Verificando qual indivisuo possui o menor atrasoAdiantamento
 				System.out.println("Busca Local");
@@ -102,7 +104,7 @@ public class Main {
 				BuscaLocal busca = new BuscaLocal();
 				seq_Pop_filhos = busca.buscaLocal(seq_Pop_filhos, numMaquinas, maquina, tarefa, matrizTarefaMaquina, matrizSetup, individuo, numIndividuos);
 				buscaLocal = false;
-			}
+			}						
 			makespan_f = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_Pop_filhos, tarefa, matrizTarefaMaquina,matrizSetup);
 			//Fun��o Objetivo 2: C�lculo do Custo
 			float[] custo_f = new float[numIndividuos];			
