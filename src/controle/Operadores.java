@@ -137,22 +137,51 @@ public class Operadores {
 		//Efetuando a adequacao baseado no PMX
 		for (int i=0; i<numTarefas; i++){
 			if (i<corte1 || i>corte2){ //Fora da área de corte				
-				int tarefaParaAdicionarInd1 = retornaTarefaPMX(auxind1, ind1, auxind2, ind2, ind1[i], numTarefas);
+				int tarefaParaAdicionarInd1 = retornaTarefaPMX(auxind1, ind1, ind1[i], numTarefas);
 				auxind1[i] = tarefaParaAdicionarInd1;
-				int tarefaParaAdicionarInd2 = retornaTarefaPMX(auxind2, ind2, auxind1, ind1, ind2[i], numTarefas);
+				int tarefaParaAdicionarInd2 = retornaTarefaPMX(auxind2, ind2, ind2[i], numTarefas);
 				auxind2[i] = tarefaParaAdicionarInd2;
 			}			
 		}
 		
+		//Remontando as listas de acordo com a quantidade de tarefa de cada máquina	
+		cont1 = 0;
+		maquinaP1 = 0;
+		cont2 = 0;
+		maquinaP2 = 0;
+		
+		
+		//REVER
+		for (int i=0; i<numTarefas; i++){			
+			if (cont1 == tarefasMaquinaPai1[maquinaP1]){
+				maquinaP1++;
+				cont1=0;
+				seq_pop_f[pai1][maquinaP1][cont1] = auxind1[i];				
+				cont1++;
+			}else{
+				seq_pop_f[pai1][maquinaP1][cont1] = auxind1[i];				
+				cont1++;
+			}
+			if (cont2 == tarefasMaquinaPai2[maquinaP2]){
+				maquinaP2++;
+				cont2=0;
+				seq_pop_f[pai2][maquinaP2][cont2] = auxind2[i];				
+				cont2++;
+			}else{
+				seq_pop_f[pai2][maquinaP2][cont2] = auxind2[i];				
+				cont2++;
+			}					
+		}
+		//REVER
 		return seq_pop_f;
 	}
 	
-	public int retornaTarefaPMX(int[] auxindP, int[] indP,int[] auxindS, int[] indS, int tarefa, int numTarefas){		
-		boolean encontrou = false;
-		while (encontrou){
+	public int retornaTarefaPMX(int[] auxindP, int[] indS, int tarefa, int numTarefas){		
+		boolean encontrou = true;
+		while (encontrou == true){
 			int indiceTarefa = tarefaJaIncluida(auxindP, tarefa, numTarefas);
 			if (indiceTarefa == -1){ //Tarefa não incluída
-				encontrou = true;
+				encontrou = false;
 				break;
 			}else{ // Procurar qual tarefa incluir 
 				tarefa = indS[indiceTarefa];				

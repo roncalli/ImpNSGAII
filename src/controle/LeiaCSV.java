@@ -25,7 +25,7 @@ public class LeiaCSV {
 
 		String arquivoTarefa = "D:/FELIPE/FINAL/Tarefa.csv";	
 		String arquivoValorMaquina = "D:/FELIPE/FINAL/ValorMaquina.csv"; 
-		String arquivoMaquina = "D:/FELIPE/FINAL/temposMaquina70IOFAux.csv";
+		String arquivoMaquina = "D:/FELIPE/FINAL/temposMaquina70IOF.csv";
 		//String arquivoMaquina = "D:/FELIPE/TESTE/TabelaTarefaMaquina.csv";
 		//String arquivoMaquina = "D:/FELIPE/TESTE/temposMaquina70IOF.csv";
 		String arquivoSetup = "D:/FELIPE/FINAL/TabelaSetupMaquina";
