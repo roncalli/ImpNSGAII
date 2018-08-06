@@ -123,7 +123,10 @@ public class LeiaCSV {
 	}
 	
 	public void gerarCsvSolucao(int numIndividuos, int ger, float[] makespan, float[] custo, long tempoInicial, int[] nivelDominancia) throws IOException {
-		String nomeArquivo = "D:/FELIPE/FINAL/Resultados Imagens 3 Execuções/Resultado"+ger+"_3.csv"; 
+		String exec = "12";
+		String rodada = "_"+exec+".csv";
+		String data = "Data040818";
+		String nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/Exec"+exec+"/Resultado"+ger+rodada; 
 		FileWriter arquivoSaída = new FileWriter(nomeArquivo);	
 		Impressaoes impressaoes = new Impressaoes();
 		nivelDominancia = impressaoes.imprimirNaoDominados(makespan, custo, numIndividuos);		
@@ -134,7 +137,7 @@ public class LeiaCSV {
 		}		
 		arquivoSaída.flush();
 		arquivoSaída.close();
-		nomeArquivo = "D:/FELIPE/FINAL/Resultados Imagens 3 Execuções/ResultadoTempo"+ger+"_3.csv";
+		nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/Exec"+exec+"/ResultadoTempo"+ger+rodada;
 		arquivoSaída = new FileWriter(nomeArquivo);	
 		arquivoSaída.append("Tempo Total: "+((System.currentTimeMillis()-tempoInicial)/1000)+" segundos");
 		arquivoSaída.flush();
