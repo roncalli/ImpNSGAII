@@ -143,4 +143,69 @@ public class LeiaCSV {
 		arquivoSaída.flush();
 		arquivoSaída.close();
 	}
+	
+	public void gerarCsvSequenciaSolucao(int numIndividuos, int numMaquina, int numTarefas, int ger, float[] makespan, float[] custo, long tempoInicial, int[] nivelDominancia, int[][][]seq_pop) throws IOException {
+		String exec = "1";
+		String rodada = "_"+exec+".csv";
+		String data = "Data120818";
+		String nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/ArqFinal"+ger+rodada; 
+		FileWriter arquivoSaída = new FileWriter(nomeArquivo);	
+		Impressaoes impressaoes = new Impressaoes();
+		nivelDominancia = impressaoes.imprimirNaoDominados(makespan, custo, numIndividuos);		
+		for (int i=0; i<numIndividuos; i++) {
+			if(nivelDominancia[i] == -2){
+				break;
+			}
+			for (int j=0; j<numMaquina; j++){
+				for (int k=0; k<numTarefas; k++){
+					if (seq_pop[nivelDominancia[i]][j][k] != -2) {
+						arquivoSaída.append(seq_pop[nivelDominancia[i]][j][k]+" - ");
+					}else{
+						break;
+					}
+				}	
+				arquivoSaída.append("\n");
+			}
+		}
+		arquivoSaída.flush();
+		arquivoSaída.close();		
+	}
+	
+	public int[][][] lerArquivoSolucoes(int numIndividuos, int numMaquinas, int numTarefas){
+		int auxSeq[][][] = new int[numIndividuos][numMaquinas][numTarefas];
+		for (int i=0; i<numIndividuos; i++){
+			for (int j=0; j<numMaquinas; j++){
+				for (int k=0; k<numTarefas; k++){
+					auxSeq[i][j][k] = -2;
+				}
+			}
+		}
+		
+		BufferedReader br = null;
+		String linha = "";
+		String csvDivisor = ",";
+		try {
+
+			br = new BufferedReader(new FileReader(arquivoTarefa));
+			int i = 0;
+			while ((linha = br.readLine()) != null) {
+				String[] objeto = linha.split(csvDivisor);
+				tarefas[i] = new Tarefa(Integer.valueOf(objeto[objeto.length - 3]), Integer.valueOf(objeto[objeto.length - 2]), Float.valueOf(objeto[objeto.length - 1]), false);
+				i++;
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+	}
 }
