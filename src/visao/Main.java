@@ -29,7 +29,7 @@ public class Main {
 		int gatilhoBuscaLocal = 0;
 		boolean buscaLocal = false;
 		float melhorMakespan = 100000;
-		int numGer = 100; //nï¿½mero de geraï¿½ï¿½es		
+		int numGer = 1000; //nï¿½mero de geraï¿½ï¿½es		
 		int qtdMut =  10; //% Percentual de indivï¿½duos mutados
 		Maquina maquina[] = new Maquina[numMaquinas];
 		Tarefa tarefa[] = new Tarefa[numTarefas];
@@ -85,7 +85,7 @@ public class Main {
 			
 			//Cï¿½lculo makespan da populaï¿½ï¿½o de filhos
 			float [] makespan_f = new float [numIndividuos];
-			makespan_f = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_Pop_filhos, tarefa, matrizTarefaMaquina,matrizSetup);
+			float[] custo_f = new float[numIndividuos];					
 			
 			//INSERIR A BUSCA LOCAL//
 			//BuscaLocalFalse
@@ -105,24 +105,43 @@ public class Main {
 				seq_Pop_filhos = busca.buscaLocal(seq_Pop_filhos, numMaquinas, maquina, tarefa, matrizTarefaMaquina, matrizSetup, individuo, numIndividuos);
 				buscaLocal = false;
 			}						
-			makespan_f = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_Pop_filhos, tarefa, matrizTarefaMaquina,matrizSetup);
-			//Funï¿½ï¿½o Objetivo 2: Cï¿½lculo do Custo
-			float[] custo_f = new float[numIndividuos];			
-			custo_f = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_Pop_filhos, matrizTarefaMaquina, maquina, numTarefas);
+			
 			
 			//LOCAL ONDE SERÁ COLOCADO O ARQUIVO
 			if (g==0){ // Primeira geração, ainda não existe o arquivo
-				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan_f, custo_f, tempoInicial, nivelDominancia);
+				lerArquivos.gerarCsvSolucao(numIndividuos, g,makespan_f, custo_f, tempoInicial, nivelDominancia);
 				lerArquivos.gerarCsvSequenciaSolucao(numIndividuos, numMaquinas, numTarefas, g, makespan_f, custo_f, tempoInicial, nivelDominancia, seq_Pop_filhos);
 			}else{ //Atualização do Arquivo
-				int auxSeq[][][] = new int[numIndividuos][numMaquinas][numTarefas];
+				int auxSeqPop[][][] = lerArquivos.lerArquivoSolucoes(numIndividuos, numMaquinas, numTarefas);	
+				int contArquivo = 0;				
+				for (int i=0; i<numIndividuos; i++) {
+					if (auxSeqPop[i][0][0] == -2) {
+						break;
+					}					
+					contArquivo++;
+				}
 				
-				
+				int indArq = 0;
+				for (int i=numIndividuos-contArquivo; i<numIndividuos; i++) {				
+					for (int j=0; j<numMaquinas; j++) {
+						for (int k=0; k<numTarefas; k++) {
+							seq_Pop_filhos[i][j][k] = auxSeqPop[indArq][j][k];
+						}
+					}
+					indArq++;
+				}
+				makespan_f = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_Pop_filhos, tarefa, matrizTarefaMaquina,matrizSetup);
+				//Funï¿½ï¿½o Objetivo 2: Cï¿½lculo do Custo
+				custo_f = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_Pop_filhos, matrizTarefaMaquina, maquina, numTarefas);
+				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan_f, custo, tempoInicial, nivelDominancia);
+				lerArquivos.gerarCsvSequenciaSolucao(numIndividuos, numMaquinas, numTarefas, g, makespan_f, custo, tempoInicial, nivelDominancia, seq_Pop_filhos);
 			}
-			
-			
-			
 			//FIM DO ARQUIVO
+			
+			
+			makespan_f = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_Pop_filhos, tarefa, matrizTarefaMaquina,matrizSetup);
+			//Funï¿½ï¿½o Objetivo 2: Cï¿½lculo do Custo
+			custo_f = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_Pop_filhos, matrizTarefaMaquina, maquina, numTarefas);
 			
 			//Concatenando Pais e Filhos
 						

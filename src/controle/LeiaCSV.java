@@ -1,6 +1,7 @@
 package controle;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -123,10 +124,19 @@ public class LeiaCSV {
 	}
 	
 	public void gerarCsvSolucao(int numIndividuos, int ger, float[] makespan, float[] custo, long tempoInicial, int[] nivelDominancia) throws IOException {
-		String exec = "12";
+		String exec = "1";
 		String rodada = "_"+exec+".csv";
-		String data = "Data040818";
-		String nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/Exec"+exec+"/Resultado"+ger+rodada; 
+		String data = "Data120818";
+		String nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/Resultado"+rodada; 
+		try {
+			BufferedReader br = null;
+			br = new BufferedReader(new FileReader(nomeArquivo));
+			File file = new File(nomeArquivo);
+			file.delete();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
 		FileWriter arquivoSaída = new FileWriter(nomeArquivo);	
 		Impressaoes impressaoes = new Impressaoes();
 		nivelDominancia = impressaoes.imprimirNaoDominados(makespan, custo, numIndividuos);		
@@ -137,7 +147,7 @@ public class LeiaCSV {
 		}		
 		arquivoSaída.flush();
 		arquivoSaída.close();
-		nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/Exec"+exec+"/ResultadoTempo"+ger+rodada;
+		nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/ResultadoTempo"+rodada;
 		arquivoSaída = new FileWriter(nomeArquivo);	
 		arquivoSaída.append("Tempo Total: "+((System.currentTimeMillis()-tempoInicial)/1000)+" segundos");
 		arquivoSaída.flush();
@@ -148,7 +158,16 @@ public class LeiaCSV {
 		String exec = "1";
 		String rodada = "_"+exec+".csv";
 		String data = "Data120818";
-		String nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/ArqFinal"+ger+rodada; 
+		String nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/ArqFinal"+rodada; 		
+		try {
+			BufferedReader br = null;
+			br = new BufferedReader(new FileReader(nomeArquivo));
+			File file = new File(nomeArquivo);
+			file.delete();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
 		FileWriter arquivoSaída = new FileWriter(nomeArquivo);	
 		Impressaoes impressaoes = new Impressaoes();
 		nivelDominancia = impressaoes.imprimirNaoDominados(makespan, custo, numIndividuos);		
@@ -159,7 +178,11 @@ public class LeiaCSV {
 			for (int j=0; j<numMaquina; j++){
 				for (int k=0; k<numTarefas; k++){
 					if (seq_pop[nivelDominancia[i]][j][k] != -2) {
-						arquivoSaída.append(seq_pop[nivelDominancia[i]][j][k]+" - ");
+						if ((k == (numTarefas-1)) || (seq_pop[nivelDominancia[i]][j][k+1]==-2)) {
+							arquivoSaída.append(seq_pop[nivelDominancia[i]][j][k]+"");
+						}else {
+							arquivoSaída.append(seq_pop[nivelDominancia[i]][j][k]+",");
+						}
 					}else{
 						break;
 					}
@@ -173,6 +196,10 @@ public class LeiaCSV {
 	
 	public int[][][] lerArquivoSolucoes(int numIndividuos, int numMaquinas, int numTarefas){
 		int auxSeq[][][] = new int[numIndividuos][numMaquinas][numTarefas];
+		String exec = "1";
+		String rodada = "_"+exec+".csv";
+		String data = "Data120818";
+		String ArquivoFinal = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/ArqFinal"+rodada; 
 		for (int i=0; i<numIndividuos; i++){
 			for (int j=0; j<numMaquinas; j++){
 				for (int k=0; k<numTarefas; k++){
@@ -185,12 +212,13 @@ public class LeiaCSV {
 		String linha = "";
 		String csvDivisor = ",";
 		try {
-
-			br = new BufferedReader(new FileReader(arquivoTarefa));
+			br = new BufferedReader(new FileReader(ArquivoFinal));
 			int i = 0;
 			while ((linha = br.readLine()) != null) {
-				String[] objeto = linha.split(csvDivisor);
-				tarefas[i] = new Tarefa(Integer.valueOf(objeto[objeto.length - 3]), Integer.valueOf(objeto[objeto.length - 2]), Float.valueOf(objeto[objeto.length - 1]), false);
+				String[] objeto = linha.split(csvDivisor);				
+				for (int j=0; j<objeto.length; j++) {
+					auxSeq[i/numMaquinas][i%numMaquinas][j] = Integer.parseInt(objeto[j]);
+				}				
 				i++;
 			}
 		} catch (FileNotFoundException e) {
@@ -206,6 +234,6 @@ public class LeiaCSV {
 				}
 			}
 		}
-		
+	return auxSeq;	
 	}
 }
