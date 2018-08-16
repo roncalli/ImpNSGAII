@@ -68,6 +68,9 @@ public class CalculoMakespan {
 		for (int i=0; i<numMaquinas; i++){
 			makespan = 0;
 			for (int j=0; j<tarefa.length; j++){
+				if (j==tarefa.length-1) {
+					break;
+				}
 				if (seq_pop[i][j+1]!=-2){
 					 makespan = makespan + (int)matrizTarefaMaquina[seq_pop[i][j]][i] + (int)matrizSetup[i][seq_pop[i][j]][seq_pop[i][j+1]];
 				}else if (seq_pop[i][j]!=-2){

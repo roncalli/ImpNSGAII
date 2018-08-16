@@ -26,10 +26,10 @@ public class Main {
 		int numIndividuos = 100; //nï¿½mero de indivï¿½duos
 		float melhorMakespanGeracao = 100000;
 		int qtdeGerSemMelhora=0;
-		int gatilhoBuscaLocal = 0;
+		int gatilhoBuscaLocal = 50;
 		boolean buscaLocal = false;
 		float melhorMakespan = 100000;
-		int numGer = 1000; //nï¿½mero de geraï¿½ï¿½es		
+		int numGer = 500; //nï¿½mero de geraï¿½ï¿½es		
 		int qtdMut =  10; //% Percentual de indivï¿½duos mutados
 		Maquina maquina[] = new Maquina[numMaquinas];
 		Tarefa tarefa[] = new Tarefa[numTarefas];
@@ -68,16 +68,14 @@ public class Main {
 		int g = 0; // geraï¿½ï¿½o
 		// Imprimindo Primeira Geraï¿½ï¿½o
 						
-		while(g<numGer) {
+		while(g<numGer) {			
 			//Seleciona os pais utilizando torneio de multidï¿½o
 			int [] resTorneio = new int[numIndividuos];
 			Operadores operadores = new Operadores();
-			resTorneio = operadores.operadorTorneio(numIndividuos, nivelDominancia);
-			
+			resTorneio = operadores.operadorTorneio(numIndividuos, nivelDominancia);			
 			//Populaï¿½ï¿½o gerada pelo cruzamento
 			int[][][] seq_Pop_filhos = new int[numIndividuos][numMaquinas][numTarefas];			
-			seq_Pop_filhos = operadores.operadorCruzamento(numTarefas, numIndividuos, numMaquinas, resTorneio, seq_pop);
-			
+			seq_Pop_filhos = operadores.operadorCruzamento(numTarefas, numIndividuos, numMaquinas, resTorneio, seq_pop);			
 			
 			//Populaç
 			//seq_Pop_filhos = operadores.operadorMutacao(numIndividuos, numMaquinas, numTarefas, qtdMut, varMur,seq_Pop_filhos);
@@ -89,23 +87,11 @@ public class Main {
 			
 			//INSERIR A BUSCA LOCAL//
 			//BuscaLocalFalse
-			buscaLocal = false;
 			if (buscaLocal) {
-				//Verificando qual indivisuo possui o menor atrasoAdiantamento
-				System.out.println("Busca Local");
-				int individuo = 0;
-				float makespanIndividuo = 1000000;
-				for (int w=0; w<numIndividuos; w++) {
-					if (makespan_f[w]<makespanIndividuo) {
-						makespanIndividuo = makespan_f[w];
-						individuo = w;
-					}
-				}
 				BuscaLocal busca = new BuscaLocal();
-				seq_Pop_filhos = busca.buscaLocal(seq_Pop_filhos, numMaquinas, maquina, tarefa, matrizTarefaMaquina, matrizSetup, individuo, numIndividuos);
+				seq_Pop_filhos = busca.buscaLocalFirstImprovements(seq_Pop_filhos, numMaquinas, maquina, tarefa, matrizTarefaMaquina, matrizSetup, numIndividuos, numTarefas);
 				buscaLocal = false;
 			}						
-			
 			
 			//LOCAL ONDE SERÁ COLOCADO O ARQUIVO
 			if (g==0){ // Primeira geração, ainda não existe o arquivo
@@ -137,7 +123,6 @@ public class Main {
 				lerArquivos.gerarCsvSequenciaSolucao(numIndividuos, numMaquinas, numTarefas, g, makespan_f, custo, tempoInicial, nivelDominancia, seq_Pop_filhos);
 			}
 			//FIM DO ARQUIVO
-			
 			
 			makespan_f = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_Pop_filhos, tarefa, matrizTarefaMaquina,matrizSetup);
 			//Funï¿½ï¿½o Objetivo 2: Cï¿½lculo do Custo
@@ -307,7 +292,6 @@ public class Main {
 				j = ind_vet;				
 				nivel++;								
 			}	
-	
 			//% Atribui a populaï¿½ï¿½o e a sequï¿½ncia dos indivï¿½duos da populaï¿½ï¿½o		
 			//Copiando os indivíduos de seq_pop para seq_pop_f
 			for (int q=0; q<numIndividuos; q++){
@@ -323,7 +307,6 @@ public class Main {
 			nivelDominancia = relacoesDominancia.calculaNivelDominancia(numIndividuos, makespan, custo);			
 			Impressaoes imprimir = new Impressaoes();
 			melhorMakespanGeracao = imprimir.imprimir(g, makespan, custo, seq_pop, numIndividuos, nivelDominancia, numMaquinas, numTarefas);
-			System.out.println("Teste");
 			//Incremanta contador de geraï¿½ï¿½es
 			if (melhorMakespanGeracao<melhorMakespan) {
 				melhorMakespan = melhorMakespanGeracao;

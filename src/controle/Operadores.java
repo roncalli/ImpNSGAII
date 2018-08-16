@@ -51,9 +51,19 @@ public class Operadores {
 				}
 			}
 		}
-		//Utilizando o vencedor do torneio binário
+		//Utilizando o vencedor do torneio binário				
 		int pai1 = (int)(Math.random()*numIndividuos);
 		int pai2 = (int)(Math.random()*numIndividuos);
+		boolean posNaoValido = true;
+		while (posNaoValido) {
+			if (seq_pop[pai1][0][0] == 0 && (seq_pop[pai1][0][1] == 0)) {
+				pai1 = (int)(Math.random()*numIndividuos);
+			}else if (seq_pop[pai2][0][0] == 0 && (seq_pop[pai2][0][1] == 0)) {
+				pai2 = (int)(Math.random()*numIndividuos);
+			}else{
+				posNaoValido = false;
+			}
+		}
 		if (pai1 == pai2){
 			if (pai2>0){
 				pai2--;
@@ -157,8 +167,14 @@ public class Operadores {
 			for (int i=0; i<numTarefas; i++){
 				if (i<corte1 || i>corte2){ //Fora da área de corte				
 					int tarefaParaAdicionarInd1 = retornaTarefaPMX(auxind1, ind1, ind1[i], numTarefas);
+					if (tarefaParaAdicionarInd1 == -2) {
+						return seq_pop_f;
+					}
 					auxind1[i] = tarefaParaAdicionarInd1;
 					int tarefaParaAdicionarInd2 = retornaTarefaPMX(auxind2, ind2, ind2[i], numTarefas);
+					if (tarefaParaAdicionarInd2 == -2) {
+						return seq_pop_f;
+					}
 					auxind2[i] = tarefaParaAdicionarInd2;
 				}			
 			}
@@ -168,9 +184,7 @@ public class Operadores {
 			maquinaP1 = 0;
 			cont2 = 0;
 			maquinaP2 = 0;
-			
-			
-			//REVER
+						
 			for (int i=0; i<numTarefas; i++){			
 				if (cont1 == tarefasMaquinaPai1[maquinaP1]){
 					maquinaP1++;
@@ -190,14 +204,14 @@ public class Operadores {
 					seq_pop_f[pai2][maquinaP2][cont2] = auxind2[i];				
 					cont2++;
 				}					
-			}
-			//REVER
+			}			
 		}
 		return seq_pop_f;
 	}
 	
 	public int retornaTarefaPMX(int[] auxindP, int[] indS, int tarefa, int numTarefas){		
 		boolean encontrou = true;
+		int cont = 0;
 		while (encontrou == true){
 			int indiceTarefa = tarefaJaIncluida(auxindP, tarefa, numTarefas);
 			if (indiceTarefa == -1){ //Tarefa não incluída
@@ -206,6 +220,12 @@ public class Operadores {
 			}else{ // Procurar qual tarefa incluir 
 				tarefa = indS[indiceTarefa];				
 			}
+			//VERIFICAR ESSE PONTO
+			if (cont == 500) {
+				return -2;
+				
+			}
+			cont++;
 		}		
 		return tarefa;
 	}
