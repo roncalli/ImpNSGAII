@@ -431,5 +431,46 @@ public class Operadores {
 		}		
 		return false;
 	}
+	
+	public float piorMakespan(float[] makespan, int numIndividuos) {
+		float piorMakespan = 0;
+		for (int i=0; i<numIndividuos; i++) {
+			if (makespan[i]>piorMakespan) {
+				piorMakespan = makespan[i];
+			}
+		}
+		return piorMakespan;
+	}
+	
+	public float melhorMakespan(float[] makespan, int numIndividuos) {
+		float melhorMakespan = 100000;
+		for (int i=0; i<numIndividuos; i++) {
+			if (melhorMakespan<makespan[i]) {
+				melhorMakespan = makespan[i];
+			}
+		}
+		return melhorMakespan;
+	}
+	
+	public float piorCusto(float[] custo, int numIndividuos) {
+		float piorCusto = 0;
+		for (int i=0; i<numIndividuos; i++) {
+			if (custo[i]>piorCusto) {
+				piorCusto = custo[i];
+			}
+		}
+		return piorCusto;
+	}
+	
+	public float melhorCusto(float[] custo, int numIndividuos) {
+		float melhorCusto = 100000;
+		for (int i=0; i<numIndividuos; i++) {
+			if (melhorCusto<custo[i]) {
+				melhorCusto= custo[i];
+			}
+		}
+		return melhorCusto;
+	}
+	
 
 }

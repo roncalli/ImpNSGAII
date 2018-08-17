@@ -25,8 +25,12 @@ public class Main {
 		int numMaquinas = 4;
 		int numIndividuos = 100; //nï¿½mero de indivï¿½duos
 		float melhorMakespanGeracao = 100000;
+		float mMakespan = 100000;
+		float mCusto = 100000;
+		float piorMakespanGeracao = 0;
+		float piorCustoGeracao = 0;
 		int qtdeGerSemMelhora=0;
-		int gatilhoBuscaLocal = 50;
+		int gatilhoBuscaLocal = 500;
 		boolean buscaLocal = false;
 		float melhorMakespan = 100000;
 		int numGer = 500; //nï¿½mero de geraï¿½ï¿½es		
@@ -48,30 +52,47 @@ public class Main {
 		SequenciamentoTarefas sequenciamento = new SequenciamentoTarefas();
 		seq_pop = sequenciamento.sequenciamento_Inicial(numIndividuos, numMaquinas, numTarefas, tarefa);
 		
+		Operadores operadores = new Operadores();
 		
 		// Cï¿½lculos das funï¿½ï¿½es objetivo
 		// Funï¿½ï¿½o Objetivo 1: Cï¿½lculo do makespan
 		float [] makespan = new float [numIndividuos];
 		CalculoMakespan calculoMakespan = new CalculoMakespan();
 		makespan = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_pop, tarefa, matrizTarefaMaquina,matrizSetup);
+		float auxMakespan = operadores.piorMakespan(makespan, numIndividuos);
+		if (auxMakespan>piorMakespanGeracao) {
+			piorMakespanGeracao = auxMakespan;
+		}
+		auxMakespan = operadores.melhorMakespan(makespan, numIndividuos);
+		if (auxMakespan<mMakespan) {
+			mMakespan = auxMakespan;
+		}
+		
 		
 		//Funï¿½ï¿½o Objetivo 2: Cï¿½lculo do Custo
 		float[] custo = new float[numIndividuos];
 		CalculoCusto calculoCusto = new CalculoCusto();
 		custo = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_pop, matrizTarefaMaquina, maquina, numTarefas);
+		float auxCusto = operadores.piorCusto(custo, numIndividuos);
+		if (auxCusto>piorCustoGeracao) {
+			piorMakespanGeracao = auxCusto;
+		}
+		auxCusto = operadores.melhorCusto(custo, numIndividuos);
+		if (auxCusto<mCusto) {
+			mCusto = auxCusto;
+		}
+		
 		
 		//Classificaï¿½ï¿½o por nï¿½veis de nï¿½o dominï¿½ncia
 		int[] nivelDominancia = new int[numIndividuos];
 		RelacoesDominancia relacoesDominancia = new RelacoesDominancia();
 		nivelDominancia = relacoesDominancia.calculaNivelDominancia(numIndividuos, makespan, custo);
-		
 		int g = 0; // geraï¿½ï¿½o
 		// Imprimindo Primeira Geraï¿½ï¿½o
 						
 		while(g<numGer) {			
 			//Seleciona os pais utilizando torneio de multidï¿½o
-			int [] resTorneio = new int[numIndividuos];
-			Operadores operadores = new Operadores();
+			int [] resTorneio = new int[numIndividuos];			
 			resTorneio = operadores.operadorTorneio(numIndividuos, nivelDominancia);			
 			//Populaï¿½ï¿½o gerada pelo cruzamento
 			int[][][] seq_Pop_filhos = new int[numIndividuos][numMaquinas][numTarefas];			
@@ -95,7 +116,7 @@ public class Main {
 			
 			//LOCAL ONDE SERÁ COLOCADO O ARQUIVO
 			if (g==0){ // Primeira geração, ainda não existe o arquivo
-				lerArquivos.gerarCsvSolucao(numIndividuos, g,makespan_f, custo_f, tempoInicial, nivelDominancia);
+				lerArquivos.gerarCsvSolucao(numIndividuos, g,makespan_f, custo_f, tempoInicial, nivelDominancia,piorMakespanGeracao,piorCustoGeracao,mMakespan,mCusto);
 				lerArquivos.gerarCsvSequenciaSolucao(numIndividuos, numMaquinas, numTarefas, g, makespan_f, custo_f, tempoInicial, nivelDominancia, seq_Pop_filhos);
 			}else{ //Atualização do Arquivo
 				int auxSeqPop[][][] = lerArquivos.lerArquivoSolucoes(numIndividuos, numMaquinas, numTarefas);	
@@ -117,16 +138,49 @@ public class Main {
 					indArq++;
 				}
 				makespan_f = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_Pop_filhos, tarefa, matrizTarefaMaquina,matrizSetup);
+				auxMakespan = operadores.piorMakespan(makespan_f, numIndividuos);
+				if (auxMakespan>piorMakespanGeracao) {
+					piorMakespanGeracao = auxMakespan;
+				}
+				auxMakespan = operadores.melhorMakespan(makespan, numIndividuos);
+				if (auxMakespan<mMakespan) {
+					mMakespan = auxMakespan;
+				}
 				//Funï¿½ï¿½o Objetivo 2: Cï¿½lculo do Custo
 				custo_f = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_Pop_filhos, matrizTarefaMaquina, maquina, numTarefas);
-				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan_f, custo, tempoInicial, nivelDominancia);
+				auxCusto = operadores.piorCusto(custo, numIndividuos);
+				if (auxCusto>piorCustoGeracao) {
+					piorMakespanGeracao = auxCusto;
+				}
+				auxCusto = operadores.melhorCusto(custo, numIndividuos);
+				if (auxCusto<mCusto) {
+					mCusto = auxCusto;
+				}
+				
+				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan_f, custo, tempoInicial, nivelDominancia,piorMakespanGeracao,piorCustoGeracao,mMakespan,mCusto);
 				lerArquivos.gerarCsvSequenciaSolucao(numIndividuos, numMaquinas, numTarefas, g, makespan_f, custo, tempoInicial, nivelDominancia, seq_Pop_filhos);
 			}
 			//FIM DO ARQUIVO
 			
 			makespan_f = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_Pop_filhos, tarefa, matrizTarefaMaquina,matrizSetup);
+			auxMakespan = operadores.piorMakespan(makespan_f, numIndividuos);
+			if (auxMakespan>piorMakespanGeracao) {
+				piorMakespanGeracao = auxMakespan;
+			}
+			auxMakespan = operadores.melhorMakespan(makespan, numIndividuos);
+			if (auxMakespan<mMakespan) {
+				mMakespan = auxMakespan;
+			}
 			//Funï¿½ï¿½o Objetivo 2: Cï¿½lculo do Custo
 			custo_f = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_Pop_filhos, matrizTarefaMaquina, maquina, numTarefas);
+			auxCusto = operadores.piorCusto(custo, numIndividuos);
+			if (auxCusto>piorCustoGeracao) {
+				piorMakespanGeracao = auxCusto;
+			}
+			auxCusto = operadores.melhorCusto(custo, numIndividuos);
+			if (auxCusto<mCusto) {
+				mCusto = auxCusto;
+			}
 			
 			//Concatenando Pais e Filhos
 						
@@ -302,7 +356,24 @@ public class Main {
 				}
 			}
 			makespan = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_pop, tarefa, matrizTarefaMaquina,matrizSetup);
+			auxMakespan = operadores.piorMakespan(makespan_f, numIndividuos);
+			if (auxMakespan>piorMakespanGeracao) {
+				piorMakespanGeracao = auxMakespan;
+			}
+			auxMakespan = operadores.melhorMakespan(makespan, numIndividuos);
+			if (auxMakespan<mMakespan) {
+				mMakespan = auxMakespan;
+			}
+			
 			custo = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_pop, matrizTarefaMaquina, maquina, numTarefas);
+			auxCusto = operadores.piorCusto(custo, numIndividuos);
+			if (auxCusto>piorCustoGeracao) {
+				piorMakespanGeracao = auxCusto;
+			}
+			auxCusto = operadores.melhorCusto(custo, numIndividuos);
+			if (auxCusto<mCusto) {
+				mCusto = auxCusto;
+			}
 			
 			nivelDominancia = relacoesDominancia.calculaNivelDominancia(numIndividuos, makespan, custo);			
 			Impressaoes imprimir = new Impressaoes();
@@ -320,19 +391,39 @@ public class Main {
 			}
 			g++;
 			if (g==500) {
-				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan, custo, tempoInicial,nivelDominancia);
+				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan, custo, tempoInicial,nivelDominancia,piorMakespanGeracao,piorCustoGeracao,mMakespan,mCusto);
+				piorMakespanGeracao = 0;
+				piorCustoGeracao = 0;
+				mMakespan = 100000;
+				mCusto = 100000;
 			}
 			if (g==1000) {
-				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan, custo, tempoInicial,nivelDominancia);
+				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan, custo, tempoInicial,nivelDominancia,piorMakespanGeracao,piorCustoGeracao,mMakespan,mCusto);
+				piorMakespanGeracao = 0;
+				piorCustoGeracao = 0;
+				mMakespan = 100000;
+				mCusto = 100000;
 			}
 			if (g==2000) {
-				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan, custo, tempoInicial,nivelDominancia);
+				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan, custo, tempoInicial,nivelDominancia,piorMakespanGeracao,piorCustoGeracao,mMakespan,mCusto);
+				piorMakespanGeracao = 0;
+				piorCustoGeracao = 0;
+				mMakespan = 100000;
+				mCusto = 100000;
 			}
 			if (g==5000) {
-				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan, custo, tempoInicial,nivelDominancia);
+				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan, custo, tempoInicial,nivelDominancia,piorMakespanGeracao,piorCustoGeracao,mMakespan,mCusto);
+				piorMakespanGeracao = 0;
+				piorCustoGeracao = 0;
+				mMakespan = 100000;
+				mCusto = 100000;
 			}
 			if (g==10000) {
-				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan, custo, tempoInicial,nivelDominancia);
+				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan, custo, tempoInicial,nivelDominancia,piorMakespanGeracao,piorCustoGeracao,mMakespan,mCusto);
+				piorMakespanGeracao = 0;
+				piorCustoGeracao = 0;
+				mMakespan = 100000;
+				mCusto = 100000;
 			}			
 		}
 		//Imprimindo resultados		

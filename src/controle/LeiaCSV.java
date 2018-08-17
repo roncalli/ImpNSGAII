@@ -123,7 +123,7 @@ public class LeiaCSV {
 		}
 	}
 	
-	public void gerarCsvSolucao(int numIndividuos, int ger, float[] makespan, float[] custo, long tempoInicial, int[] nivelDominancia) throws IOException {
+	public void gerarCsvSolucao(int numIndividuos, int ger, float[] makespan, float[] custo, long tempoInicial, int[] nivelDominancia, float piorMakespan, float piorCusto, float melhorMakespan, float melhorCusto) throws IOException {
 		String exec = "1";
 		String rodada = "_"+exec+".csv";
 		String data = "Data120818";
@@ -152,6 +152,16 @@ public class LeiaCSV {
 		arquivoSaída.append("Tempo Total: "+((System.currentTimeMillis()-tempoInicial)/1000)+" segundos");
 		arquivoSaída.flush();
 		arquivoSaída.close();
+		
+		nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/MelhorPior(Makespan-Custo)"+ger+rodada;
+		arquivoSaída = new FileWriter(nomeArquivo);	
+		arquivoSaída.append("Melhor Makespan: "+melhorMakespan);
+		arquivoSaída.append("Pior Makespan: "+piorMakespan);
+		arquivoSaída.append("Melhor Custo: "+melhorCusto);
+		arquivoSaída.append("Pior Custo: "+piorCusto);
+		arquivoSaída.flush();
+		arquivoSaída.close();
+		
 	}
 	
 	public void gerarCsvSequenciaSolucao(int numIndividuos, int numMaquina, int numTarefas, int ger, float[] makespan, float[] custo, long tempoInicial, int[] nivelDominancia, int[][][]seq_pop) throws IOException {
