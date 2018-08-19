@@ -115,7 +115,7 @@ public class Main {
 				lerArquivos.gerarCsvSolucao(numIndividuos, g,makespan_f, custo_f, tempoInicial, nivelDominancia);
 				lerArquivos.gerarCsvSequenciaSolucao(numIndividuos, numMaquinas, numTarefas, g, makespan_f, custo_f, tempoInicial, nivelDominancia, seq_Pop_filhos);
 			}else{ //Atualização do Arquivo
-				int auxSeqPop[][][] = lerArquivos.lerArquivoSolucoes(numIndividuos, numMaquinas, numTarefas);	
+				int auxSeqPop[][][] = lerArquivos.lerArquivoSolucoes(numIndividuos, numMaquinas, numTarefas,g);	
 				int contArquivo = 0;				
 				for (int i=0; i<numIndividuos; i++) {
 					if (auxSeqPop[i][0][0] == -2) {
@@ -394,7 +394,7 @@ public class Main {
 			if (g==500) {
 				lerArquivos.gerarMelhorPiorFOBJ(g, auxMakespan, auxCusto, auxPiorCusto, auxPiorMakespan);
 				lerArquivos.gerarCsvSequenciaSolucao(numIndividuos, numMaquinas, numTarefas, g, makespan, custo, tempoInicial, nivelDominancia, seq_pop_linha);
-				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan, custo, tempoInicial, nivelDominancia);
+				lerArquivos.gerarCsvSolucaoResultados(numIndividuos, g, makespan, custo, tempoInicial, nivelDominancia);
 				piorMakespanGeracao = 0;
 				piorCustoGeracao = 0;
 				mMakespan = 100000;
@@ -403,7 +403,7 @@ public class Main {
 			if (g==1000) {
 				lerArquivos.gerarMelhorPiorFOBJ(g, mMakespan, mCusto, piorCustoGeracao, piorMakespanGeracao);
 				lerArquivos.gerarCsvSequenciaSolucao(numIndividuos, numMaquinas, numTarefas, g, makespan, custo, tempoInicial, nivelDominancia, seq_pop_linha);
-				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan, custo, tempoInicial, nivelDominancia);
+				lerArquivos.gerarCsvSolucaoResultados(numIndividuos, g, makespan, custo, tempoInicial, nivelDominancia);
 				piorMakespanGeracao = 0;
 				piorCustoGeracao = 0;
 				mMakespan = 100000;
@@ -412,7 +412,7 @@ public class Main {
 			if (g==2000) {
 				lerArquivos.gerarMelhorPiorFOBJ(g, mMakespan, mCusto, piorCustoGeracao, piorMakespanGeracao);
 				lerArquivos.gerarCsvSequenciaSolucao(numIndividuos, numMaquinas, numTarefas, g, makespan, custo, tempoInicial, nivelDominancia, seq_pop_linha);
-				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan, custo, tempoInicial, nivelDominancia);
+				lerArquivos.gerarCsvSolucaoResultados(numIndividuos, g, makespan, custo, tempoInicial, nivelDominancia);
 				piorMakespanGeracao = 0;
 				piorCustoGeracao = 0;
 				mMakespan = 100000;
@@ -421,7 +421,7 @@ public class Main {
 			if (g==5000) {
 				lerArquivos.gerarMelhorPiorFOBJ(g, mMakespan, mCusto, piorCustoGeracao, piorMakespanGeracao);
 				lerArquivos.gerarCsvSequenciaSolucao(numIndividuos, numMaquinas, numTarefas, g, makespan, custo, tempoInicial, nivelDominancia, seq_pop_linha);
-				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan, custo, tempoInicial, nivelDominancia);
+				lerArquivos.gerarCsvSolucaoResultados(numIndividuos, g, makespan, custo, tempoInicial, nivelDominancia);
 				piorMakespanGeracao = 0;
 				piorCustoGeracao = 0;
 				mMakespan = 100000;
@@ -430,7 +430,7 @@ public class Main {
 			if (g==10000) {
 				lerArquivos.gerarMelhorPiorFOBJ(g, mMakespan, mCusto, piorCustoGeracao, piorMakespanGeracao);
 				lerArquivos.gerarCsvSequenciaSolucao(numIndividuos, numMaquinas, numTarefas, g, makespan, custo, tempoInicial, nivelDominancia, seq_pop_linha);
-				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan, custo, tempoInicial, nivelDominancia);
+				lerArquivos.gerarCsvSolucaoResultados(numIndividuos, g, makespan, custo, tempoInicial, nivelDominancia);
 				piorMakespanGeracao = 0;
 				piorCustoGeracao = 0;
 				mMakespan = 100000;

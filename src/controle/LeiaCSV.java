@@ -145,6 +145,42 @@ public class LeiaCSV {
 		}		
 		arquivoSaída.flush();
 		arquivoSaída.close();
+		
+		nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/ResultadoTempo"+rodada;
+		arquivoSaída = new FileWriter(nomeArquivo);	
+		arquivoSaída.append("Tempo Total: "+((System.currentTimeMillis()-tempoInicial)/1000)+" segundos");
+		arquivoSaída.flush();
+		arquivoSaída.close();
+	}
+	
+	public void gerarCsvSolucaoResultados(int numIndividuos, int ger, float[] makespan, float[] custo, long tempoInicial, int[] nivelDominancia) throws IOException {
+		String exec = "1";
+		String rodada = "_"+exec+".csv";
+		String data = "Data190818";
+		String nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/Resultado"+ger+rodada; 
+		try {
+			File file = new File(nomeArquivo);
+			file.delete();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		FileWriter arquivoSaída = new FileWriter(nomeArquivo);	
+		Impressaoes impressaoes = new Impressaoes();
+		nivelDominancia = impressaoes.imprimirNaoDominados(makespan, custo, numIndividuos);		
+		for (int i=0; i<numIndividuos; i++) {
+			if (nivelDominancia[i] != -2) {
+				arquivoSaída.append(makespan[nivelDominancia[i]]+","+custo[nivelDominancia[i]]+"\n");
+			}
+		}		
+		arquivoSaída.flush();
+		arquivoSaída.close();
+		
+		nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/ResultadoTempo"+ger+rodada;
+		arquivoSaída = new FileWriter(nomeArquivo);	
+		arquivoSaída.append("Tempo Total: "+((System.currentTimeMillis()-tempoInicial)/1000)+" segundos");
+		arquivoSaída.flush();
+		arquivoSaída.close();
 	}
 	
 	public void gerarMelhorPiorFOBJ(int ger, float melhorMakespan, float melhorCusto, float piorCusto, float piorMakespan) throws IOException{
@@ -205,7 +241,7 @@ public class LeiaCSV {
 		arquivoSaída.close();		
 	}
 	
-	public int[][][] lerArquivoSolucoes(int numIndividuos, int numMaquinas, int numTarefas){
+	public int[][][] lerArquivoSolucoes(int numIndividuos, int numMaquinas, int numTarefas, int ger){
 		int auxSeq[][][] = new int[numIndividuos][numMaquinas][numTarefas];
 		String exec = "1";
 		String rodada = "_"+exec+".csv";
