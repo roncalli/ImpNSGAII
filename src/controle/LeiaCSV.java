@@ -123,14 +123,12 @@ public class LeiaCSV {
 		}
 	}
 	
-	public void gerarCsvSolucao(int numIndividuos, int ger, float[] makespan, float[] custo, long tempoInicial, int[] nivelDominancia, float piorMakespan, float piorCusto, float melhorMakespan, float melhorCusto) throws IOException {
+	public void gerarCsvSolucao(int numIndividuos, int ger, float[] makespan, float[] custo, long tempoInicial, int[] nivelDominancia) throws IOException {
 		String exec = "1";
 		String rodada = "_"+exec+".csv";
 		String data = "Data190818";
 		String nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/Resultado"+rodada; 
 		try {
-			BufferedReader br = null;
-			br = new BufferedReader(new FileReader(nomeArquivo));
 			File file = new File(nomeArquivo);
 			file.delete();
 		} catch (Exception e) {
