@@ -126,7 +126,7 @@ public class LeiaCSV {
 	public void gerarCsvSolucao(int numIndividuos, int ger, float[] makespan, float[] custo, long tempoInicial, int[] nivelDominancia, float piorMakespan, float piorCusto, float melhorMakespan, float melhorCusto) throws IOException {
 		String exec = "1";
 		String rodada = "_"+exec+".csv";
-		String data = "Data120818";
+		String data = "Data190818";
 		String nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/Resultado"+rodada; 
 		try {
 			BufferedReader br = null;
@@ -153,7 +153,7 @@ public class LeiaCSV {
 		
 		String exec = "1";
 		String rodada = "_"+exec+".csv";
-		String data = "Data120818";
+		String data = "Data190818";
 		
 		String nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/MelhorPior(Makespan-Custo)"+ger+rodada;
 		FileWriter arquivoSaída = new FileWriter(nomeArquivo);	
@@ -170,7 +170,7 @@ public class LeiaCSV {
 	public void gerarCsvSequenciaSolucao(int numIndividuos, int numMaquina, int numTarefas, int ger, float[] makespan, float[] custo, long tempoInicial, int[] nivelDominancia, int[][][]seq_pop) throws IOException {
 		String exec = "1";
 		String rodada = "_"+exec+".csv";
-		String data = "Data120818";
+		String data = "Data190818";
 		String nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/ArqFinal"+rodada; 		
 		try {
 			BufferedReader br = null;
@@ -211,7 +211,7 @@ public class LeiaCSV {
 		int auxSeq[][][] = new int[numIndividuos][numMaquinas][numTarefas];
 		String exec = "1";
 		String rodada = "_"+exec+".csv";
-		String data = "Data120818";
+		String data = "Data190818";
 		String ArquivoFinal = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/ArqFinal"+rodada; 
 		for (int i=0; i<numIndividuos; i++){
 			for (int j=0; j<numMaquinas; j++){

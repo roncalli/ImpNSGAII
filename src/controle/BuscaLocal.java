@@ -20,11 +20,14 @@ public class BuscaLocal {
 			}
 		}
 		int [] tarefaPos = new int[numMaquinas];
+		int [] auxTarefaPos = new int[numMaquinas];
+
 		//Guardando o número de Tarefa de cada indivíduo e de cada máquina
 		for (int i=0; i<numMaquinas; i++){
 			for (int j=0; j<numTarefas; j++){				
 				if (seq_pop[pos][i][j]==-2){
 					tarefaPos[i] = j;
+					auxTarefaPos[i] = j;
 					break;
 				}
 			}
@@ -95,7 +98,18 @@ public class BuscaLocal {
 						if (k == (posicaoEncaixe.get(j)+1)) {
 							auxind[posicaoEncaixe.get(j)] = ind[posicaoTarefas.get(i)]; 
 						}					
-					}	
+					}
+					//Ajustando o número de tarefas nas máquinas
+					int nTar = 0;
+					for (int k=0; k<numMaquinas; k++){
+						nTar = nTar + tarefaPos[k];
+						if (posicaoTarefas.get(i)/nTar == 0){
+							auxTarefaPos[k]--; //Retirando a tarefa da máquina 
+						}
+						if (posicaoEncaixe.get(i)/nTar == 0){
+							auxTarefaPos[k]++;
+						}
+					}
 					
 					//Remontando a lista para o cálculo do Makespan e Custo
 					//Remontando as listas de acordo com a quantidade de tarefa de cada máquina	
@@ -141,11 +155,17 @@ public class BuscaLocal {
 							for (int k=0; k<numTarefas; k++){
 								auxind[k] = ind[k];
 							}	
+							for (int k=0; k<numMaquinas; k++){
+								auxTarefaPos[k] = tarefaPos[k];
+							}
 							System.out.println("Sequencia Inválida");
 						}
 					}else{
 						for (int k=0; k<numTarefas; k++){
 							auxind[k] = ind[k];
+						}
+						for (int k=0; k<numMaquinas; k++){
+							auxTarefaPos[k] = tarefaPos[k];
 						}
 						System.out.println("Não Melhorou Busca Local");
 					}

@@ -42,10 +42,6 @@ public class Main {
 		lerArquivos.popularTabelas(tarefa, maquina, matrizTarefaMaquina,matrizSetup,numMaquinas);
 		//Fim dos par�metros do sistema
 		
-		
-		// pop (tarefa, individuo) - valor da c�lula � a m�quina		
-		// Gera 100% dos indiv�duos de maneira aleat�ria
-		// Sequenciamento da Popula��o
 		// Formato:(sequencia da individuo, maquina, tarefa)	
 		
 		int [][][] seq_pop = new int[numIndividuos][numMaquinas][numTarefas];				
