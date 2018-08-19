@@ -445,7 +445,7 @@ public class Operadores {
 	public float melhorMakespan(float[] makespan, int numIndividuos) {
 		float melhorMakespan = 100000;
 		for (int i=0; i<numIndividuos; i++) {
-			if (melhorMakespan<makespan[i]) {
+			if (makespan[i]<melhorMakespan) {
 				melhorMakespan = makespan[i];
 			}
 		}
@@ -465,7 +465,7 @@ public class Operadores {
 	public float melhorCusto(float[] custo, int numIndividuos) {
 		float melhorCusto = 100000;
 		for (int i=0; i<numIndividuos; i++) {
-			if (melhorCusto<custo[i]) {
+			if (custo[i]<melhorCusto) {
 				melhorCusto= custo[i];
 			}
 		}

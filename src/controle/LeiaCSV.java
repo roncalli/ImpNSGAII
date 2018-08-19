@@ -147,21 +147,24 @@ public class LeiaCSV {
 		}		
 		arquivoSaída.flush();
 		arquivoSaída.close();
-		nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/ResultadoTempo"+rodada;
+	}
+	
+	public void gerarMelhorPiorFOBJ(int ger, float melhorMakespan, float melhorCusto, float piorCusto, float piorMakespan) throws IOException{
+		
+		String exec = "1";
+		String rodada = "_"+exec+".csv";
+		String data = "Data120818";
+		
+		String nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/MelhorPior(Makespan-Custo)"+ger+rodada;
+		FileWriter arquivoSaída = new FileWriter(nomeArquivo);	
 		arquivoSaída = new FileWriter(nomeArquivo);	
-		arquivoSaída.append("Tempo Total: "+((System.currentTimeMillis()-tempoInicial)/1000)+" segundos");
+		
+		arquivoSaída.append("Melhor Makespan: "+melhorMakespan+"\n");
+		arquivoSaída.append("Pior Makespan: "+piorMakespan+"\n");
+		arquivoSaída.append("Melhor Custo: "+melhorCusto+"\n");
+		arquivoSaída.append("Pior Custo: "+piorCusto+"\n");
 		arquivoSaída.flush();
 		arquivoSaída.close();
-		
-		nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/MelhorPior(Makespan-Custo)"+ger+rodada;
-		arquivoSaída = new FileWriter(nomeArquivo);	
-		arquivoSaída.append("Melhor Makespan: "+melhorMakespan);
-		arquivoSaída.append("Pior Makespan: "+piorMakespan);
-		arquivoSaída.append("Melhor Custo: "+melhorCusto);
-		arquivoSaída.append("Pior Custo: "+piorCusto);
-		arquivoSaída.flush();
-		arquivoSaída.close();
-		
 	}
 	
 	public void gerarCsvSequenciaSolucao(int numIndividuos, int numMaquina, int numTarefas, int ger, float[] makespan, float[] custo, long tempoInicial, int[] nivelDominancia, int[][][]seq_pop) throws IOException {

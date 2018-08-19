@@ -30,10 +30,10 @@ public class Main {
 		float piorMakespanGeracao = 0;
 		float piorCustoGeracao = 0;
 		int qtdeGerSemMelhora=0;
-		int gatilhoBuscaLocal = 500;
+		int gatilhoBuscaLocal = 50;
 		boolean buscaLocal = false;
 		float melhorMakespan = 100000;
-		int numGer = 500; //n�mero de gera��es		
+		int numGer = 10000; //n�mero de gera��es		
 		int qtdMut =  10; //% Percentual de indiv�duos mutados
 		Maquina maquina[] = new Maquina[numMaquinas];
 		Tarefa tarefa[] = new Tarefa[numTarefas];
@@ -75,7 +75,7 @@ public class Main {
 		custo = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_pop, matrizTarefaMaquina, maquina, numTarefas);
 		float auxCusto = operadores.piorCusto(custo, numIndividuos);
 		if (auxCusto>piorCustoGeracao) {
-			piorMakespanGeracao = auxCusto;
+			piorCustoGeracao = auxCusto;
 		}
 		auxCusto = operadores.melhorCusto(custo, numIndividuos);
 		if (auxCusto<mCusto) {
@@ -150,7 +150,7 @@ public class Main {
 				custo_f = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_Pop_filhos, matrizTarefaMaquina, maquina, numTarefas);
 				auxCusto = operadores.piorCusto(custo, numIndividuos);
 				if (auxCusto>piorCustoGeracao) {
-					piorMakespanGeracao = auxCusto;
+					piorCustoGeracao = auxCusto;
 				}
 				auxCusto = operadores.melhorCusto(custo, numIndividuos);
 				if (auxCusto<mCusto) {
@@ -175,7 +175,7 @@ public class Main {
 			custo_f = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_Pop_filhos, matrizTarefaMaquina, maquina, numTarefas);
 			auxCusto = operadores.piorCusto(custo, numIndividuos);
 			if (auxCusto>piorCustoGeracao) {
-				piorMakespanGeracao = auxCusto;
+				piorCustoGeracao = auxCusto;
 			}
 			auxCusto = operadores.melhorCusto(custo, numIndividuos);
 			if (auxCusto<mCusto) {
@@ -368,7 +368,7 @@ public class Main {
 			custo = calculoCusto.calculoCusto(numIndividuos, numMaquinas, seq_pop, matrizTarefaMaquina, maquina, numTarefas);
 			auxCusto = operadores.piorCusto(custo, numIndividuos);
 			if (auxCusto>piorCustoGeracao) {
-				piorMakespanGeracao = auxCusto;
+				piorCustoGeracao = auxCusto;
 			}
 			auxCusto = operadores.melhorCusto(custo, numIndividuos);
 			if (auxCusto<mCusto) {
@@ -384,42 +384,47 @@ public class Main {
 				qtdeGerSemMelhora = 0;
 			}else {
 				qtdeGerSemMelhora++;
+				
 			}
 			if (qtdeGerSemMelhora == gatilhoBuscaLocal) {
 				buscaLocal = true;
 				qtdeGerSemMelhora = 0;
 			}
 			g++;
+			auxMakespan = operadores.melhorMakespan(makespan, numIndividuos);
+			auxCusto = operadores.melhorCusto(custo, numIndividuos);
+			float auxPiorMakespan = operadores.piorMakespan(makespan, numIndividuos);
+			float auxPiorCusto = operadores.piorCusto(custo, numIndividuos);
 			if (g==500) {
-				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan, custo, tempoInicial,nivelDominancia,piorMakespanGeracao,piorCustoGeracao,mMakespan,mCusto);
+				lerArquivos.gerarMelhorPiorFOBJ(g, auxMakespan, auxCusto, auxPiorCusto, auxPiorMakespan);
 				piorMakespanGeracao = 0;
 				piorCustoGeracao = 0;
 				mMakespan = 100000;
 				mCusto = 100000;
 			}
 			if (g==1000) {
-				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan, custo, tempoInicial,nivelDominancia,piorMakespanGeracao,piorCustoGeracao,mMakespan,mCusto);
+				lerArquivos.gerarMelhorPiorFOBJ(g, mMakespan, mCusto, piorCustoGeracao, piorMakespanGeracao);
 				piorMakespanGeracao = 0;
 				piorCustoGeracao = 0;
 				mMakespan = 100000;
 				mCusto = 100000;
 			}
 			if (g==2000) {
-				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan, custo, tempoInicial,nivelDominancia,piorMakespanGeracao,piorCustoGeracao,mMakespan,mCusto);
+				lerArquivos.gerarMelhorPiorFOBJ(g, mMakespan, mCusto, piorCustoGeracao, piorMakespanGeracao);
 				piorMakespanGeracao = 0;
 				piorCustoGeracao = 0;
 				mMakespan = 100000;
 				mCusto = 100000;
 			}
 			if (g==5000) {
-				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan, custo, tempoInicial,nivelDominancia,piorMakespanGeracao,piorCustoGeracao,mMakespan,mCusto);
+				lerArquivos.gerarMelhorPiorFOBJ(g, mMakespan, mCusto, piorCustoGeracao, piorMakespanGeracao);
 				piorMakespanGeracao = 0;
 				piorCustoGeracao = 0;
 				mMakespan = 100000;
 				mCusto = 100000;
 			}
 			if (g==10000) {
-				lerArquivos.gerarCsvSolucao(numIndividuos, g, makespan, custo, tempoInicial,nivelDominancia,piorMakespanGeracao,piorCustoGeracao,mMakespan,mCusto);
+				lerArquivos.gerarMelhorPiorFOBJ(g, mMakespan, mCusto, piorCustoGeracao, piorMakespanGeracao);
 				piorMakespanGeracao = 0;
 				piorCustoGeracao = 0;
 				mMakespan = 100000;

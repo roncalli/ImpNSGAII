@@ -58,17 +58,14 @@ public class BuscaLocal {
 		//Gerar uma permutação aleatória das posições das tarefas
 
 		List<Integer> posicaoTarefas = new ArrayList<Integer>();
+		List<Integer> posicaoEncaixe = new ArrayList<Integer>();
+
 		for (int i = 0; i < numTarefas; i++) { //Sequencia da mega sena
 		    posicaoTarefas.add(i);
+		    posicaoEncaixe.add(i);
 		}
 		//Embaralhamos os números:
 		Collections.shuffle(posicaoTarefas);		
-		
-		//Gerar uma permutação aleatória das posições das posições de encaixe das tarefas
-		List<Integer> posicaoEncaixe = new ArrayList<Integer>();
-		for (int i = 0; i < numTarefas; i++) { //Sequencia da mega sena
-		    posicaoEncaixe.add(i);
-		}
 		//Embaralhamos os números:
 		Collections.shuffle(posicaoEncaixe);
 		
@@ -84,54 +81,75 @@ public class BuscaLocal {
 		for (int i=0; i<numTarefas; i++) {//Controle a tarefa em uma posição
 			for (int j=0; j<numTarefas; j++) { //Controla a posição de encaixe desta tarefa				
 				//Retirando a tarefa selecionada da sua posição de origem e movimentando o vetor
-				for (int k=posicaoTarefas.get(i); k<numTarefas; k++) {
-					if (k<numTarefas-1) {
-						auxind[k] = ind[k+1];
-					}else {
-						auxind[k] = -2;
-					}					
-				}				
-				//Inserindo a tarefa selecionada da sua posição de definida e movimentando o vetor
-				for (int k=numTarefas-1; k>posicaoEncaixe.get(j); k--) {
-					auxind[k] = auxind[k-1];
-					if (k == (posicaoEncaixe.get(j)+1)) {
-						auxind[posicaoEncaixe.get(j)] = ind[posicaoTarefas.get(i)]; 
-					}					
-				}					
-				//Remontando a lista para o cálculo do Makespan e Custo
-				//Remontando as listas de acordo com a quantidade de tarefa de cada máquina	
-				contInd = 0;
-				maquinaInd = 0;
-				int [][] seqAux = new int[numMaquinas][numTarefas];
-				//Inicializando o vetor com valor -2
-				for (int k=0; k<numMaquinas; k++) {
-					for (int w=0; w<numTarefas; w++) {
-						seqAux[k][w] = -2;
+				if (posicaoEncaixe.get(j) != posicaoTarefas.get(i)){
+					for (int k=posicaoTarefas.get(i); k<numTarefas; k++) {
+						if (k<numTarefas-1) {
+							auxind[k] = ind[k+1];
+						}else {
+							auxind[k] = -2;
+						}					
+					}				
+					//Inserindo a tarefa selecionada da sua posição de definida e movimentando o vetor
+					for (int k=numTarefas-1; k>posicaoEncaixe.get(j); k--) {
+						auxind[k] = auxind[k-1];
+						if (k == (posicaoEncaixe.get(j)+1)) {
+							auxind[posicaoEncaixe.get(j)] = ind[posicaoTarefas.get(i)]; 
+						}					
+					}	
+					
+					//Remontando a lista para o cálculo do Makespan e Custo
+					//Remontando as listas de acordo com a quantidade de tarefa de cada máquina	
+					contInd = 0;
+					maquinaInd = 0;
+					int [][] seqAux = new int[numMaquinas][numTarefas];
+					//Inicializando o vetor com valor -2
+					for (int k=0; k<numMaquinas; k++) {
+						for (int w=0; w<numTarefas; w++) {
+							seqAux[k][w] = -2;
+						}
+					}
+					
+					for (int k=0; k<numTarefas; k++){			
+						if (contInd == tarefaPos[maquinaInd]){
+							maquinaInd++;
+							contInd=0;
+							seqAux[maquinaInd][contInd] = auxind[k];				
+							contInd++;
+						}else{
+							seqAux[maquinaInd][contInd] = auxind[k];				
+							contInd++;
+						}	
+					}	
+					//Calcular Makespan e Custo Novamente
+					float makesanApos = makespan.calculoMakespanSequencia(seqAux, tarefa, matrizTarefaMaquina, numMaquinas, matrizSetup);			
+					float custoApos = custo.calculoCustoSequencia(seqAux, tarefa, matrizTarefaMaquina, numMaquinas, maquina);
+					if ((makesanApos<makesanAntes)||(((makesanApos == makesanAntes) &&(custoApos<custoAntes)))) {
+						//Paleativo
+						int numTarefasValidas = 0;
+						for (int k=0; k<numTarefas; k++){
+							if (auxind[k] != -2){
+								numTarefasValidas++;
+							}
+						}
+						//Paleativo
+						if (numTarefasValidas == numTarefas){
+							System.out.println("Melhorou Busca Local");						
+							seq_pop[pos] = seqAux;
+							melhorou = true;
+							break;
+						}else{
+							for (int k=0; k<numTarefas; k++){
+								auxind[k] = ind[k];
+							}	
+							System.out.println("Sequencia Inválida");
+						}
+					}else{
+						for (int k=0; k<numTarefas; k++){
+							auxind[k] = ind[k];
+						}
+						System.out.println("Não Melhorou Busca Local");
 					}
 				}
-				
-				for (int k=0; k<numTarefas; k++){			
-					if (contInd == tarefaPos[maquinaInd]){
-						maquinaInd++;
-						contInd=0;
-						seqAux[maquinaInd][contInd] = auxind[k];				
-						contInd++;
-					}else{
-						seqAux[maquinaInd][contInd] = auxind[k];				
-						contInd++;
-					}	
-				}	
-				//Calcular Makespan e Custo Novamente
-				float makesanApos = makespan.calculoMakespanSequencia(seqAux, tarefa, matrizTarefaMaquina, numMaquinas, matrizSetup);			
-				float custoApos = custo.calculoCustoSequencia(seqAux, tarefa, matrizTarefaMaquina, numMaquinas, maquina);
-				if ((makesanApos<makesanAntes)||(((makesanApos == makesanAntes) &&(custoApos<custoAntes)))) {
-					System.out.println("Melhorou Busca Local");
-					seq_pop[pos] = seqAux;
-					melhorou = true;
-					break;
-				}else{
-					System.out.println("Não Melhorou Busca Local");
-				}				
 			}
 			if(melhorou) {
 				break;
