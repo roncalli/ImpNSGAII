@@ -9,7 +9,7 @@ public class Hipervolume {
 	
 	
 		public float[][] lerCsvHipervolume(){		
-		String arquivoTarefa = "D:/FELIPE/RESULTADOS/Data040818/Hipervolume_Teste/Teste5000.csv";
+		String arquivoTarefa = "D:/FELIPE/RESULTADOS/Data190818/ARQUIVOFINAL/Exec5/Resultado10000_5.csv";
 		BufferedReader br = null;
 		String linha = "";
 		String csvDivisor = ",";
@@ -55,6 +55,28 @@ public class Hipervolume {
 				menorCusto = hipervolume[i][1];
 			}								
 		}
+		
+		//Ordenando as soluções para a realização dos cálculos
+		float auxM = 0;
+		float auxC = 0;
+		for(int linha = 0; linha < hipervolume.length; linha++) {
+			for(int coluna = 0; coluna < hipervolume[linha].length; coluna++) {
+				int col = coluna;
+				for(int i = linha; i < hipervolume.length; i++) {		
+					if (  hipervolume[linha][0] > hipervolume[i][0] ){
+						auxM = hipervolume[linha][0];
+						auxC = hipervolume[linha][1];
+						hipervolume[linha][0] = hipervolume[i][0];
+						hipervolume[linha][1] = hipervolume[i][1];
+						hipervolume[i][0] = auxM;
+						hipervolume[i][1] = auxC;
+					}
+				}
+			}
+		}
+		
+		
+		
 		
 		for (int i=0; i<hipervolume.length; i++){
 			hipervolume[i][0] = (hipervolume[i][0]-menorMakespan)/(nadir[0]-menorMakespan); 
