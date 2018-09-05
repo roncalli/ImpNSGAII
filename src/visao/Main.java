@@ -103,10 +103,9 @@ public class Main {
 			float[] custo_f = new float[numIndividuos];					
 			
 			//INSERIR A BUSCA LOCAL//
-			//BuscaLocalFalse
 			if (buscaLocal) {
 				BuscaLocal busca = new BuscaLocal();
-				seq_Pop_filhos = busca.buscaLocalFirstImprovements(seq_Pop_filhos, numMaquinas, maquina, tarefa, matrizTarefaMaquina, matrizSetup, numIndividuos, numTarefas);
+				seq_Pop_filhos = busca.buscaLocalFirstImprovements(seq_Pop_filhos, numMaquinas, maquina, tarefa, matrizTarefaMaquina, matrizSetup, numIndividuos, numTarefas,makespan,custo);
 				buscaLocal = false;
 			}						
 			
@@ -248,6 +247,8 @@ public class Main {
 							boolean solucaoJaIncluida = false;
 							if (cont>0){
 								solucaoJaIncluida = operadores.verificaSolucoesIguais(makespan_pai_filho, custo_pai_filho, cont);
+								//TESTE - RETIRAR
+								solucaoJaIncluida = false;
 							}
 							if (!solucaoJaIncluida){								
 								for (int w=0; w<numMaquinas; w++){
@@ -299,14 +300,16 @@ public class Main {
 					for (int cont = 0; cont<2; cont++) {
 						if (cont==0) {							
 							for (int w=0; w<numMaquinas; w++){
-								for (int k =0; k<numTarefas; k++) {													
+								for (int k =0; k<numTarefas; k++) {		
+									//ALterar
 									seq_pop_linha[ind_vet][w][k] = 	seq_pai_filho[cont][w][k];																				
 								}
 							}
 							inseridos_borda++;
 						}else { // if cont==1							
 							for (int w=0; w<numMaquinas; w++){
-								for (int k =0; k<numTarefas; k++) {													
+								for (int k =0; k<numTarefas; k++) {					
+									//ALterar
 									seq_pop_linha[ind_vet][w][k] = 	seq_pai_filho[cont][w][k];																				
 								}
 							}
@@ -341,7 +344,8 @@ public class Main {
 				}				
 				j = ind_vet;				
 				nivel++;								
-			}	
+			}
+			
 			//% Atribui a populaï¿½ï¿½o e a sequï¿½ncia dos indivï¿½duos da populaï¿½ï¿½o		
 			//Copiando os indivíduos de seq_pop para seq_pop_f
 			for (int q=0; q<numIndividuos; q++){
@@ -350,7 +354,8 @@ public class Main {
 						seq_pop[q][w][r] = seq_pop_linha[q][w][r];
 					}
 				}
-			}
+			}			
+			
 			makespan = calculoMakespan.calculoMakespan(numIndividuos, numMaquinas, seq_pop, tarefa, matrizTarefaMaquina,matrizSetup);
 			auxMakespan = operadores.piorMakespan(makespan_f, numIndividuos);
 			if (auxMakespan>piorMakespanGeracao) {
