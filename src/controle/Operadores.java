@@ -222,6 +222,7 @@ public class Operadores {
 			}
 			//VERIFICAR ESSE PONTO
 			if (cont == 500) {
+				//Quando cai aqui a resposta está incorreta (sequencia inválida, repetição 
 				return -2;
 				
 			}
@@ -472,5 +473,50 @@ public class Operadores {
 		return melhorCusto;
 	}
 	
+	public boolean solucaoValida (int[][] seq_pop, int numTarefas) {
+		//criando as estruturas auxiliares
+		int [] ind = new int[numTarefas];				
+		
+		//Colocando o valor -2 como marcador da tarefa
+		for (int i=0; i<numTarefas; i++){
+			ind[i]=-2;			
+		}
+		
+		//Copiando os valores para as estruturas criadas
+		int maquinaInd = 0;
+		int contInd = 0;		
+		for (int i=0; i<numTarefas; i++){			
+			if (seq_pop[maquinaInd][contInd] == -2){
+				maquinaInd++;
+				contInd=0;
+				ind[i] = seq_pop[maquinaInd][contInd];						
+				contInd++;
+			}else{
+				ind[i] = seq_pop[maquinaInd][contInd];						
+				contInd++;
+			}						
+		}
+		
+		//Ordenando a estrutura
+		for (int i=0; i<numTarefas; i++) {
+			int aux = -1;
+			for (int j=i; j<numTarefas; j++) {
+				if (ind[i] < ind[j])
+                {
+                    aux = ind[i];
+                    ind[i] = ind[j];
+                    ind[j] = aux;
+                }
+			}
+		}
+		
+		//Verificando semelhanças
+		for (int i=0; i<numTarefas-1; i++) {
+			if (ind[i] == ind[i+1]) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 }

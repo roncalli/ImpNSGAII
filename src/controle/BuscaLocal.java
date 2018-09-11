@@ -101,7 +101,7 @@ public class BuscaLocal {
 			
 			int numAvaliacoes = 0;
 			while (numAvaliacoes<1000){
-				if ((seq_pop[pos][0][0] == 0)&&(seq_pop[pos][0][1] == 0)&&(seq_pop[pos][0][2] == 0)) {
+				if (((seq_pop[pos][0][0] == 0)&&(seq_pop[pos][0][1] == 0))||((seq_pop[pos][0][1] == 0)&&(seq_pop[pos][0][2] == 0))) {
 					System.out.println("Sequencia Inválida Busca Local");
 					break;
 				}
@@ -207,11 +207,26 @@ public class BuscaLocal {
 									}
 								}
 								//Paleativo
-								if (numTarefasValidas == numTarefas){																			
-									seq_pop[pos] = seqAux; //ALTERAR AQUI DEPOIS
-									melhorou = true;
-									break;
+								if (numTarefasValidas == numTarefas){
+									//Verificar se seqAux é uma sequencia válida
+									boolean solucaoValida = operadores.solucaoValida(seqAux, numTarefas);
+									if (solucaoValida) {
+										seq_pop[pos] = seqAux; //ALTERAR AQUI DEPOIS
+										melhorou = true;
+										System.out.println("Melhorou Busca Local");
+										break;
+									}else {
+										System.out.println("Não Melhorou Busca Local - 1");
+										for (int k=0; k<numTarefas; k++){
+											auxind[k] = ind[k];
+										}	
+										for (int k=0; k<numMaquinas; k++){
+											auxTarefaPos[k] = tarefaPos[k];
+										}	
+									}
+									//Verificar se seqAux é uma sequencia válida																		
 								}else{
+									System.out.println("Não Melhorou Busca Local - 1");
 									for (int k=0; k<numTarefas; k++){
 										auxind[k] = ind[k];
 									}	
@@ -220,6 +235,7 @@ public class BuscaLocal {
 									}									
 								}
 							}else{
+								System.out.println("Não Melhorou Busca Local - 3");
 								for (int k=0; k<numTarefas; k++){
 									auxind[k] = ind[k];
 								}

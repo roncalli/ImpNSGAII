@@ -30,7 +30,7 @@ public class Main {
 		float piorMakespanGeracao = 0;
 		float piorCustoGeracao = 0;
 		int qtdeGerSemMelhora=0;
-		int gatilhoBuscaLocal = 50;
+		int gatilhoBuscaLocal = 100;
 		boolean buscaLocal = false;
 		float melhorMakespan = 100000;
 		int numGer = 10000; //n�mero de gera��es		
@@ -103,6 +103,7 @@ public class Main {
 			float[] custo_f = new float[numIndividuos];					
 			
 			//INSERIR A BUSCA LOCAL//
+			//buscaLocal = false;
 			if (buscaLocal) {
 				BuscaLocal busca = new BuscaLocal();
 				seq_Pop_filhos = busca.buscaLocalFirstImprovements(seq_Pop_filhos, numMaquinas, maquina, tarefa, matrizTarefaMaquina, matrizSetup, numIndividuos, numTarefas,makespan,custo);
