@@ -55,7 +55,6 @@ public class BuscaLocal {
 			}
 		}
 		
-		
 		// Fim da Inclusão de distância de Multidão para a seleção dos indivíduos 
 		
 		for (int q=0; q<qtde; q++){
@@ -211,12 +210,20 @@ public class BuscaLocal {
 									//Verificar se seqAux é uma sequencia válida
 									boolean solucaoValida = operadores.solucaoValida(seqAux, numTarefas);
 									if (solucaoValida) {
-										seq_pop[pos] = seqAux; //ALTERAR AQUI DEPOIS
+										//Verificando a posição de inserção da tarefa
+										int aux_pos = pos;
+										for(int w=0; w<numIndividuos; w++) {											
+											if (((seq_pop[w][0][0] == 0)&&(seq_pop[w][0][1] == 0))||((seq_pop[w][0][1] == 0)&&(seq_pop[w][0][2] == 0))) {
+												aux_pos = w;
+												break;
+											}
+										}
+										seq_pop[aux_pos] = seqAux; //ALTERAR AQUI DEPOIS
 										melhorou = true;
-										System.out.println("Melhorou Busca Local");
+										//System.out.println("Melhorou Busca Local");
 										break;
 									}else {
-										System.out.println("Não Melhorou Busca Local - 1");
+										//System.out.println("Não Melhorou Busca Local - 1");
 										for (int k=0; k<numTarefas; k++){
 											auxind[k] = ind[k];
 										}	
@@ -226,7 +233,7 @@ public class BuscaLocal {
 									}
 									//Verificar se seqAux é uma sequencia válida																		
 								}else{
-									System.out.println("Não Melhorou Busca Local - 1");
+									//System.out.println("Não Melhorou Busca Local - 1");
 									for (int k=0; k<numTarefas; k++){
 										auxind[k] = ind[k];
 									}	
@@ -235,7 +242,7 @@ public class BuscaLocal {
 									}									
 								}
 							}else{
-								System.out.println("Não Melhorou Busca Local - 3");
+								//System.out.println("Não Melhorou Busca Local - 3");
 								for (int k=0; k<numTarefas; k++){
 									auxind[k] = ind[k];
 								}
