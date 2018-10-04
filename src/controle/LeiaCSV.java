@@ -124,9 +124,9 @@ public class LeiaCSV {
 	}
 	
 	public void gerarCsvSolucao(int numIndividuos, int ger, float[] makespan, float[] custo, long tempoInicial, int[] nivelDominancia) throws IOException {
-		String exec = "1";
+		String exec = "2";
 		String rodada = "_"+exec+".csv";
-		String data = "Data190818";
+		String data = "Data021018";
 		String nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/Resultado"+rodada; 
 		try {
 			File file = new File(nomeArquivo);
@@ -154,9 +154,9 @@ public class LeiaCSV {
 	}
 	
 	public void gerarCsvSolucaoResultados(int numIndividuos, int ger, float[] makespan, float[] custo, long tempoInicial, int[] nivelDominancia) throws IOException {
-		String exec = "1";
+		String exec = "2";
 		String rodada = "_"+exec+".csv";
-		String data = "Data190818";
+		String data = "Data021018";
 		String nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/Resultado"+ger+rodada; 
 		try {
 			File file = new File(nomeArquivo);
@@ -185,9 +185,9 @@ public class LeiaCSV {
 	
 	public void gerarMelhorPiorFOBJ(int ger, float melhorMakespan, float melhorCusto, float piorCusto, float piorMakespan) throws IOException{
 		
-		String exec = "1";
+		String exec = "2";
 		String rodada = "_"+exec+".csv";
-		String data = "Data190818";
+		String data = "Data021018";
 		
 		String nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/MelhorPior(Makespan-Custo)"+ger+rodada;
 		FileWriter arquivoSaída = new FileWriter(nomeArquivo);	
@@ -202,9 +202,9 @@ public class LeiaCSV {
 	}
 	
 	public void gerarCsvSequenciaSolucao(int numIndividuos, int numMaquina, int numTarefas, int ger, float[] makespan, float[] custo, long tempoInicial, int[] nivelDominancia, int[][][]seq_pop) throws IOException {
-		String exec = "1";
+		String exec = "2";
 		String rodada = "_"+exec+".csv";
-		String data = "Data190818";
+		String data = "Data021018";
 		String nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/ArqFinal"+rodada; 		
 		try {
 			BufferedReader br = null;
@@ -243,9 +243,9 @@ public class LeiaCSV {
 	
 	public int[][][] lerArquivoSolucoes(int numIndividuos, int numMaquinas, int numTarefas, int ger){
 		int auxSeq[][][] = new int[numIndividuos][numMaquinas][numTarefas];
-		String exec = "1";
+		String exec = "2";
 		String rodada = "_"+exec+".csv";
-		String data = "Data190818";
+		String data = "Data021018";
 		String ArquivoFinal = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/ArqFinal"+rodada; 
 		for (int i=0; i<numIndividuos; i++){
 			for (int j=0; j<numMaquinas; j++){

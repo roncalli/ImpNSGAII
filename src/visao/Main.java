@@ -104,9 +104,16 @@ public class Main {
 			
 			//INSERIR A BUSCA LOCAL//
 			//buscaLocal = false;
+			boolean buscaSlide = false;
 			if (buscaLocal) {
 				BuscaLocal busca = new BuscaLocal();
-				seq_Pop_filhos = busca.buscaLocalFirstImprovements(seq_Pop_filhos, numMaquinas, maquina, tarefa, matrizTarefaMaquina, matrizSetup, numIndividuos, numTarefas,makespan,custo);
+				if (buscaSlide) {
+					seq_Pop_filhos = busca.buscaLocalFirstImprovementsSlide(seq_Pop_filhos, numMaquinas, maquina, tarefa, matrizTarefaMaquina, matrizSetup, numIndividuos, numTarefas,makespan,custo);
+					buscaSlide = !buscaSlide;
+				}else {
+					seq_Pop_filhos = busca.buscaLocalFirstImprovementsTroca(seq_Pop_filhos, numMaquinas, maquina, tarefa, matrizTarefaMaquina, matrizSetup, numIndividuos, numTarefas,makespan,custo);
+					buscaSlide = !buscaSlide;
+				}
 				buscaLocal = false;
 			}						
 			
@@ -442,7 +449,15 @@ public class Main {
 				mMakespan = 100000;
 				mCusto = 100000;
 			}			
-		}
+		}					
+		//Lendo o arquivo de soluções
+		//VERIFICAR
+//		System.out.println("Busca Local Final do Arquivo");
+//		int [][][] solucaoFinal = lerArquivos.lerArquivoSolucoes(numIndividuos, numMaquinas, numTarefas, 0);		
+//		BuscaLocal busca = new BuscaLocal();
+//		float [] auxMakespanBL = calculoMakespan.calculoMakespan(solucaoFinal.length, numMaquinas, solucaoFinal, tarefa, matrizTarefaMaquina,matrizSetup);
+//		float [] auxCustoBL =  calculoCusto.calculoCusto(solucaoFinal.length, numMaquinas, solucaoFinal, matrizTarefaMaquina, maquina, numTarefas);
+//		int [][][] solucaoFinalBL = busca.buscaLocalFirstImprovementsSlide(solucaoFinal, numMaquinas, maquina, tarefa, matrizTarefaMaquina, matrizSetup, solucaoFinal.length, numTarefas, auxMakespanBL, auxCustoBL);
 		//Imprimindo resultados		
 		Impressaoes imprimir = new Impressaoes();
 		imprimir.imprimir(g, makespan, custo, seq_pop, numIndividuos, nivelDominancia,numMaquinas, numTarefas);		
