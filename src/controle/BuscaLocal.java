@@ -8,12 +8,15 @@ import modelo.Maquina;
 import modelo.Tarefa;
 
 public class BuscaLocal {
-	public int [][][] buscaLocalFirstImprovementsSlide(int [][][] seq_pop, int numMaquinas, Maquina[] maquina, Tarefa[] tarefa, float[][] matrizTarefaMaquina, float[][][] matrizSetup, int numIndividuos, int numTarefas, float[] auxMakespan, float[] auxCusto){
+	public int [][][] buscaLocalFirstImprovementsSlide(int [][][] seq_pop, int numMaquinas, Maquina[] maquina, Tarefa[] tarefa, float[][] matrizTarefaMaquina, float[][][] matrizSetup, int numIndividuos, int numTarefas, float[] auxMakespan, float[] auxCusto, int numGer, int g){
 		//Implementar utilizando First Improvements utilizando a idéia do Carrano, gerando lista aleatórias de posições e de encaixe das tarefas
 		int pos = (int)(Math.random()*numIndividuos);
 		
 		// Incluindo distância de Multidão para a seleção dos indivíduos 
 		int qtde = (int) (numIndividuos*5)/100;
+//		if (g == (numGer-1)) { 			
+//			qtde = numIndividuos;
+//		}
 		int [] escolhidos = new int [qtde];
 		float [][] auxDist = new float[numIndividuos][2];
 		Operadores operadores = new Operadores();
@@ -99,7 +102,12 @@ public class BuscaLocal {
 			}
 			
 			int numAvaliacoes = 0;
-			while (numAvaliacoes<1000){
+			int limiteAvaliacoes = 1000;
+			if (g == (numGer-1)) {
+				System.out.println("Busca Local Final - 1");
+				limiteAvaliacoes = 10000;
+			}
+			while (numAvaliacoes<limiteAvaliacoes){
 				if (((seq_pop[pos][0][0] == 0)&&(seq_pop[pos][0][1] == 0))||((seq_pop[pos][0][1] == 0)&&(seq_pop[pos][0][2] == 0))) {
 					System.out.println("Sequencia Inválida Busca Local");
 					break;
@@ -270,12 +278,15 @@ public class BuscaLocal {
 	
 	//FALTA AINDA IMPLEMENTAR A TROCA
 	//ESTÁ IGUAL A DE CIMA
-	public int [][][] buscaLocalFirstImprovementsTroca(int [][][] seq_pop, int numMaquinas, Maquina[] maquina, Tarefa[] tarefa, float[][] matrizTarefaMaquina, float[][][] matrizSetup, int numIndividuos, int numTarefas, float[] auxMakespan, float[] auxCusto){
+	public int [][][] buscaLocalFirstImprovementsTroca(int [][][] seq_pop, int numMaquinas, Maquina[] maquina, Tarefa[] tarefa, float[][] matrizTarefaMaquina, float[][][] matrizSetup, int numIndividuos, int numTarefas, float[] auxMakespan, float[] auxCusto, int numGer, int g){
 		//Implementar utilizando First Improvements utilizando a idéia do Carrano, gerando lista aleatórias de posições e de encaixe das tarefas
 		int pos = (int)(Math.random()*numIndividuos);
 		
 		// Incluindo distância de Multidão para a seleção dos indivíduos 
 		int qtde = (int) (numIndividuos*5)/100;
+//		if (g == (numGer-1)) { 
+//			qtde = numIndividuos;
+//		}
 		int [] escolhidos = new int [qtde];
 		float [][] auxDist = new float[numIndividuos][2];
 		Operadores operadores = new Operadores();
@@ -361,7 +372,12 @@ public class BuscaLocal {
 			}
 			
 			int numAvaliacoes = 0;
-			while (numAvaliacoes<1000){
+			int limiteAvaliacoes = 1000;
+			if (g == (numGer-1)) {
+				System.out.println("Busca Local Final - 2");
+				limiteAvaliacoes = 10000;
+			}
+			while (numAvaliacoes<limiteAvaliacoes){
 				if (((seq_pop[pos][0][0] == 0)&&(seq_pop[pos][0][1] == 0))||((seq_pop[pos][0][1] == 0)&&(seq_pop[pos][0][2] == 0))) {
 					System.out.println("Sequencia Inválida Busca Local");
 					break;

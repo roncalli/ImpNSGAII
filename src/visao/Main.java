@@ -85,7 +85,8 @@ public class Main {
 		nivelDominancia = relacoesDominancia.calculaNivelDominancia(numIndividuos, makespan, custo);
 		int g = 0; // gera��o
 		// Imprimindo Primeira Gera��o
-						
+		boolean buscaSlide = false;
+				
 		while(g<numGer) {			
 			//Seleciona os pais utilizando torneio de multid�o
 			int [] resTorneio = new int[numIndividuos];			
@@ -104,14 +105,16 @@ public class Main {
 			
 			//INSERIR A BUSCA LOCAL//
 			//buscaLocal = false;
-			boolean buscaSlide = false;
+			if (g == (numGer-1)) {
+				buscaLocal = true;
+			}
 			if (buscaLocal) {
 				BuscaLocal busca = new BuscaLocal();
 				if (buscaSlide) {
-					seq_Pop_filhos = busca.buscaLocalFirstImprovementsSlide(seq_Pop_filhos, numMaquinas, maquina, tarefa, matrizTarefaMaquina, matrizSetup, numIndividuos, numTarefas,makespan,custo);
+					seq_Pop_filhos = busca.buscaLocalFirstImprovementsSlide(seq_Pop_filhos, numMaquinas, maquina, tarefa, matrizTarefaMaquina, matrizSetup, numIndividuos, numTarefas,makespan,custo, numGer,g);
 					buscaSlide = !buscaSlide;
 				}else {
-					seq_Pop_filhos = busca.buscaLocalFirstImprovementsTroca(seq_Pop_filhos, numMaquinas, maquina, tarefa, matrizTarefaMaquina, matrizSetup, numIndividuos, numTarefas,makespan,custo);
+					seq_Pop_filhos = busca.buscaLocalFirstImprovementsTroca(seq_Pop_filhos, numMaquinas, maquina, tarefa, matrizTarefaMaquina, matrizSetup, numIndividuos, numTarefas,makespan,custo,numGer,g);
 					buscaSlide = !buscaSlide;
 				}
 				buscaLocal = false;
