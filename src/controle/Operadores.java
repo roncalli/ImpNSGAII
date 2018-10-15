@@ -268,7 +268,6 @@ public class Operadores {
 				}
 			}
 		}		
-		System.out.println("");
 		//Movimentando as tarefas da máquina onde a tarefa foi retirada
 		for (int i=posicaoTarefaSelecionada; i<numTarefas; i++){			
 			seq_pop[maquinaTarefaSelecionada][i] = seq_pop[maquinaTarefaSelecionada][i+1];			

@@ -11,14 +11,14 @@ public class Impressaoes {
 		float piorCusto = 0;
 		float melhorCusto = 1000000;
 		int ind_mc = 0;				
-		System.out.println("Imprimindo os ítens da geração: "+geracao);
-		System.out.println("----------------------------------------------------------------------");
-		System.out.println();
-		System.out.println("Indivíduo     -     Makespan     -    Custo");	
+//		System.out.println("Imprimindo os ítens da geração: "+geracao);
+//		System.out.println("----------------------------------------------------------------------");
+//		System.out.println();
+//		System.out.println("Indivíduo     -     Makespan     -    Custo");	
 		nivelDominancia = imprimirNaoDominados(makespan, custo, numIndividuos);
 		for (int i=0; i<numIndividuos; i++) {
 			if (nivelDominancia[i] != -2) {//Imprimindo apenas as soluções não dominadas
-				System.out.println(i+"          -          "+makespan[nivelDominancia[i]]+"          -          "+custo[nivelDominancia[i]]);
+				// System.out.println(i+"          -          "+makespan[nivelDominancia[i]]+"          -          "+custo[nivelDominancia[i]]);
 				if (makespan[nivelDominancia[i]]<melhorMakespan) {
 					melhorMakespan = makespan[nivelDominancia[i]];
 					ind_mm = nivelDominancia[i];
@@ -36,20 +36,20 @@ public class Impressaoes {
 				}
 			}
 		}
-		System.out.println();
-		System.out.println("Sequenciamento da solução com melhor makespan:");
-		System.out.println();
+//		System.out.println();
+//		System.out.println("Sequenciamento da solução com melhor makespan:");
+//		System.out.println();
 		for (int i=0;i<numMaquinas; i++) {
 			int j=0;
-			System.out.println("Máquina: "+i);
+			// System.out.println("Máquina: "+i);
 			while ((seq_pop[ind_mm][i][j]!=-2)) {
-				System.out.print(seq_pop[ind_mm][i][j]+"  -  ");
+				// System.out.print(seq_pop[ind_mm][i][j]+"  -  ");
 				if (j == numTarefas-1){
 					break;
 				}
-				if (seq_pop[ind_mm][i][j+1] == -2) {
-					System.out.println();
-				}
+//				if (seq_pop[ind_mm][i][j+1] == -2) {
+//					System.out.println();
+//				}
 				j++;
 				if (j == numTarefas){
 					break;
@@ -57,9 +57,9 @@ public class Impressaoes {
 			}
 		}	
 		
-		System.out.println();
-		System.out.println("Sequenciamento da solução com melhor Custo:");
-		System.out.println();
+//		System.out.println();
+//		System.out.println("Sequenciamento da solução com melhor Custo:");
+//		System.out.println();
 //		for (int i=0;i<numMaquinas; i++) {
 //			int j=0;
 //			System.out.println("Máquina: "+i);
@@ -74,13 +74,13 @@ public class Impressaoes {
 //				}
 //			}
 //		}	
-		System.out.println();
-		System.out.println();
-		System.out.println("Melhor Makespan: "+melhorMakespan+"    -    "+"Pior Makespan: "+piorMakespan);
-		System.out.println("Melhor Custo: "+melhorCusto+"    -    "+"Pior Custo: "+piorCusto);
-		System.out.println("----------------------------------------------------------------------");
-		System.out.println();
-		System.out.println();
+//		System.out.println();
+//		System.out.println();
+//		System.out.println("Melhor Makespan: "+melhorMakespan+"    -    "+"Pior Makespan: "+piorMakespan);
+//		System.out.println("Melhor Custo: "+melhorCusto+"    -    "+"Pior Custo: "+piorCusto);
+//		System.out.println("----------------------------------------------------------------------");
+//		System.out.println();
+//		System.out.println();
 		return melhorMakespan;
 	}
 	

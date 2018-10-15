@@ -123,10 +123,9 @@ public class LeiaCSV {
 		}
 	}
 	
-	public void gerarCsvSolucao(int numIndividuos, int ger, float[] makespan, float[] custo, long tempoInicial, int[] nivelDominancia) throws IOException {
-		String exec = "2";
+	public void gerarCsvSolucao(int numIndividuos, int ger, float[] makespan, float[] custo, long tempoInicial, int[] nivelDominancia, int exec) throws IOException {
 		String rodada = "_"+exec+".csv";
-		String data = "Data021018";
+		String data = "Data021018_5";
 		String nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/Resultado"+rodada; 
 		try {
 			File file = new File(nomeArquivo);
@@ -135,28 +134,27 @@ public class LeiaCSV {
 			// TODO: handle exception
 		}
 		
-		FileWriter arquivoSaída = new FileWriter(nomeArquivo);	
+		FileWriter arquivoSaida = new FileWriter(nomeArquivo);	
 		Impressaoes impressaoes = new Impressaoes();
 		nivelDominancia = impressaoes.imprimirNaoDominados(makespan, custo, numIndividuos);		
 		for (int i=0; i<numIndividuos; i++) {
 			if (nivelDominancia[i] != -2) {
-				arquivoSaída.append(makespan[nivelDominancia[i]]+","+custo[nivelDominancia[i]]+"\n");
+				arquivoSaida.append(makespan[nivelDominancia[i]]+","+custo[nivelDominancia[i]]+"\n");
 			}
 		}		
-		arquivoSaída.flush();
-		arquivoSaída.close();
+		arquivoSaida.flush();
+		arquivoSaida.close();
 		
 		nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/ResultadoTempo"+rodada;
-		arquivoSaída = new FileWriter(nomeArquivo);	
-		arquivoSaída.append("Tempo Total: "+((System.currentTimeMillis()-tempoInicial)/1000)+" segundos");
-		arquivoSaída.flush();
-		arquivoSaída.close();
+		arquivoSaida = new FileWriter(nomeArquivo);	
+		arquivoSaida.append("Tempo Total: "+((System.currentTimeMillis()-tempoInicial)/1000)+" segundos");
+		arquivoSaida.flush();
+		arquivoSaida.close();
 	}
 	
-	public void gerarCsvSolucaoResultados(int numIndividuos, int ger, float[] makespan, float[] custo, long tempoInicial, int[] nivelDominancia) throws IOException {
-		String exec = "2";
+	public void gerarCsvSolucaoResultados(int numIndividuos, int ger, float[] makespan, float[] custo, long tempoInicial, int[] nivelDominancia, int exec) throws IOException {
 		String rodada = "_"+exec+".csv";
-		String data = "Data021018";
+		String data = "Data021018_5";
 		String nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/Resultado"+ger+rodada; 
 		try {
 			File file = new File(nomeArquivo);
@@ -165,46 +163,43 @@ public class LeiaCSV {
 			// TODO: handle exception
 		}
 		
-		FileWriter arquivoSaída = new FileWriter(nomeArquivo);	
+		FileWriter arquivoSaida = new FileWriter(nomeArquivo);	
 		Impressaoes impressaoes = new Impressaoes();
 		nivelDominancia = impressaoes.imprimirNaoDominados(makespan, custo, numIndividuos);		
 		for (int i=0; i<numIndividuos; i++) {
 			if (nivelDominancia[i] != -2) {
-				arquivoSaída.append(makespan[nivelDominancia[i]]+","+custo[nivelDominancia[i]]+"\n");
+				arquivoSaida.append(makespan[nivelDominancia[i]]+","+custo[nivelDominancia[i]]+"\n");
 			}
 		}		
-		arquivoSaída.flush();
-		arquivoSaída.close();
+		arquivoSaida.flush();
+		arquivoSaida.close();
 		
 		nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/ResultadoTempo"+ger+rodada;
-		arquivoSaída = new FileWriter(nomeArquivo);	
-		arquivoSaída.append("Tempo Total: "+((System.currentTimeMillis()-tempoInicial)/1000)+" segundos");
-		arquivoSaída.flush();
-		arquivoSaída.close();
+		arquivoSaida = new FileWriter(nomeArquivo);	
+		arquivoSaida.append("Tempo Total: "+((System.currentTimeMillis()-tempoInicial)/1000)+" segundos");
+		arquivoSaida.flush();
+		arquivoSaida.close();
 	}
 	
-	public void gerarMelhorPiorFOBJ(int ger, float melhorMakespan, float melhorCusto, float piorCusto, float piorMakespan) throws IOException{
-		
-		String exec = "2";
+	public void gerarMelhorPiorFOBJ(int ger, float melhorMakespan, float melhorCusto, float piorCusto, float piorMakespan, int exec) throws IOException{
 		String rodada = "_"+exec+".csv";
-		String data = "Data021018";
+		String data = "Data021018_5";
 		
 		String nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/MelhorPior(Makespan-Custo)"+ger+rodada;
-		FileWriter arquivoSaída = new FileWriter(nomeArquivo);	
-		arquivoSaída = new FileWriter(nomeArquivo);	
+		FileWriter arquivoSaida = new FileWriter(nomeArquivo);	
+		arquivoSaida = new FileWriter(nomeArquivo);	
 		
-		arquivoSaída.append("Melhor Makespan: "+melhorMakespan+"\n");
-		arquivoSaída.append("Pior Makespan: "+piorMakespan+"\n");
-		arquivoSaída.append("Melhor Custo: "+melhorCusto+"\n");
-		arquivoSaída.append("Pior Custo: "+piorCusto+"\n");
-		arquivoSaída.flush();
-		arquivoSaída.close();
+		arquivoSaida.append("Melhor Makespan: "+melhorMakespan+"\n");
+		arquivoSaida.append("Pior Makespan: "+piorMakespan+"\n");
+		arquivoSaida.append("Melhor Custo: "+melhorCusto+"\n");
+		arquivoSaida.append("Pior Custo: "+piorCusto+"\n");
+		arquivoSaida.flush();
+		arquivoSaida.close();
 	}
 	
-	public void gerarCsvSequenciaSolucao(int numIndividuos, int numMaquina, int numTarefas, int ger, float[] makespan, float[] custo, long tempoInicial, int[] nivelDominancia, int[][][]seq_pop) throws IOException {
-		String exec = "2";
+	public void gerarCsvSequenciaSolucao(int numIndividuos, int numMaquina, int numTarefas, int ger, float[] makespan, float[] custo, long tempoInicial, int[] nivelDominancia, int[][][]seq_pop, int exec) throws IOException {
 		String rodada = "_"+exec+".csv";
-		String data = "Data021018";
+		String data = "Data021018_5";
 		String nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/ArqFinal"+rodada; 		
 		try {
 			BufferedReader br = null;
@@ -215,7 +210,7 @@ public class LeiaCSV {
 			// TODO: handle exception
 		}
 		
-		FileWriter arquivoSaída = new FileWriter(nomeArquivo);	
+		FileWriter arquivoSaida = new FileWriter(nomeArquivo);	
 		Impressaoes impressaoes = new Impressaoes();
 		nivelDominancia = impressaoes.imprimirNaoDominados(makespan, custo, numIndividuos);		
 		for (int i=0; i<numIndividuos; i++) {
@@ -226,26 +221,25 @@ public class LeiaCSV {
 				for (int k=0; k<numTarefas; k++){
 					if (seq_pop[nivelDominancia[i]][j][k] != -2) {
 						if ((k == (numTarefas-1)) || (seq_pop[nivelDominancia[i]][j][k+1]==-2)) {
-							arquivoSaída.append(seq_pop[nivelDominancia[i]][j][k]+"");
+							arquivoSaida.append(seq_pop[nivelDominancia[i]][j][k]+"");
 						}else {
-							arquivoSaída.append(seq_pop[nivelDominancia[i]][j][k]+",");
+							arquivoSaida.append(seq_pop[nivelDominancia[i]][j][k]+",");
 						}
 					}else{
 						break;
 					}
 				}	
-				arquivoSaída.append("\n");
+				arquivoSaida.append("\n");
 			}
 		}
-		arquivoSaída.flush();
-		arquivoSaída.close();		
+		arquivoSaida.flush();
+		arquivoSaida.close();		
 	}
 	
-	public int[][][] lerArquivoSolucoes(int numIndividuos, int numMaquinas, int numTarefas, int ger){
+	public int[][][] lerArquivoSolucoes(int numIndividuos, int numMaquinas, int numTarefas, int ger, int exec){
 		int auxSeq[][][] = new int[numIndividuos][numMaquinas][numTarefas];
-		String exec = "2";
 		String rodada = "_"+exec+".csv";
-		String data = "Data021018";
+		String data = "Data021018_5";
 		String ArquivoFinal = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/ArqFinal"+rodada; 
 		for (int i=0; i<numIndividuos; i++){
 			for (int j=0; j<numMaquinas; j++){

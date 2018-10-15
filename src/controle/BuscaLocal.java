@@ -9,10 +9,10 @@ import modelo.Tarefa;
 
 public class BuscaLocal {
 	public int [][][] buscaLocalFirstImprovementsSlide(int [][][] seq_pop, int numMaquinas, Maquina[] maquina, Tarefa[] tarefa, float[][] matrizTarefaMaquina, float[][][] matrizSetup, int numIndividuos, int numTarefas, float[] auxMakespan, float[] auxCusto, int numGer, int g){
-		//Implementar utilizando First Improvements utilizando a idéia do Carrano, gerando lista aleatórias de posições e de encaixe das tarefas
+		//Implementar utilizando First Improvements utilizando a idï¿½ia do Carrano, gerando lista aleatï¿½rias de posiï¿½ï¿½es e de encaixe das tarefas
 		int pos = (int)(Math.random()*numIndividuos);
 		
-		// Incluindo distância de Multidão para a seleção dos indivíduos 
+		// Incluindo distï¿½ncia de Multidï¿½o para a seleï¿½ï¿½o dos indivï¿½duos 
 		int qtde = (int) (numIndividuos*5)/100;
 //		if (g == (numGer-1)) { 			
 //			qtde = numIndividuos;
@@ -27,7 +27,7 @@ public class BuscaLocal {
 		auxDist = operadores.calculoDistanciaMultidao(auxMakespan, auxCusto, 2,posicao_nivel);
 		float []distMultidao = new float[numIndividuos];
 
-		//Ordenando após calcular a distância de multidão
+		//Ordenando apï¿½s calcular a distï¿½ncia de multidï¿½o
 		for (int w=0; w<numIndividuos; w++){
 			distMultidao[w] = auxDist[w][0];
 			posicao_nivel[w] = (int)auxDist[w][1];
@@ -58,14 +58,14 @@ public class BuscaLocal {
 			}
 		}
 		
-		// Fim da Inclusão de distância de Multidão para a seleção dos indivíduos 
+		// Fim da Inclusï¿½o de distï¿½ncia de Multidï¿½o para a seleï¿½ï¿½o dos indivï¿½duos 
 		
 		for (int q=0; q<qtde; q++){
 			
 			int [] tarefaPos = new int[numMaquinas];
 			int [] auxTarefaPos = new int[numMaquinas];
 			pos = escolhidos[q];
-			//Guardando o número de Tarefa de cada indivíduo e de cada máquina
+			//Guardando o nï¿½mero de Tarefa de cada indivï¿½duo e de cada mï¿½quina
 			for (int i=0; i<numMaquinas; i++){
 				for (int j=0; j<numTarefas; j++){				
 					if (seq_pop[pos][i][j]==-2){
@@ -104,16 +104,16 @@ public class BuscaLocal {
 			int numAvaliacoes = 0;
 			int limiteAvaliacoes = 1000;
 			if (g == (numGer-1)) {
-				System.out.println("Busca Local Final - 1");
+				//System.out.println("Busca Local Final - 1");
 				limiteAvaliacoes = 10000;
 			}
 			while (numAvaliacoes<limiteAvaliacoes){
 				if (((seq_pop[pos][0][0] == 0)&&(seq_pop[pos][0][1] == 0))||((seq_pop[pos][0][1] == 0)&&(seq_pop[pos][0][2] == 0))) {
-					System.out.println("Sequencia Inválida Busca Local");
+					//System.out.println("Sequencia Invï¿½lida Busca Local");
 					break;
 				}
 			
-				//Gerar uma permutação aleatória das posições das tarefas
+				//Gerar uma permutaï¿½ï¿½o aleatï¿½ria das posiï¿½ï¿½es das tarefas
 				if (numAvaliacoes == 1000){
 					break;
 				}
@@ -124,9 +124,9 @@ public class BuscaLocal {
 				    posicaoTarefas.add(i);
 				    posicaoEncaixe.add(i);
 				}
-				//Embaralhamos os números:
+				//Embaralhamos os nï¿½meros:
 				Collections.shuffle(posicaoTarefas);		
-				//Embaralhamos os números:
+				//Embaralhamos os nï¿½meros:
 				Collections.shuffle(posicaoEncaixe);
 				
 				CalculoMakespan makespan = new CalculoMakespan();
@@ -134,13 +134,13 @@ public class BuscaLocal {
 				float makesanAntes = makespan.calculoMakespanSequencia(seq_pop[pos], tarefa, matrizTarefaMaquina, numMaquinas, matrizSetup);			
 				float custoAntes = custo.calculoCustoSequencia(seq_pop[pos], tarefa, matrizTarefaMaquina, numMaquinas, maquina);
 				numAvaliacoes++;
-				//Efetuando a troca nas posições estabelecidas pelas sequencias aleatórias
+				//Efetuando a troca nas posiï¿½ï¿½es estabelecidas pelas sequencias aleatï¿½rias
 		
-				//Efetuando a troca nas posições estabelecidas pelas sequencias aleatórias
+				//Efetuando a troca nas posiï¿½ï¿½es estabelecidas pelas sequencias aleatï¿½rias
 				boolean melhorou = false;
-				for (int i=0; i<numTarefas; i++) {//Controle a tarefa em uma posição
-					for (int j=0; j<numTarefas; j++) { //Controla a posição de encaixe desta tarefa				
-						//Retirando a tarefa selecionada da sua posição de origem e movimentando o vetor
+				for (int i=0; i<numTarefas; i++) {//Controle a tarefa em uma posiï¿½ï¿½o
+					for (int j=0; j<numTarefas; j++) { //Controla a posiï¿½ï¿½o de encaixe desta tarefa				
+						//Retirando a tarefa selecionada da sua posiï¿½ï¿½o de origem e movimentando o vetor
 						if (numAvaliacoes == 1000){
 							break;
 						}
@@ -152,21 +152,21 @@ public class BuscaLocal {
 									auxind[k] = -2;
 								}					
 							}				
-							//Inserindo a tarefa selecionada da sua posição de definida e movimentando o vetor
+							//Inserindo a tarefa selecionada da sua posiï¿½ï¿½o de definida e movimentando o vetor
 							for (int k=numTarefas-1; k>posicaoEncaixe.get(j); k--) {
 								auxind[k] = auxind[k-1];
 								if (k == (posicaoEncaixe.get(j)+1)) {
 									auxind[posicaoEncaixe.get(j)] = ind[posicaoTarefas.get(i)]; 
 								}					
 							}
-							//Ajustando o número de tarefas nas máquinas
+							//Ajustando o nï¿½mero de tarefas nas mï¿½quinas
 							int nTar = 0;
 							boolean tarefaAdicionada = false;
 							boolean tarefaRetirada = false;
 							for (int k=0; k<numMaquinas; k++){
 								nTar = nTar + tarefaPos[k];
 								if ((posicaoTarefas.get(i)/nTar == 0)&&(tarefaRetirada == false)){
-									auxTarefaPos[k]--; //Retirando a tarefa da máquina 
+									auxTarefaPos[k]--; //Retirando a tarefa da mï¿½quina 
 									tarefaRetirada = true;
 								}
 								if ((posicaoEncaixe.get(i)/nTar == 0)&&(tarefaAdicionada == false)){
@@ -178,8 +178,8 @@ public class BuscaLocal {
 								}
 							}
 							
-							//Remontando a lista para o cálculo do Makespan e Custo
-							//Remontando as listas de acordo com a quantidade de tarefa de cada máquina	
+							//Remontando a lista para o cï¿½lculo do Makespan e Custo
+							//Remontando as listas de acordo com a quantidade de tarefa de cada mï¿½quina	
 							contInd = 0;
 							maquinaInd = 0;
 							int [][] seqAux = new int[numMaquinas][numTarefas];
@@ -215,10 +215,10 @@ public class BuscaLocal {
 								}
 								//Paleativo
 								if (numTarefasValidas == numTarefas){
-									//Verificar se seqAux é uma sequencia válida
+									//Verificar se seqAux ï¿½ uma sequencia vï¿½lida
 									boolean solucaoValida = operadores.solucaoValida(seqAux, numTarefas);
 									if (solucaoValida) {
-										//Verificando a posição de inserção da tarefa
+										//Verificando a posiï¿½ï¿½o de inserï¿½ï¿½o da tarefa
 										int aux_pos = pos;
 										for(int w=0; w<numIndividuos; w++) {											
 											if (((seq_pop[w][0][0] == 0)&&(seq_pop[w][0][1] == 0))||((seq_pop[w][0][1] == 0)&&(seq_pop[w][0][2] == 0))) {
@@ -231,7 +231,7 @@ public class BuscaLocal {
 										//System.out.println("Melhorou Busca Local");
 										break;
 									}else {
-										//System.out.println("Não Melhorou Busca Local - 1");
+										//System.out.println("Nï¿½o Melhorou Busca Local - 1");
 										for (int k=0; k<numTarefas; k++){
 											auxind[k] = ind[k];
 										}	
@@ -239,9 +239,9 @@ public class BuscaLocal {
 											auxTarefaPos[k] = tarefaPos[k];
 										}	
 									}
-									//Verificar se seqAux é uma sequencia válida																		
+									//Verificar se seqAux ï¿½ uma sequencia vï¿½lida																		
 								}else{
-									//System.out.println("Não Melhorou Busca Local - 1");
+									//System.out.println("Nï¿½o Melhorou Busca Local - 1");
 									for (int k=0; k<numTarefas; k++){
 										auxind[k] = ind[k];
 									}	
@@ -250,7 +250,7 @@ public class BuscaLocal {
 									}									
 								}
 							}else{
-								//System.out.println("Não Melhorou Busca Local - 3");
+								//System.out.println("Nï¿½o Melhorou Busca Local - 3");
 								for (int k=0; k<numTarefas; k++){
 									auxind[k] = ind[k];
 								}
@@ -277,12 +277,12 @@ public class BuscaLocal {
 	
 	
 	//FALTA AINDA IMPLEMENTAR A TROCA
-	//ESTÁ IGUAL A DE CIMA
+	//ESTï¿½ IGUAL A DE CIMA
 	public int [][][] buscaLocalFirstImprovementsTroca(int [][][] seq_pop, int numMaquinas, Maquina[] maquina, Tarefa[] tarefa, float[][] matrizTarefaMaquina, float[][][] matrizSetup, int numIndividuos, int numTarefas, float[] auxMakespan, float[] auxCusto, int numGer, int g){
-		//Implementar utilizando First Improvements utilizando a idéia do Carrano, gerando lista aleatórias de posições e de encaixe das tarefas
+		//Implementar utilizando First Improvements utilizando a idï¿½ia do Carrano, gerando lista aleatï¿½rias de posiï¿½ï¿½es e de encaixe das tarefas
 		int pos = (int)(Math.random()*numIndividuos);
 		
-		// Incluindo distância de Multidão para a seleção dos indivíduos 
+		// Incluindo distï¿½ncia de Multidï¿½o para a seleï¿½ï¿½o dos indivï¿½duos 
 		int qtde = (int) (numIndividuos*5)/100;
 //		if (g == (numGer-1)) { 
 //			qtde = numIndividuos;
@@ -297,7 +297,7 @@ public class BuscaLocal {
 		auxDist = operadores.calculoDistanciaMultidao(auxMakespan, auxCusto, 2,posicao_nivel);
 		float []distMultidao = new float[numIndividuos];
 
-		//Ordenando após calcular a distância de multidão
+		//Ordenando apï¿½s calcular a distï¿½ncia de multidï¿½o
 		for (int w=0; w<numIndividuos; w++){
 			distMultidao[w] = auxDist[w][0];
 			posicao_nivel[w] = (int)auxDist[w][1];
@@ -328,14 +328,14 @@ public class BuscaLocal {
 			}
 		}
 		
-		// Fim da Inclusão de distância de Multidão para a seleção dos indivíduos 
+		// Fim da Inclusï¿½o de distï¿½ncia de Multidï¿½o para a seleï¿½ï¿½o dos indivï¿½duos 
 		
 		for (int q=0; q<qtde; q++){
 			
 			int [] tarefaPos = new int[numMaquinas];
 			int [] auxTarefaPos = new int[numMaquinas];
 			pos = escolhidos[q];
-			//Guardando o número de Tarefa de cada indivíduo e de cada máquina
+			//Guardando o nï¿½mero de Tarefa de cada indivï¿½duo e de cada mï¿½quina
 			for (int i=0; i<numMaquinas; i++){
 				for (int j=0; j<numTarefas; j++){				
 					if (seq_pop[pos][i][j]==-2){
@@ -379,11 +379,11 @@ public class BuscaLocal {
 			}
 			while (numAvaliacoes<limiteAvaliacoes){
 				if (((seq_pop[pos][0][0] == 0)&&(seq_pop[pos][0][1] == 0))||((seq_pop[pos][0][1] == 0)&&(seq_pop[pos][0][2] == 0))) {
-					System.out.println("Sequencia Inválida Busca Local");
+					System.out.println("Sequencia Invï¿½lida Busca Local");
 					break;
 				}
 			
-				//Gerar uma permutação aleatória das posições das tarefas
+				//Gerar uma permutaï¿½ï¿½o aleatï¿½ria das posiï¿½ï¿½es das tarefas
 				if (numAvaliacoes == 1000){
 					break;
 				}
@@ -394,9 +394,9 @@ public class BuscaLocal {
 				    posicaoTarefas.add(i);
 				    posicaoEncaixe.add(i);
 				}
-				//Embaralhamos os números:
+				//Embaralhamos os nï¿½meros:
 				Collections.shuffle(posicaoTarefas);		
-				//Embaralhamos os números:
+				//Embaralhamos os nï¿½meros:
 				Collections.shuffle(posicaoEncaixe);
 				
 				CalculoMakespan makespan = new CalculoMakespan();
@@ -404,13 +404,13 @@ public class BuscaLocal {
 				float makesanAntes = makespan.calculoMakespanSequencia(seq_pop[pos], tarefa, matrizTarefaMaquina, numMaquinas, matrizSetup);			
 				float custoAntes = custo.calculoCustoSequencia(seq_pop[pos], tarefa, matrizTarefaMaquina, numMaquinas, maquina);
 				numAvaliacoes++;
-				//Efetuando a troca nas posições estabelecidas pelas sequencias aleatórias
+				//Efetuando a troca nas posiï¿½ï¿½es estabelecidas pelas sequencias aleatï¿½rias
 		
-				//Efetuando a troca nas posições estabelecidas pelas sequencias aleatórias
+				//Efetuando a troca nas posiï¿½ï¿½es estabelecidas pelas sequencias aleatï¿½rias
 				boolean melhorou = false;
-				for (int i=0; i<numTarefas; i++) {//Controle a tarefa em uma posição
-					for (int j=0; j<numTarefas; j++) { //Controla a posição de encaixe desta tarefa				
-						//Retirando a tarefa selecionada da sua posição de origem e movimentando o vetor
+				for (int i=0; i<numTarefas; i++) {//Controle a tarefa em uma posiï¿½ï¿½o
+					for (int j=0; j<numTarefas; j++) { //Controla a posiï¿½ï¿½o de encaixe desta tarefa				
+						//Retirando a tarefa selecionada da sua posiï¿½ï¿½o de origem e movimentando o vetor
 						if (numAvaliacoes == 1000){
 							break;
 						}
@@ -420,8 +420,8 @@ public class BuscaLocal {
 						auxind[posicaoEncaixe.get(j)] = auxTar;
 						
 						if (posicaoEncaixe.get(j) != posicaoTarefas.get(i)){							
-							//Remontando a lista para o cálculo do Makespan e Custo
-							//Remontando as listas de acordo com a quantidade de tarefa de cada máquina	
+							//Remontando a lista para o cï¿½lculo do Makespan e Custo
+							//Remontando as listas de acordo com a quantidade de tarefa de cada mï¿½quina	
 							contInd = 0;
 							maquinaInd = 0;
 							int [][] seqAux = new int[numMaquinas][numTarefas];
@@ -457,10 +457,10 @@ public class BuscaLocal {
 								}
 								//Paleativo
 								if (numTarefasValidas == numTarefas){
-									//Verificar se seqAux é uma sequencia válida
+									//Verificar se seqAux ï¿½ uma sequencia vï¿½lida
 									boolean solucaoValida = operadores.solucaoValida(seqAux, numTarefas);
 									if (solucaoValida) {
-										//Verificando a posição de inserção da tarefa
+										//Verificando a posiï¿½ï¿½o de inserï¿½ï¿½o da tarefa
 										int aux_pos = pos;
 										for(int w=0; w<numIndividuos; w++) {											
 											if (((seq_pop[w][0][0] == 0)&&(seq_pop[w][0][1] == 0))||((seq_pop[w][0][1] == 0)&&(seq_pop[w][0][2] == 0))) {
@@ -473,7 +473,7 @@ public class BuscaLocal {
 										//System.out.println("Melhorou Busca Local");
 										break;
 									}else {
-										//System.out.println("Não Melhorou Busca Local - 1");
+										//System.out.println("Nï¿½o Melhorou Busca Local - 1");
 										for (int k=0; k<numTarefas; k++){
 											auxind[k] = ind[k];
 										}	
@@ -481,9 +481,9 @@ public class BuscaLocal {
 											auxTarefaPos[k] = tarefaPos[k];
 										}	
 									}
-									//Verificar se seqAux é uma sequencia válida																		
+									//Verificar se seqAux ï¿½ uma sequencia vï¿½lida																		
 								}else{
-									//System.out.println("Não Melhorou Busca Local - 1");
+									//System.out.println("Nï¿½o Melhorou Busca Local - 1");
 									for (int k=0; k<numTarefas; k++){
 										auxind[k] = ind[k];
 									}	
@@ -492,7 +492,7 @@ public class BuscaLocal {
 									}									
 								}
 							}else{
-								//System.out.println("Não Melhorou Busca Local - 3");
+								//System.out.println("Nï¿½o Melhorou Busca Local - 3");
 								for (int k=0; k<numTarefas; k++){
 									auxind[k] = ind[k];
 								}
@@ -509,6 +509,10 @@ public class BuscaLocal {
 						}
 					}	
 					if(numAvaliacoes == 1000) {							
+						break;
+					}
+					if(melhorou) {
+						numAvaliacoes = 0;
 						break;
 					}
 				}
