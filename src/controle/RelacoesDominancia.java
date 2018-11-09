@@ -55,7 +55,7 @@ public class RelacoesDominancia {
 	
 	public int[] retornarIndividuosMaisDominados (int numIndividuos, int [] nivelDominancia, int percentual) {		
 		int maxDom = -1;
-		int qtde = (int)(((numIndividuos*percentual)/100));
+		int qtde = (int)(((numIndividuos*percentual)/numIndividuos));
 		int [] retorno = new int[qtde];
 		for (int i=0; i<numIndividuos; i++) {
 			if (nivelDominancia[i] > maxDom) {

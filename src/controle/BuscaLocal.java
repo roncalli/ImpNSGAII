@@ -13,7 +13,7 @@ public class BuscaLocal {
 		int pos = (int)(Math.random()*numIndividuos);
 		
 		// Incluindo dist�ncia de Multid�o para a sele��o dos indiv�duos 
-		int qtde = (int) (numIndividuos*5)/100;
+		int qtde = (int) (numIndividuos*5)/numIndividuos;
 //		if (g == (numGer-1)) { 			
 //			qtde = numIndividuos;
 //		}
@@ -165,6 +165,9 @@ public class BuscaLocal {
 							boolean tarefaRetirada = false;
 							for (int k=0; k<numMaquinas; k++){
 								nTar = nTar + tarefaPos[k];
+								if (nTar == 0) {
+									break;
+								}
 								if ((posicaoTarefas.get(i)/nTar == 0)&&(tarefaRetirada == false)){
 									auxTarefaPos[k]--; //Retirando a tarefa da m�quina 
 									tarefaRetirada = true;
@@ -283,7 +286,7 @@ public class BuscaLocal {
 		int pos = (int)(Math.random()*numIndividuos);
 		
 		// Incluindo dist�ncia de Multid�o para a sele��o dos indiv�duos 
-		int qtde = (int) (numIndividuos*5)/100;
+		int qtde = (int) (numIndividuos*5)/numIndividuos;
 //		if (g == (numGer-1)) { 
 //			qtde = numIndividuos;
 //		}

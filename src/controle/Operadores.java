@@ -12,10 +12,10 @@ public class Operadores {
 		for (int i=0; i<numIndividuos; i++) {
 			float k = (float)0.75; // Porcentagem de escolher o melhor
 			float r = (float)Math.random();
-			int op1 = (int) (Math.floor(Math.random()*100)); // Escolha aleatória dois individuos para o torneio
-			int op2 = (int) (Math.floor(Math.random()*100)); // Escolha aleatória dois individuos para o torneio			
+			int op1 = (int) (Math.floor(Math.random()*numIndividuos)); // Escolha aleatória dois individuos para o torneio
+			int op2 = (int) (Math.floor(Math.random()*numIndividuos)); // Escolha aleatória dois individuos para o torneio			
 			while (op1 == op2) { // Garantir que op1 seja o mesmo individuo de op2
-				op2 = (int) (Math.floor(Math.random()*100));
+				op2 = (int) (Math.floor(Math.random()*numIndividuos));
 			}
 			if (r<k) { //Escolhe o melhor
 				if (nivelDominancia[op1]<nivelDominancia[op2]) {
@@ -51,160 +51,163 @@ public class Operadores {
 				}
 			}
 		}
-		//Utilizando o vencedor do torneio binário				
-		int pai1 = (int)(Math.random()*numIndividuos);
-		int pai2 = (int)(Math.random()*numIndividuos);
-		boolean posNaoValido = true;
-		while (posNaoValido) {
-			if (seq_pop[pai1][0][0] == 0 && (seq_pop[pai1][0][1] == 0)) {
-				pai1 = (int)(Math.random()*numIndividuos);
-			}else if (seq_pop[pai2][0][0] == 0 && (seq_pop[pai2][0][1] == 0)) {
-				pai2 = (int)(Math.random()*numIndividuos);
-			}else{
-				posNaoValido = false;
-			}
-		}
-		if (pai1 == pai2){
-			if (pai2>0){
-				pai2--;
-			}else{
-				pai2++;
-			}
-		}
 		
-		//Guardando o número de Tarefa de cada indivíduo e de cada máquina
-		for (int i=0; i<numMaquinas; i++){
-			for (int j=0; j<numTarefas; j++){				
-				if (seq_pop[pai1][i][j]==-2){
-					tarefasMaquinaPai1[i] = j;
-					break;
+		for (int w=0; w<(numIndividuos/2); w++) {
+			//Utilizando o vencedor do torneio binário				
+			int pai1 = (int)(Math.random()*numIndividuos);
+			int pai2 = (int)(Math.random()*numIndividuos);
+			boolean posNaoValido = true;
+			while (posNaoValido) {
+				if (seq_pop[pai1][0][0] == 0 && (seq_pop[pai1][0][1] == 0)) {
+					pai1 = (int)(Math.random()*numIndividuos);
+				}else if (seq_pop[pai2][0][0] == 0 && (seq_pop[pai2][0][1] == 0)) {
+					pai2 = (int)(Math.random()*numIndividuos);
+				}else{
+					posNaoValido = false;
 				}
 			}
-		}	
-		for (int i=0; i<numMaquinas; i++){
-			for (int j=0; j<numTarefas; j++){				
-				if (seq_pop[pai2][i][j]==-2){
-					tarefasMaquinaPai2[i] = j;
-					break;
+			if (pai1 == pai2){
+				if (pai2>0){
+					pai2--;
+				}else{
+					pai2++;
 				}
-			}
-		}	
-		
-		//criando as estruturas auxiliares
-		int [] ind1 = new int[numTarefas];
-		int [] ind2 = new int[numTarefas];
-		int []auxind1 = new int[numTarefas];
-		int []auxind2 = new int[numTarefas];
-		
-		//Colocando o valor -1 como marcador da tarefa
-		for (int i=0; i<numTarefas; i++){
-			auxind1[i]=-1;
-			auxind2[i]=-1;
-		}
-		
-		//Copiando os valores para as estruturas criadas
-		int maquinaP1 = 0;
-		int cont1 = 0;
-		int maquinaP2 = 0;
-		int cont2=0;
-		for (int i=0; i<numTarefas; i++){			
-			if (seq_pop[pai1][maquinaP1][cont1] == -2){
-				maquinaP1++;
-				cont1=0;
-				ind1[i] = seq_pop[pai1][maquinaP1][cont1];				
-				cont1++;
-			}else{
-				ind1[i] = seq_pop[pai1][maquinaP1][cont1];				
-				cont1++;
-			}
-			if (seq_pop[pai2][maquinaP2][cont2] == -2){
-				maquinaP2++;
-				cont2=0;
-				ind2[i] = seq_pop[pai2][maquinaP2][cont2];				
-				cont2++;
-			}else{
-				ind2[i] = seq_pop[pai2][maquinaP2][cont2];				
-				cont2++;
-			}					
-		}
-		
-		//Definindo 2 pontos de Corte 
-		int corte1 = (int) (Math.random()*numTarefas);
-		int corte2 = (int) (Math.random()*numTarefas);
-		
-		if (corte1>corte2){//Ordenando
-			int aux = corte1;
-			corte1 = corte2;
-			corte2 = aux;
-		}
-		
-		//Efetuando o cruzamento
-		for (int i=corte1; i<=corte2; i++){//Efetuando a troca do bloco entre os pontos de corte
-			auxind1[i] = ind2[i];
-			auxind2[i] = ind1[i];			
-		}
-		
-		
-		//PELEATIVO
-		boolean solucaoCorreta = true;
-		int cont0 = 0;
-		for (int i=0; i<numTarefas; i++) {
-			if (ind1[i] == 0) {
-				cont0++;
-			}
-			if (ind2[i] == 0) {
-				cont0++;
-			}
-		}
-		
-		if (cont0>2) {
-			solucaoCorreta = false;
-		}
-		
-		if (solucaoCorreta == true) { // PALEATIVO
-		
-			//Efetuando a adequacao baseado no PMX
-			for (int i=0; i<numTarefas; i++){
-				if (i<corte1 || i>corte2){ //Fora da área de corte				
-					int tarefaParaAdicionarInd1 = retornaTarefaPMX(auxind1, ind1, ind1[i], numTarefas);
-					if (tarefaParaAdicionarInd1 == -2) {
-						return seq_pop_f;
-					}
-					auxind1[i] = tarefaParaAdicionarInd1;
-					int tarefaParaAdicionarInd2 = retornaTarefaPMX(auxind2, ind2, ind2[i], numTarefas);
-					if (tarefaParaAdicionarInd2 == -2) {
-						return seq_pop_f;
-					}
-					auxind2[i] = tarefaParaAdicionarInd2;
-				}			
 			}
 			
-			//Remontando as listas de acordo com a quantidade de tarefa de cada máquina	
-			cont1 = 0;
-			maquinaP1 = 0;
-			cont2 = 0;
-			maquinaP2 = 0;
-						
+			//Guardando o número de Tarefa de cada indivíduo e de cada máquina
+			for (int i=0; i<numMaquinas; i++){
+				for (int j=0; j<numTarefas; j++){				
+					if (seq_pop[pai1][i][j]==-2){
+						tarefasMaquinaPai1[i] = j;
+						break;
+					}
+				}
+			}	
+			for (int i=0; i<numMaquinas; i++){
+				for (int j=0; j<numTarefas; j++){				
+					if (seq_pop[pai2][i][j]==-2){
+						tarefasMaquinaPai2[i] = j;
+						break;
+					}
+				}
+			}	
+			
+			//criando as estruturas auxiliares
+			int [] ind1 = new int[numTarefas];
+			int [] ind2 = new int[numTarefas];
+			int []auxind1 = new int[numTarefas];
+			int []auxind2 = new int[numTarefas];
+			
+			//Colocando o valor -1 como marcador da tarefa
+			for (int i=0; i<numTarefas; i++){
+				auxind1[i]=-1;
+				auxind2[i]=-1;
+			}
+			
+			//Copiando os valores para as estruturas criadas
+			int maquinaP1 = 0;
+			int cont1 = 0;
+			int maquinaP2 = 0;
+			int cont2=0;
 			for (int i=0; i<numTarefas; i++){			
-				if (cont1 == tarefasMaquinaPai1[maquinaP1]){
+				if (seq_pop[pai1][maquinaP1][cont1] == -2){
 					maquinaP1++;
 					cont1=0;
-					seq_pop_f[pai1][maquinaP1][cont1] = auxind1[i];				
+					ind1[i] = seq_pop[pai1][maquinaP1][cont1];				
 					cont1++;
 				}else{
-					seq_pop_f[pai1][maquinaP1][cont1] = auxind1[i];				
+					ind1[i] = seq_pop[pai1][maquinaP1][cont1];				
 					cont1++;
 				}
-				if (cont2 == tarefasMaquinaPai2[maquinaP2]){
+				if (seq_pop[pai2][maquinaP2][cont2] == -2){
 					maquinaP2++;
 					cont2=0;
-					seq_pop_f[pai2][maquinaP2][cont2] = auxind2[i];				
+					ind2[i] = seq_pop[pai2][maquinaP2][cont2];				
 					cont2++;
 				}else{
-					seq_pop_f[pai2][maquinaP2][cont2] = auxind2[i];				
+					ind2[i] = seq_pop[pai2][maquinaP2][cont2];				
 					cont2++;
 				}					
-			}			
+			}
+			
+			//Definindo 2 pontos de Corte 
+			int corte1 = (int) (Math.random()*numTarefas);
+			int corte2 = (int) (Math.random()*numTarefas);
+			
+			if (corte1>corte2){//Ordenando
+				int aux = corte1;
+				corte1 = corte2;
+				corte2 = aux;
+			}
+			
+			//Efetuando o cruzamento
+			for (int i=corte1; i<=corte2; i++){//Efetuando a troca do bloco entre os pontos de corte
+				auxind1[i] = ind2[i];
+				auxind2[i] = ind1[i];			
+			}
+			
+			
+			//PELEATIVO
+			boolean solucaoCorreta = true;
+			int cont0 = 0;
+			for (int i=0; i<numTarefas; i++) {
+				if (ind1[i] == 0) {
+					cont0++;
+				}
+				if (ind2[i] == 0) {
+					cont0++;
+				}
+			}
+			
+			if (cont0>2) {
+				solucaoCorreta = false;
+			}
+			
+			if (solucaoCorreta == true) { // PALEATIVO
+			
+				//Efetuando a adequacao baseado no PMX
+				for (int i=0; i<numTarefas; i++){
+					if (i<corte1 || i>corte2){ //Fora da área de corte				
+						int tarefaParaAdicionarInd1 = retornaTarefaPMX(auxind1, ind1, ind1[i], numTarefas);
+						if (tarefaParaAdicionarInd1 == -2) {
+							return seq_pop_f;
+						}
+						auxind1[i] = tarefaParaAdicionarInd1;
+						int tarefaParaAdicionarInd2 = retornaTarefaPMX(auxind2, ind2, ind2[i], numTarefas);
+						if (tarefaParaAdicionarInd2 == -2) {
+							return seq_pop_f;
+						}
+						auxind2[i] = tarefaParaAdicionarInd2;
+					}			
+				}
+				
+				//Remontando as listas de acordo com a quantidade de tarefa de cada máquina	
+				cont1 = 0;
+				maquinaP1 = 0;
+				cont2 = 0;
+				maquinaP2 = 0;
+							
+				for (int i=0; i<numTarefas; i++){			
+					if (cont1 == tarefasMaquinaPai1[maquinaP1]){
+						maquinaP1++;
+						cont1=0;
+						seq_pop_f[pai1][maquinaP1][cont1] = auxind1[i];				
+						cont1++;
+					}else{
+						seq_pop_f[pai1][maquinaP1][cont1] = auxind1[i];				
+						cont1++;
+					}
+					if (cont2 == tarefasMaquinaPai2[maquinaP2]){
+						maquinaP2++;
+						cont2=0;
+						seq_pop_f[pai2][maquinaP2][cont2] = auxind2[i];				
+						cont2++;
+					}else{
+						seq_pop_f[pai2][maquinaP2][cont2] = auxind2[i];				
+						cont2++;
+					}					
+				}			
+			}
 		}
 		return seq_pop_f;
 	}
@@ -352,9 +355,9 @@ public class Operadores {
 		//Embaralhamos os números:
 		Collections.shuffle(tarefas);
 		for (int i=0; i<qtdMut; i++){						
-			int individuo = (int) tarefas.get(i); //Seleciona o indivíduo que sofrerá a mutação
-			int sorteio = (int) (Math.random()*100);												
-			if (sorteio>=50){//Escolhe-se o operador de troca para mutação
+			int individuo = (int) (Math.random()*numIndividuos); //Seleciona o indivíduo que sofrerá a mutação
+			int sorteio = (int) (Math.random()*numIndividuos);												
+			if (sorteio>=(numIndividuos/2)){//Escolhe-se o operador de troca para mutação
 				operadorMutTroca(numTarefas, numMaquinas, seq_pop_f[individuo]);
 			}else{//Escolhe-se o operador de slide para mutação																						
 				operadorMutSlide(numTarefas, numMaquinas, seq_pop_f[individuo]);			

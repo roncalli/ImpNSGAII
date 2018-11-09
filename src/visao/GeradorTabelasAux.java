@@ -15,7 +15,7 @@ public class GeradorTabelasAux {
 
 		// TABELA TAREFA
 		try {
-			FileWriter writer = new FileWriter("D:/FELIPE/TESTE/TabelaTarefa.csv");
+			FileWriter writer = new FileWriter("D:/FELIPE/BASE5/TabelaTarefa.csv");
 			// Preencher Matriz Tarefa Maquina
 			// IdTarefa, PesoTarefa, DataEntrega
 			// Peso tarefa variando de 1 a 10
@@ -34,7 +34,7 @@ public class GeradorTabelasAux {
 		}
 		// TABELA TAREFA MAQUINA
 		try {
-			FileWriter writer = new FileWriter("D:/FELIPE/TESTE/TabelaTarefaMaquina.csv");
+			FileWriter writer = new FileWriter("D:/FELIPE/BASE5/TabelaTarefaMaquina.csv");
 			// Preencher Matriz Tarefa Maquina
 			// Peso tarefa maquina variando de 1 a 10
 			// Data de entrega 80 (2 semanas)
@@ -59,7 +59,7 @@ public class GeradorTabelasAux {
 
 		for (int w = 0; w < numMaquinas; w++) {
 			try {
-				String nomeArquivo = "D:/FELIPE/TESTE/TabelaSetupMaquinaAUX" + w + ".csv";
+				String nomeArquivo = "D:/FELIPE/BASE5/TabelaSetupMaquinaAUX" + w + ".csv";
 				FileWriter writer = new FileWriter(nomeArquivo);
 				// Preencher Matriz Tarefa Maquina
 				// Peso tarefa maquina variando de 1 a 10
