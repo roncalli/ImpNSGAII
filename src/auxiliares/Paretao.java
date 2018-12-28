@@ -12,8 +12,8 @@ public class Paretao {
 		System.out.println("Teste");
 		int num = 100;
 		Paretao aux = new Paretao();
-		String data = "Data061118_";
-		String nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"Paretao.txt";
+		String data = "Data121218_";
+		String nomeArquivo = "D:/FELIPE/RESULTADOS/BASE5/"+data+"Paretao.txt";
 		FileWriter arquivoSaida = new FileWriter(nomeArquivo);
 		for (int w=0; w<6; w++){
 			for (int j=0; j<30; j++){
@@ -33,7 +33,7 @@ public class Paretao {
 	public float[][] lerArquivoSolucoes(int exec, int num, String data){
 		float auxSeq[][] = new float[num][2];
 		String rodada = "_"+exec+".csv";
-		String ArquivoFinal = "D:/FELIPE/RESULTADOS/"+data+"/ARQUIVOFINAL/Exec"+exec+"/Resultado20000"+rodada; 
+		String ArquivoFinal = "D:/FELIPE/RESULTADOS/BASE5/"+data+"/ARQUIVOFINAL/Exec"+exec+"/Resultado20000"+rodada; 
 		for (int i=0; i<num; i++){
 			auxSeq[i][0] = -2;
 			auxSeq[i][1] = -2;

@@ -39,7 +39,7 @@ public class Main {
 				boolean buscaLocal = false;
 				float melhorMakespan = 100000;
 				int numGer = 20000; //n�mero de gera��es		
-				int qtdMut =  40; //% Percentual de indiv�duos mutados
+				int qtdMut =  30; //% Percentual de indiv�duos mutados
 				int probabilidadeCruzamento = 90;
 				Maquina maquina[] = new Maquina[numMaquinas];
 				Tarefa tarefa[] = new Tarefa[numTarefas];
