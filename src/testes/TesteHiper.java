@@ -13,7 +13,7 @@ public class TesteHiper {
 		float [] nadir = new float[2];	
 		nadir[0] = 50;
 		nadir[1] = 31000;
-		String data = "Data041118_";
+		String data = "BASE5/Data261218_";
 		Hipervolume hiper = new Hipervolume();
 		float[][] valor = hiper.calculoHipervolume(nadir,data);
 		String nomeArquivo = "D:/FELIPE/RESULTADOS/"+data+"Hipervolume.txt";
