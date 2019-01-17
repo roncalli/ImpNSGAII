@@ -8,95 +8,98 @@ import java.io.IOException;
 public class Hipervolume {
 	
 	
-		public float[][] lerCsvHipervolume(){		
-		String arquivoTarefa = "D:/FELIPE/RESULTADOS/Data021018_5/ARQUIVOFINAL/Exec1/Resultado10000_1.csv";
-		BufferedReader br = null;
-		String linha = "";
-		String csvDivisor = ",";
-		float[][] valorHipervolume = null;
-		try {
-			BufferedReader brAux = null;
-			brAux = new BufferedReader(new FileReader(arquivoTarefa));
-			br = new BufferedReader(new FileReader(arquivoTarefa));
-			int i = 0;
-			float [][] hipervolume = new float[(int)brAux.lines().count()][2];			
-			while ((linha = br.readLine()) != null) {
-				String[] objeto = linha.split(csvDivisor);
-				hipervolume[i][0] = Float.valueOf(objeto[objeto.length - 2]);
-				hipervolume[i][1] = Float.valueOf(objeto[objeto.length - 1]);						
-				i++;
-			}
-			valorHipervolume = hipervolume;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
+		public float[][] lerCsvHipervolume(int execucao, int rodada, String data){	
+			String arquivoTarefa = "D:/FELIPE/RESULTADOS/"+data+rodada+"/ARQUIVOFINAL/Exec"+(execucao+1)+"/Resultado20000_"+(execucao+1)+".csv";
+			BufferedReader br = null;
+			String linha = "";
+			String csvDivisor = ",";
+			float[][] valorHipervolume = null;
+			try {
+				BufferedReader brAux = null;
+				brAux = new BufferedReader(new FileReader(arquivoTarefa));
+				br = new BufferedReader(new FileReader(arquivoTarefa));
+				int i = 0;
+				float [][] hipervolume = new float[(int)brAux.lines().count()][2];			
+				while ((linha = br.readLine()) != null) {
+					String[] objeto = linha.split(csvDivisor);
+					hipervolume[i][0] = Float.valueOf(objeto[objeto.length - 2]);
+					hipervolume[i][1] = Float.valueOf(objeto[objeto.length - 1]);						
+					i++;
 				}
-			}
-		}
-		return valorHipervolume;
-	}
-	
-	public float calculoHipervolume(float[] nadir){
-		float [][] hipervolume = lerCsvHipervolume();
-		float menorCusto = 100000;
-		float menorMakespan = 100000;
-		for (int i=0; i<hipervolume.length; i++){
-			if (hipervolume[i][0]<menorMakespan) {
-				menorMakespan = hipervolume[i][0];
-			}
-			if (hipervolume[i][1]<menorCusto) {
-				menorCusto = hipervolume[i][1];
-			}								
-		}
-		
-		//Ordenando as soluções para a realização dos cálculos
-		float auxM = 0;
-		float auxC = 0;
-		for(int linha = 0; linha < hipervolume.length; linha++) {
-			for(int coluna = 0; coluna < hipervolume[linha].length; coluna++) {
-				int col = coluna;
-				for(int i = linha; i < hipervolume.length; i++) {		
-					if (  hipervolume[linha][0] > hipervolume[i][0] ){
-						auxM = hipervolume[linha][0];
-						auxC = hipervolume[linha][1];
-						hipervolume[linha][0] = hipervolume[i][0];
-						hipervolume[linha][1] = hipervolume[i][1];
-						hipervolume[i][0] = auxM;
-						hipervolume[i][1] = auxC;
+				valorHipervolume = hipervolume;
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				if (br != null) {
+					try {
+						br.close();
+					} catch (IOException e) {
+						e.printStackTrace();
 					}
 				}
 			}
-		}
-		
-		
-		
-		
-		for (int i=0; i<hipervolume.length; i++){
-			hipervolume[i][0] = (hipervolume[i][0]-menorMakespan)/(nadir[0]-menorMakespan); 
-			hipervolume[i][1] = (hipervolume[i][1]-menorCusto)/(nadir[1] - menorCusto);					
-		}
+			return valorHipervolume;
+	}
 	
-		//Fim da Normalização
+	public float[][] calculoHipervolume(float[] nadir, String data){
 		
-		float ca = 1;
-		float ma = 0;
-		float calcHipervolume = 0;
-		for (int i=0; i<hipervolume.length; i++){
-			ca = 1-hipervolume[i][1];
-			if (i<hipervolume.length-1) {
-				ma = hipervolume[i+1][0] - hipervolume[i][0];
-			}else {
-				ma = 1 - hipervolume[i][0];
+		float [][]calcHipervolume = new float[6][30];
+		for (int w=0; w<6; w++){
+			for (int y=0; y<30; y++){
+				float [][] hipervolume = lerCsvHipervolume(y, w, data);
+				float menorCusto = 100000;
+				float menorMakespan = 100000;
+				for (int i=0; i<hipervolume.length; i++){
+					if (hipervolume[i][0]<menorMakespan) {
+						menorMakespan = hipervolume[i][0];
+					}
+					if (hipervolume[i][1]<menorCusto) {
+						menorCusto = hipervolume[i][1];
+					}
+				}
+		
+				//Ordenando as soluções para a realização dos cálculos
+				float auxM = 0;
+				float auxC = 0;
+				for(int linha = 0; linha < hipervolume.length; linha++) {
+					for(int coluna = 0; coluna < hipervolume[linha].length; coluna++) {
+						int col = coluna;
+						for(int i = linha; i < hipervolume.length; i++) {		
+							if (  hipervolume[linha][0] > hipervolume[i][0] ){
+								auxM = hipervolume[linha][0];
+								auxC = hipervolume[linha][1];
+								hipervolume[linha][0] = hipervolume[i][0];
+								hipervolume[linha][1] = hipervolume[i][1];
+								hipervolume[i][0] = auxM;
+								hipervolume[i][1] = auxC;
+							}
+						}
+					}
+				}	
+				for (int i=0; i<hipervolume.length; i++){
+					hipervolume[i][0] = (hipervolume[i][0]-menorMakespan)/(nadir[0]-menorMakespan); 
+					hipervolume[i][1] = (hipervolume[i][1]-menorCusto)/(nadir[1] - menorCusto);					
+				}
+			
+				//Fim da Normalização
+				
+				float ca = 1;
+				float ma = 0;
+				float calcHipervolumeAux = 0;
+				for (int i=0; i<hipervolume.length; i++){
+					ca = 1-hipervolume[i][1];
+					if (i<hipervolume.length-1) {
+						ma = hipervolume[i+1][0] - hipervolume[i][0];
+					}else {
+						ma = 1 - hipervolume[i][0];
+					}
+					calcHipervolumeAux = calcHipervolumeAux + ca*ma;
+				}
+				calcHipervolume[w][y] = calcHipervolumeAux;
 			}
-			calcHipervolume = calcHipervolume + ca*ma;
-		}
+ 		}
 		return calcHipervolume;
 	}
 }
